@@ -48,19 +48,11 @@ public abstract class BaseActivity extends Activity {
     protected abstract void initData();
 
     public void ToastLong(String msg){
-        if(toast == null){
-            toast = Toast.makeText(this,"",Toast.LENGTH_LONG);
-        }
-        toast.setText(msg);
-        toast.show();
+        MyToast.showText(this,msg,Toast.LENGTH_LONG);
     }
 
     public void ToastShort(String msg){
-        if(toast == null){
-            toast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
-        }
-        toast.setText(msg);
-        toast.show();
+        MyToast.showText(this,msg,Toast.LENGTH_SHORT);
     }
 
     /**

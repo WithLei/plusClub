@@ -174,7 +174,7 @@ public class LoginActivity extends BaseActivity {
     private void GetCookies() {
         cookie = "";
         OkHttpUtils.get()
-                .url(NetConfig.EDU_URL)
+                .url(NetConfig.BASE_EDU_RS)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -212,7 +212,7 @@ public class LoginActivity extends BaseActivity {
         if (sp.getString("id","").isEmpty())
             return ;
         OkHttpUtils.post()
-                .url(NetConfig.MY_URL)
+                .url(NetConfig.BASE_EDU_HOST_ME)
                 .addHeader("Cookie",cookie)
                 .build()
                 .execute(new Callback() {
@@ -268,7 +268,7 @@ public class LoginActivity extends BaseActivity {
      */
     private void doLogin(String id, String pwd, String checkid) {
         OkHttpUtils.post()
-                .url(NetConfig.EDU_URL)
+                .url(NetConfig.BASE_EDU_RS)
                 .addParams("__VIEWSTATE", "dDwtNTE2MjI4MTQ7Oz7pB/NTSIblf9AJanMrSjcqz4d8cA==")
                 .addParams("Button1", "")
                 .addParams("hidPdrs", "")

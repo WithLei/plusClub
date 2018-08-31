@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity {
     private void doLogout() {
         printLog("退出登陆");
         OkHttpUtils.post()
-                .url(NetConfig.MY_URL + id)
+                .url(NetConfig.BASE_EDU_HOST_ME + id)
                 .addHeader("Cookie", Cookie)
                 .addParams("__EVENTARGUMENT", "")
                 .addParams("__EVENTTARGET", "likTc")
