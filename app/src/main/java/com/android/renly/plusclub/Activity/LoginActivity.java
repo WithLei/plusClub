@@ -66,12 +66,17 @@ public class LoginActivity extends BaseActivity {
 
     private Unbinder unbinder;
 
+    private String cookie = "";
+    private Bitmap bm;
+    private SharedPreferences sp;
+
     private static final int GET_CHECK_IMAGE = 1;
     private static final int LOGIN_SUCCESS = 2;
     private static final int LOGIN_FAIL_VERIFATION_ERROR = 3;
     private static final int LOGIN_FAIL_USERNAME_EMPTY = 4;
     private static final int LOGIN_FAIL_PASSWORD_ERROR = 5;
     private static final int LOGIN_FAIL_PASSWORD_EMPTY = 6;
+    private static final int LOGIN_FAIL_SYSTEMBUSY = 7;
 
     private Handler handler = new Handler() {
         @Override
@@ -79,33 +84,44 @@ public class LoginActivity extends BaseActivity {
             switch (msg.what) {
                 case GET_CHECK_IMAGE:
                     ivCheck.setImageBitmap(bm);
+                    etCheck.setText("");
                     break;
                 case LOGIN_SUCCESS:
-                    AfterSuccessLogin();
+                    AfterSuccessLogin(msg.getData().getString("stuName"));
                     break;
                 case LOGIN_FAIL_VERIFATION_ERROR:
+                    etCheck.setText("");
                     ToastShort("验证码输入错误");
+                    printLog("验证码输入错误");
+                    //刷新验证码
+                    GetVerifation();
                     break;
                 case LOGIN_FAIL_USERNAME_EMPTY:
                     ToastShort("学号为空");
+                    printLog("学号为空");
+                    //刷新验证码
+                    GetVerifation();
                     break;
                 case LOGIN_FAIL_PASSWORD_ERROR:
                     ToastShort("学号或密码错误");
+                    printLog("学号或密码错误");
+                    //刷新验证码
+                    GetVerifation();
                     break;
                 case LOGIN_FAIL_PASSWORD_EMPTY:
                     ToastShort("密码为空");
+                    printLog("密码为空");
+                    //刷新验证码
+                    GetVerifation();
+                    break;
+                case LOGIN_FAIL_SYSTEMBUSY:
+                    ToastShort("错误原因：系统正忙！");
+                    printLog("错误原因：系统正忙！");
+                    GetCookies();
                     break;
             }
         }
     };
-
-    private String cookie = "";
-    private Bitmap bm;
-
-    @Override
-    public int getLayoutID() {
-        return R.layout.activity_login;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,50 +130,26 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public void initData() {
-        GetCookies();
+    protected int getLayoutID() {
+        return R.layout.activity_login;
     }
 
     @Override
-    public void initView() {
-        GetVerifation();
+    protected void initData() {
+        sp = getSharedPreferences("userInfo",MODE_PRIVATE);
+        GetCookies();
+        isLogin();
     }
 
-    private void GetCookies() {
-        OkHttpUtils.get()
-                .url(NetConfig.EDU_URL)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(Response response, int id) throws Exception {
-                        Headers headers = response.headers();
-                        for (int i = 0; i < headers.size(); i++)
-                            if (headers.name(i).equals("Set-Cookie"))
-                                if (headers.value(i).endsWith(" Path=/"))
-                                    cookie += headers.value(i).substring(0, headers.value(i).length() - 7);
-                                else
-                                    cookie += headers.value(i);
-                        printLog("cookie " + cookie);
-                        return null;
-                    }
-
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("print", "onError" + call.toString());
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        Log.e("print", "onResponse");
-                    }
-                });
+    @Override
+    protected void initView() {
+        GetVerifation();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unbinder.unbind();
+        super.onDestroy();
     }
 
     @OnClick({R.id.btn_login, R.id.iv_check})
@@ -177,6 +169,74 @@ public class LoginActivity extends BaseActivity {
     }
 
     /**
+     * 请求新的Cookie
+     */
+    private void GetCookies() {
+        cookie = "";
+        OkHttpUtils.get()
+                .url(NetConfig.EDU_URL)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(Response response, int id) throws Exception {
+                        Headers headers = response.headers();
+                        for (int i = 0; i < headers.size(); i++)
+                            if (headers.name(i).equals("Set-Cookie"))
+                                if (headers.value(i).endsWith(" Path=/"))
+                                    cookie += headers.value(i).substring(0, headers.value(i).length() - 7);
+                                else
+                                    cookie += headers.value(i);
+                        printLog("cookie:" + cookie);
+                        //刷新验证码
+                        GetVerifation();
+                        return null;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("print", "GetCookies onError" + call.toString());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        Log.e("print", "GetCookies onResponse");
+                    }
+                });
+    }
+
+    /**
+     * 判断是否登录
+     */
+    private void isLogin() {
+        if (sp.getString("id","").isEmpty())
+            return ;
+        OkHttpUtils.post()
+                .url(NetConfig.MY_URL)
+                .addHeader("Cookie",cookie)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(Response response, int id) throws Exception {
+                        String responseHTML = new String(response.body().bytes(),"GB2312");
+                        checkLoginSuccess(responseHTML);
+                        writeData("/sdcard/Test/isLoginHTML.txt",responseHTML);
+                        return null;
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        printLog("isLogin() onError");
+                    }
+
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        printLog("isLogin() onResponse");
+                    }
+                });
+    }
+
+    /**
      * 获取验证码图片
      */
     private void GetVerifation() {
@@ -187,12 +247,12 @@ public class LoginActivity extends BaseActivity {
                 .execute(new BitmapCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e("response", "GetVerifation Fail");
+                        printLog("GetVerifation onError");
                     }
 
                     @Override
                     public void onResponse(Bitmap response, int id) {
-                        Log.e("response", "GetVerifation Success");
+                        printLog("GetVerifation onResponse");
                         bm = response;
                         handler.sendEmptyMessage(GET_CHECK_IMAGE);
                     }
@@ -224,22 +284,22 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
-                        printLog(responseHTML);
+//                        printLog(responseHTML);
                         checkLoginSuccess(responseHTML);
-                        writeData("/sdcard/Test/output.txt", responseHTML);
+                        writeData("/sdcard/Test/doLoginHTML.txt", responseHTML);
 //                        openHostPage();
                         return null;
                     }
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e("print", "onError" + call.toString());
+                        Log.e("print", "doLogin() onError" + call.toString());
                         e.printStackTrace();
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
-                        Log.e("print", "onResponse");
+                        Log.e("print", "doLogin() onResponse");
                     }
                 });
     }
@@ -251,43 +311,66 @@ public class LoginActivity extends BaseActivity {
         Document doc = Jsoup.parse(loginresult);
         Elements alert = doc.select("script[language]");
         Elements success = doc.select("a[href]");
+        Elements err = doc.select("p[class]");
+        Elements names = doc.select("#xhxm");
 
         for (Element link : success) {
             //获取所要查询的URL,这里相应地址button的名字叫成绩查询
             if (link.text().equals("等级考试查询")) {
                 printLog("登陆成功");
-                handler.sendEmptyMessage(LOGIN_SUCCESS);
+
+                //登陆成功后获取学生姓名，此处获取到的学生姓名为xx同学
+                String stuName = "";
+                for(Element name : names)
+                    stuName = name.text();
+                printLog("stuName " + stuName);
+
+                Message msg = new Message();
+                Bundle bundle = new Bundle();
+                bundle.putString("stuName",stuName);
+                msg.setData(bundle);
+                msg.what = LOGIN_SUCCESS;
+                handler.sendMessage(msg);
                 return;
             }
         }
         for (Element link : alert) {
-            //刷新验证码
-            GetVerifation();
             //获取错误信息
             if (link.data().contains("验证码不正确")) {
                 handler.sendEmptyMessage(LOGIN_FAIL_VERIFATION_ERROR);
+                return;
             } else if (link.data().contains("username不能为空")) {
                 handler.sendEmptyMessage(LOGIN_FAIL_USERNAME_EMPTY);
+                return;
             } else if (link.data().contains("password错误")) {
                 handler.sendEmptyMessage(LOGIN_FAIL_PASSWORD_ERROR);
+                return;
             } else if (link.data().contains("password不能为空")) {
                 handler.sendEmptyMessage(LOGIN_FAIL_PASSWORD_EMPTY);
+                return;
             }
+        }
+        for(Element link : err){
+            if(link.text().equals("错误原因：系统正忙！"))
+                handler.sendEmptyMessage(LOGIN_FAIL_SYSTEMBUSY);
         }
     }
 
     /**
      * 成功登陆后的操作
      */
-    private void AfterSuccessLogin() {
+    private void AfterSuccessLogin(String stuName) {
         ToastShort("登陆成功");
         SharedPreferences sp = getSharedPreferences("userInfo",MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("Cookie",cookie);
         editor.putString("id","16103220237");
         editor.putString("pwd","zl11471583210");
-        editor.commit();
+        editor.putString("stuName",stuName);
+        printLog("stuName+" + stuName);
+        editor.apply();
         gotoActivity(MainActivity.class);
+        finish();
     }
 
 }

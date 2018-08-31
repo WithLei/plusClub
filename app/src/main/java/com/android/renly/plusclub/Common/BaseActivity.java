@@ -13,6 +13,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.RandomAccessFile;
 
+import butterknife.ButterKnife;
+
 public abstract class BaseActivity extends Activity {
     /***是否显示标题栏*/
     private  boolean isshowtitle = true;
@@ -32,17 +34,18 @@ public abstract class BaseActivity extends Activity {
                     WindowManager.LayoutParams. FLAG_FULLSCREEN);
         }
         setContentView(getLayoutID());
+        ButterKnife.bind(this);
         //设置数据
         initData();
         //初始化控件
         initView();
 
     }
-    public abstract int getLayoutID();
+    protected abstract int getLayoutID();
 
-    public abstract void initView();
+    protected abstract void initView();
 
-    public abstract void initData();
+    protected abstract void initData();
 
     public void ToastLong(String msg){
         if(toast == null){

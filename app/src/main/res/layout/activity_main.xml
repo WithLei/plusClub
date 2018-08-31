@@ -10,5 +10,11 @@
         android:layout_gravity="center"
         android:text="退出登陆"
         />
+    <TextView
+        android:id="@+id/tv_main_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="你好，"/>
 
 </LinearLayout>

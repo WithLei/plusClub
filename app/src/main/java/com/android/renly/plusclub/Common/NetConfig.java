@@ -12,4 +12,5 @@ public class NetConfig {
 
     public static final String CHECKIMG_URL = "https://jwgl.webvpn.lsu.edu.cn/CheckCode.aspx";
 
+    public static final String GET_LOGOUT_URL = "https://jwgl.webvpn.lsu.edu.cn/logout.aspx";
 }
