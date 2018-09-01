@@ -8,4 +8,12 @@
         <attr name="drawableWidth" format="dimension" />
         <attr name="drawableHeight" format="dimension" />
     </declare-styleable>
+
+    <!--circle Image View-->
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
 </resources>
