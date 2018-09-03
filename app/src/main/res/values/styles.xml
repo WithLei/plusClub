@@ -10,6 +10,8 @@
         <item name="windowNoTitle">true</item>
         <!--<item name="android:windowAnimationStyle">@style/activityAnimation</item>-->
     </style>
+
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="BaseTheme">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
