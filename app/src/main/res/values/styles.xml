@@ -89,4 +89,34 @@
         <item name="android:statusBarColor">@color/main_color_11</item>
     </style>
 
+    <style name="text_18_pri">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/text_color_pri</item>
+    </style>
+
+    <style name="text_16_sec">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_color_sec</item>
+    </style>
+
+    <style name="text_16_pri">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_color_pri</item>
+    </style>
+
+    <style name="text_14_sec">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_color_sec</item>
+    </style>
+
+    <style name="text_14_pri">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_color_pri</item>
+    </style>
+
+    <style name="text_12_sec">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_color_sec</item>
+    </style>
+
 </resources>

@@ -30,10 +30,10 @@ public abstract class BaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    public abstract int getLayoutid();
+
     //初始化界面的数据
     protected abstract void initData(Context content);
-
-    public abstract int getLayoutid();
 
     @Override
     public void onDestroyView() {

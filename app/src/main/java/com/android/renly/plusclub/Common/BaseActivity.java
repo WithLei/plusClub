@@ -1,10 +1,9 @@
 package com.android.renly.plusclub.Common;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,7 +14,7 @@ import java.io.RandomAccessFile;
 
 import butterknife.ButterKnife;
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends FragmentActivity {
     /***是否显示标题栏*/
     private  boolean isshowtitle = true;
     /***是否显示标题栏*/
@@ -43,9 +42,9 @@ public abstract class BaseActivity extends Activity {
     }
     protected abstract int getLayoutID();
 
-    protected abstract void initView();
-
     protected abstract void initData();
+
+    protected abstract void initView();
 
     public void ToastLong(String msg){
         MyToast.showText(this,msg,Toast.LENGTH_LONG);

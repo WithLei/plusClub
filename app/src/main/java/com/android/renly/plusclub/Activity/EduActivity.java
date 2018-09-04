@@ -1,16 +1,15 @@
-package com.android.renly.plusclub;
+package com.android.renly.plusclub.Activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.R;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -27,7 +26,7 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class MainActivity extends BaseActivity {
+public class EduActivity extends BaseActivity {
 
     @BindView(R.id.btn_main_exit)
     Button btnMainExit;

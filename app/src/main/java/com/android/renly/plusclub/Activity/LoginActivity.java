@@ -1,6 +1,5 @@
 package com.android.renly.plusclub.Activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.NetConfig;
-import com.android.renly.plusclub.MainActivity;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.DrawableTextView;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -131,7 +130,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected int getLayoutID() {
-        return R.layout.activity_login;
+        return R.layout.activity_edu_login;
     }
 
     @Override
@@ -361,15 +360,15 @@ public class LoginActivity extends BaseActivity {
      */
     private void AfterSuccessLogin(String stuName) {
         ToastShort("登陆成功");
-        SharedPreferences sp = getSharedPreferences("userInfo",MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString("Cookie",cookie);
-        editor.putString("id","16103220237");
-        editor.putString("pwd","zl11471583210");
-        editor.putString("stuName",stuName);
+        editor.putString(App.COOKIE,cookie);
+        editor.putString(App.USER_UID_KEY,"16103220237");
+        editor.putString(App.USER_PWD_KEY,"zl11471583210");
+        editor.putString(App.MY_SP_NAME,stuName);
         printLog("stuName+" + stuName);
         editor.apply();
-        gotoActivity(MainActivity.class);
+        gotoActivity(EduActivity.class);
         finish();
     }
 
