@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_window"
+    android:id="@+id/ll_mine_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_secondary"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/header"
+        android:id="@+id/rl_mine_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -16,7 +16,7 @@
         android:paddingBottom="16dp">
 
         <com.android.renly.plusclub.UI.CircleImageView
-            android:id="@+id/user_img"
+            android:id="@+id/ci_mine_user_img"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
@@ -26,10 +26,10 @@
             app:civ_border_width="2dp" />
 
         <TextView
-            android:id="@+id/user_name"
+            android:id="@+id/tv_mine_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/user_img"
+            android:layout_below="@id/ci_mine_user_img"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
             android:lines="1"
@@ -39,10 +39,10 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/user_grade"
+            android:id="@+id/tv_mine_user_grade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/user_name"
+            android:layout_below="@id/tv_mine_user_name"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="6dp"
             android:text="大一"
@@ -59,7 +59,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/history"
+            android:id="@+id/ll_mine_history"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -85,7 +85,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/star"
+            android:id="@+id/ll_mine_star"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -111,7 +111,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/friend"
+            android:id="@+id/ll_mine_friend"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -137,7 +137,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/post"
+            android:id="@+id/ll_mine_post"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -165,7 +165,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/function_list"
+        android:id="@+id/lv_mine_function_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

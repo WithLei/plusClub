@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
+
 
 public abstract class BaseFragment extends Fragment {
     private View mContentView;
@@ -20,7 +22,7 @@ public abstract class BaseFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContentView = inflater.inflate(getLayoutid(),container,false);
         mContent = getContext();
-//        ButterKnife.bind(mContentView);
+        ButterKnife.bind(mContentView);
         return mContentView;
     }
 
