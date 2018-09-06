@@ -1,9 +1,11 @@
 package com.android.renly.plusclub.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Fragment.HomeFragment;
@@ -15,10 +17,14 @@ import com.android.renly.plusclub.UI.MyBottomTab;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class HomeActivity extends BaseActivity {
     @BindView(R.id.bottom_bar)
     MyBottomTab bottomBar;
+
+    private long mExitTime;
+    private Unbinder unbinder;
 
     private static HomeFragment homeFragment;
     private static HotNewsFragment hotNewsFragment;
@@ -39,12 +45,7 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        bottomBar.setOnTabChangeListener(new MyBottomTab.OnTabChangeListener() {
-            @Override
-            public void tabClicked(View v, int position, boolean isChange) {
-                setSelect(position);
-            }
-        });
+        bottomBar.setOnTabChangeListener((v, position, isChange) -> setSelect(position));
     }
 
     private void setSelect(int position) {
@@ -98,8 +99,52 @@ public class HomeActivity extends BaseActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ThemeActivity.requestCode && resultCode == RESULT_OK){
+            // 切换主题
+            printLog("切换主题");
+            recreate();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
+        if (savedInstanceState != null) {
+            printLog("savedInstanceState:" + savedInstanceState.getInt("position", 0));
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            if ((System.currentTimeMillis() - mExitTime) > 1500) {
+                Toast.makeText(this, "再按一次退出Plus客户端(｡･ω･｡)~~", Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+        try{
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            transaction = fragmentManager.beginTransaction();
+            transaction.remove(homeFragment);
+            transaction.remove(hotNewsFragment);
+            transaction.remove(msgFragment);
+            transaction.remove(mineFragment);
+            transaction.commit();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

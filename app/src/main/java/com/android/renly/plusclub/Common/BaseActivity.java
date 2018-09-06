@@ -6,19 +6,27 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.R;
+import com.android.renly.plusclub.Utils.DimmenUtils;
 
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public abstract class BaseActivity extends FragmentActivity {
     /***是否显示标题栏*/
@@ -27,6 +35,7 @@ public abstract class BaseActivity extends FragmentActivity {
     private  boolean isshowstate = false;
     /***封装toast对象**/
     private static Toast toast;
+    private Unbinder unbinder;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +50,7 @@ public abstract class BaseActivity extends FragmentActivity {
                     WindowManager.LayoutParams. FLAG_FULLSCREEN);
         }
         setContentView(getLayoutID());
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         //设置数据
         initData();
         //初始化控件
@@ -114,8 +123,58 @@ public abstract class BaseActivity extends FragmentActivity {
      * 打开targetActivity
      * @param targetActivity
      */
-    public void gotoActivity(Class targetActivity){
+    public void gotoActivity(Class<?> targetActivity){
         startActivity(new Intent(this,targetActivity));
+    }
+
+    /**
+     * 初始化标题栏
+     * @param isshowBack
+     * @param text
+     */
+    protected void initToolBar(boolean isshowBack, String text) {
+        View toolbar = findViewById(R.id.myToolBar);
+        if (toolbar != null) {
+            ((TextView) toolbar.findViewById(R.id.tv_toolbar_title)).setText(text);
+            if (isshowBack) {
+                findViewById(R.id.iv_toolbar_back).setOnClickListener(view -> finish());
+            } else {
+                findViewById(R.id.iv_toolbar_back).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    /**
+     * 添加标题栏组件
+     * @param resid
+     * @return
+     */
+    protected ImageView addToolbarMenu(int resid) {
+        View toolbar = findViewById(R.id.myToolBar);
+        if (toolbar != null) {
+            ImageView i = toolbar.findViewById(R.id.iv_toolbar_menu);
+            i.setImageResource(resid);
+            i.setVisibility(View.VISIBLE);
+            return i;
+        }
+        return null;
+    }
+
+    /**
+     * 添加标题栏组件
+     * @param v
+     */
+    protected void addToolbarView(View v) {
+        FrameLayout toolbar = findViewById(R.id.myToolBar);
+        if (toolbar != null) {
+            FrameLayout.LayoutParams pls = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            v.setLayoutParams(pls);
+            int padding = DimmenUtils.dip2px(this, 12);
+            v.setPadding(padding, padding, padding, padding);
+            pls.setMarginEnd(padding);
+            pls.gravity = Gravity.END;
+            toolbar.addView(v);
+        }
     }
 
     /**
@@ -128,20 +187,22 @@ public abstract class BaseActivity extends FragmentActivity {
         int to = cur;
         boolean autoChnage = false;
 
-        //夜间主题
         if (theme == ThemeActivity.THEME_NIGHT) {
+            //夜间主题
             to = AppCompatDelegate.MODE_NIGHT_YES;
-        } else {//白天主题
+        } else {
+            //白天主题
             if (App.isAutoDarkMode(this)) {
                 autoChnage = true;
                 int[] time = App.getDarkModeTime(this);
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                if ((hour >= time[0] || hour < time[1])) {
+//                if ((hour >= time[0] || hour < time[1])) {
                     //自动切换
-                    to = AppCompatDelegate.MODE_NIGHT_YES;
-                } else {
+//                    to = AppCompatDelegate.MODE_NIGHT_YES;
+//                    printLog("toNight");
+//                } else {
                     to = AppCompatDelegate.MODE_NIGHT_NO;
-                }
+//                }
             } else {
                 to = AppCompatDelegate.MODE_NIGHT_NO;
             }
@@ -162,5 +223,11 @@ public abstract class BaseActivity extends FragmentActivity {
 //            }
             AppCompatDelegate.setDefaultNightMode(to);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 }

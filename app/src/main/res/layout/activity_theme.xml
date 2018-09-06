@@ -16,7 +16,7 @@
         android:textSize="16sp" />
 
     <GridView
-        android:id="@+id/commons_colors"
+        android:id="@+id/gv_theme_commons_colors"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:numColumns="6"
@@ -24,7 +24,7 @@
         android:verticalSpacing="12dp" />
 
     <LinearLayout
-        android:id="@+id/night_views"
+        android:id="@+id/ll_theme_night_views"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -48,7 +48,7 @@
                 android:text="自动切换夜间模式" />
 
             <CheckBox
-                android:id="@+id/auto_dark_mode"
+                android:id="@+id/cb_theme_auto_dark_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true" />
@@ -60,7 +60,7 @@
             android:background="@color/colorDivider" />
 
         <LinearLayout
-            android:id="@+id/start_time"
+            android:id="@+id/ll_theme_start_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
@@ -75,7 +75,7 @@
                 android:text="开始时间" />
 
             <TextView
-                android:id="@+id/start_time_text"
+                android:id="@+id/tv_theme_start_time_text"
                 style="@style/text_14_sec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
             android:background="@color/colorDivider" />
 
         <LinearLayout
-            android:id="@+id/end_time"
+            android:id="@+id/ll_theme_end_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
@@ -103,7 +103,7 @@
                 android:text="结束时间" />
 
             <TextView
-                android:id="@+id/end_time_text"
+                android:id="@+id/tv_theme_end_time_text"
                 style="@style/text_14_sec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

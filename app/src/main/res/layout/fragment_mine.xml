@@ -55,6 +55,7 @@
         android:layout_height="wrap_content"
         android:background="@color/bg_primary"
         android:baselineAligned="false"
+        android:visibility="gone"
         android:elevation="1dp"
         android:orientation="horizontal">
 

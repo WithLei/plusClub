@@ -1,25 +1,35 @@
 package com.android.renly.plusclub.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
+import com.android.renly.plusclub.Utils.IntentUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class MineFragment extends BaseFragment {
+public class MineFragment extends BaseFragment implements AdapterView.OnItemClickListener{
     @BindView(R.id.ci_mine_user_img)
     CircleImageView ciMineUserImg;
     @BindView(R.id.rl_mine_header)
@@ -38,27 +48,27 @@ public class MineFragment extends BaseFragment {
     LinearLayout llMineWindow;
     Unbinder unbinder;
     private String username, uid;
-    private CircleImageView userImg;
-    private TextView userName, userGrade;
     //记录上次创建时候是否登录
     private boolean isLoginLast = false;
 
     private final int[] icons = new int[]{
-            R.drawable.ic_autorenew_black_24dp,
+//            R.drawable.ic_autorenew_black_24dp,
             R.drawable.ic_palette_black_24dp,
             R.drawable.ic_settings_24dp,
             R.drawable.ic_info_24dp,
             R.drawable.ic_menu_share_24dp,
             R.drawable.ic_favorite_white_12dp,
+            R.drawable.ic_lab_24dp,
     };
 
     private final String[] titles = new String[]{
-            "签到中心",
+//            "签到中心",
             "主题设置",
             "设置",
             "关于本程序",
-            "分享手机睿思",
+            "分享Plus客户端",
             "到商店评分",
+            "实验室功能",
     };
 
     @Override
@@ -68,7 +78,15 @@ public class MineFragment extends BaseFragment {
 
     @Override
     protected void initData(Context content) {
-
+        List<Map<String,Object>>list = new ArrayList<>();
+        for(int i = 0;i < icons.length;i++){
+            Map<String,Object>ob = new HashMap<>();
+            ob.put("icon",icons[i]);
+            ob.put("title",titles[i]);
+            list.add(ob);
+        }
+        lvMineFunctionList.setAdapter(new SimpleAdapter(getActivity(),list,R.layout.item_function,new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
+        lvMineFunctionList.setOnItemClickListener(this);
     }
 
     @Override
@@ -96,6 +114,29 @@ public class MineFragment extends BaseFragment {
             case R.id.ll_mine_friend:
                 break;
             case R.id.ll_mine_post:
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+        switch (position){
+            case 0:
+                Intent intent = new Intent(getActivity(), ThemeActivity.class);
+                getActivity().startActivityForResult(intent,ThemeActivity.requestCode);
+                break;
+            case 1:
+
+                break;
+            case 2:
+                break;
+            case 3:
+                String data = "这个手机Plus客户端非常不错，分享给你们。";
+                IntentUtils.shareApp(getActivity(), data);
+                break;
+            case 4:
+                break;
+            case 5:
                 break;
         }
     }

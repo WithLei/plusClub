@@ -30,11 +30,11 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     private int[] icons_unselect = {
             R.drawable.ic_home_24dp,
             R.drawable.ic_whatshot_white_24dp,
-            R.drawable.ic_notifications_white_24dp,
+            R.drawable.ic_board_24dp,
             R.drawable.ic_person_white_24dp
     };
 
-    private String[] tab_names = {"板块", "看贴", "消息", "个人"};
+    private String[] tab_names = {"板块", "看贴", "课程表", "个人"};
     private OnTabChangeListener listener;
     private boolean ishaveMessage = false;
 

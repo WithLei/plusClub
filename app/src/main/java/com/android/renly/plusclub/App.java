@@ -87,9 +87,8 @@ public class App extends Application {
     }
 
     public static int getCustomTheme(Context context) {
-//        SharedPreferences shp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-//        return shp.getInt(THEME_KEY, 0);
-        return ThemeActivity.THEME_NIGHT;
+        SharedPreferences shp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return shp.getInt(THEME_KEY, 0);
     }
 
     public static void setCustomTheme(Context context, int theme) {

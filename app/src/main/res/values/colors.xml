@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#16a8c2</color>
-    <color name="colorPrimaryDark">#2b86e3</color>
-    <color name="colorAccent">#16a8c2</color>
+    <color name="colorPrimary">#7bb736</color>
+    <color name="colorPrimaryDark">#16c24b</color>
+    <color name="colorAccent">#7bb736</color>
     <color name="colorDivider">#fff5f5f5</color>
     <color name="colorDisableHintIcon">#86000000</color>
     <color name="text_color_pri">#ff050505</color>
@@ -22,7 +22,7 @@
     <!--自定义主题-->
     <color name="main_color_2">#f44836</color>
     <color name="main_color_3">#f2821e</color>
-    <color name="main_color_4">#7bb736</color>
+    <color name="main_color_4">#d12121</color>
     <color name="main_color_5">#16c24b</color>
     <color name="main_color_6">#16a8c2</color>
     <color name="main_color_7">#2b86e3</color>

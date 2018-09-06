@@ -13,6 +13,6 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initData(Context content) {
-
+        printLog("onCreate HomeFragment");
     }
 }
