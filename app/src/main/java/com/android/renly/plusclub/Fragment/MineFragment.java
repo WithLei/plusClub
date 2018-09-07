@@ -13,7 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Activity.ThemeActivity;
+import com.android.renly.plusclub.Activity.UserDetailActivity;
+import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
@@ -29,7 +32,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class MineFragment extends BaseFragment implements AdapterView.OnItemClickListener{
+import static android.app.Activity.RESULT_OK;
+
+public class MineFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     @BindView(R.id.ci_mine_user_img)
     CircleImageView ciMineUserImg;
     @BindView(R.id.rl_mine_header)
@@ -47,6 +52,10 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     @BindView(R.id.ll_mine_window)
     LinearLayout llMineWindow;
     Unbinder unbinder;
+    @BindView(R.id.tv_mine_user_name)
+    TextView tvMineUserName;
+    @BindView(R.id.tv_mine_user_grade)
+    TextView tvMineUserGrade;
     private String username, uid;
     //记录上次创建时候是否登录
     private boolean isLoginLast = false;
@@ -78,15 +87,29 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
     @Override
     protected void initData(Context content) {
-        List<Map<String,Object>>list = new ArrayList<>();
-        for(int i = 0;i < icons.length;i++){
-            Map<String,Object>ob = new HashMap<>();
-            ob.put("icon",icons[i]);
-            ob.put("title",titles[i]);
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (int i = 0; i < icons.length; i++) {
+            Map<String, Object> ob = new HashMap<>();
+            ob.put("icon", icons[i]);
+            ob.put("title", titles[i]);
             list.add(ob);
         }
-        lvMineFunctionList.setAdapter(new SimpleAdapter(getActivity(),list,R.layout.item_function,new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
+        lvMineFunctionList.setAdapter(new SimpleAdapter(getActivity(), list, R.layout.item_function, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
         lvMineFunctionList.setOnItemClickListener(this);
+        initView();
+    }
+
+    private void initView() {
+        if (App.ISLOGIN(getActivity())){
+            ciMineUserImg.setImageDrawable(getResources().getDrawable(R.mipmap.pluslogo_round));
+            tvMineUserName.setText(App.getUid(getActivity()));
+            tvMineUserGrade.setVisibility(View.VISIBLE);
+            tvMineUserGrade.setText("大二");
+        }else {
+            ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
+            tvMineUserName.setText(App.getUid(getActivity()));
+            tvMineUserGrade.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -94,6 +117,11 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
         return rootView;
+    }
+
+    @Override
+    public void ScrollToTop() {
+
     }
 
     @Override
@@ -106,6 +134,12 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ci_mine_user_img:
+                if (!App.ISLOGIN(getActivity())) {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    getActivity().startActivityForResult(intent, LoginActivity.requestCode);
+                }else{
+                    gotoActivity(UserDetailActivity.class);
+                }
                 break;
             case R.id.ll_mine_history:
                 break;
@@ -120,10 +154,10 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        switch (position){
+        switch (position) {
             case 0:
                 Intent intent = new Intent(getActivity(), ThemeActivity.class);
-                getActivity().startActivityForResult(intent,ThemeActivity.requestCode);
+                getActivity().startActivityForResult(intent, ThemeActivity.requestCode);
                 break;
             case 1:
 
@@ -139,5 +173,15 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
             case 5:
                 break;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ThemeActivity.requestCode && resultCode == RESULT_OK) {
+            ciMineUserImg.setImageDrawable(getResources().getDrawable(R.mipmap.pluslogo_round));
+            printLog("onActivityResult");
+        }
+
     }
 }

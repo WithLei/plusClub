@@ -4,8 +4,6 @@ import android.app.TimePickerDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.View;
@@ -37,7 +35,7 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
     View nightViews;
 
     private Unbinder unbinder;
-    public static final int requestCode = 10;
+    public static final int requestCode = 32;
     public static final int THEME_DEFAULT = R.style.AppTheme;
     public static final int THEME_NIGHT = 1;
 

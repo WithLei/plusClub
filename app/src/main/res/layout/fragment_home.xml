@@ -12,7 +12,7 @@
         android:elevation="4dp">
 
         <com.android.renly.plusclub.UI.CircleImageView
-            android:id="@+id/img"
+            android:id="@+id/ci_home_img"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:scaleType="centerCrop"
@@ -23,7 +23,7 @@
             app:civ_border_width="1dp" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/tv_home_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -35,7 +35,7 @@
             android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/search"
+            android:id="@+id/iv_home_search"
             android:layout_width="@dimen/toolbarHeight"
             android:layout_height="@dimen/toolbarHeight"
             android:layout_gravity="end"
@@ -46,7 +46,7 @@
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/recycler_home_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg_primary" />

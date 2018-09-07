@@ -11,7 +11,7 @@
         android:id="@+id/toast_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/confirm"
+        android:background="@drawable/ic_check_circle_black_24dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp" />
 

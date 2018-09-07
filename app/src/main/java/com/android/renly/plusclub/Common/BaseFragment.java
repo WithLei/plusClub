@@ -59,6 +59,7 @@ public abstract class BaseFragment extends Fragment {
         Log.e("print",str);
     }
 
+    public abstract void ScrollToTop();
 
     @Override
     public void onDestroyView() {

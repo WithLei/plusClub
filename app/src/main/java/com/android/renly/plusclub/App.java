@@ -87,32 +87,32 @@ public class App extends Application {
     }
 
     public static int getCustomTheme(Context context) {
-        SharedPreferences shp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        return shp.getInt(THEME_KEY, 0);
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getInt(THEME_KEY, 0);
     }
 
     public static void setCustomTheme(Context context, int theme) {
-        SharedPreferences shp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = shp.edit();
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
         editor.putInt(THEME_KEY, theme);
         editor.apply();
     }
 
     public static boolean isAutoDarkMode(Context context) {
-        SharedPreferences shp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        return shp.getBoolean(AUTO_DARK_MODE_KEY, true);
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getBoolean(AUTO_DARK_MODE_KEY, true);
     }
 
     public static void setAutoDarkMode(Context context, boolean value) {
-        SharedPreferences shp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = shp.edit();
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(AUTO_DARK_MODE_KEY, value);
         editor.apply();
     }
 
     public static void setDarkModeTime(Context context, boolean isStart, int value) {
-        SharedPreferences shp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = shp.edit();
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
         if (isStart) {
             editor.putInt(START_DARK_TIME_KEY, value);
         } else {
@@ -122,11 +122,23 @@ public class App extends Application {
     }
 
     public static int[] getDarkModeTime(Context context) {
-        SharedPreferences shp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         int[] ret = new int[2];
-        ret[0] = shp.getInt(START_DARK_TIME_KEY, 21);
-        ret[1] = shp.getInt(END_DARK_TIME_KEY, 6);
+        ret[0] = sp.getInt(START_DARK_TIME_KEY, 21);
+        ret[1] = sp.getInt(END_DARK_TIME_KEY, 6);
         return ret;
+    }
+
+    public static boolean isRemeberPwdUser(Context context){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getBoolean(IS_REMEBER_PWD_USER,true);
+    }
+
+    public static void setRemeberPwdUser(Context context,boolean isRemeber){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(IS_REMEBER_PWD_USER,isRemeber);
+        editor.apply();
     }
 
     public static final String MY_SP_NAME = "PlusClub";
@@ -138,4 +150,5 @@ public class App extends Application {
     public static final String AUTO_DARK_MODE_KEY = "auto_dark_mode";
     public static final String START_DARK_TIME_KEY = "start_dart_time";
     public static final String END_DARK_TIME_KEY = "end_dark_time";
+    public static final String IS_REMEBER_PWD_USER = "is_remember_pwd_user";
 }

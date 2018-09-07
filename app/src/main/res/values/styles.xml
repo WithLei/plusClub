@@ -89,6 +89,14 @@
         <item name="android:statusBarColor">@color/main_color_11</item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="text_toolbar">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="text_18_pri">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/text_color_pri</item>

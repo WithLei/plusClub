@@ -111,9 +111,9 @@ public class MyToast extends Toast {
             toast_img.setVisibility(View.GONE);
         } else {
             if (imgType == TYPE_TRUE) {
-                toast_img.setBackgroundResource(R.drawable.confirm);
+                toast_img.setBackgroundResource(R.drawable.ic_check_circle_black_24dp);
             } else {
-                toast_img.setBackgroundResource(R.drawable.cancel);
+                toast_img.setBackgroundResource(R.drawable.ic_cancel_black_128dp);
             }
             toast_img.setVisibility(View.VISIBLE);
 

@@ -15,4 +15,9 @@ public class HotNewsFragment extends BaseFragment {
     protected void initData(Context content) {
 
     }
+
+    @Override
+    public void ScrollToTop() {
+
+    }
 }

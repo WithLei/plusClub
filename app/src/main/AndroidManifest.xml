@@ -17,9 +17,9 @@
         android:roundIcon="@mipmap/pluslogo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.EduActivity">
-        </activity>
-        <activity android:name=".Activity.LoginActivity">
+        <activity android:name=".Activity.EduActivity" />
+        <activity android:name=".Activity.EduLoginActivity">
+
         </activity>
         <activity
             android:name=".Activity.HomeActivity"
@@ -32,7 +32,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.ThemeActivity" />
+        <activity
+            android:name=".Activity.ThemeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".Activity.LoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".Activity.UserDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

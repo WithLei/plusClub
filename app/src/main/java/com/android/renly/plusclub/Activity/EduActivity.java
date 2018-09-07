@@ -6,8 +6,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -70,11 +73,10 @@ public class EduActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        sp = getSharedPreferences("userInfo", MODE_PRIVATE);
-        Cookie = sp.getString("Cookie", "");
-        id = sp.getString("id", "");
-        stuName = sp.getString("stuName","");
-        printLog("stuName++ " + stuName);
+        sp = getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
+        Cookie = sp.getString(App.COOKIE, "");
+        id = sp.getString(App.USER_UID_KEY, "");
+        stuName = sp.getString(App.USER_NAME_KEY,"");
     }
 
 
@@ -158,8 +160,9 @@ public class EduActivity extends BaseActivity {
         editor.clear();
         editor.putString("Cookie", Cookie);
         editor.apply();
-        printLog("退出登陆成功");
-        gotoActivity(LoginActivity.class);
+        printLog("退出登录成功");
+        MyToast.showText(this,"退出登录成功", Toast.LENGTH_SHORT,true);
+        gotoActivity(EduLoginActivity.class);
         finish();
     }
 
