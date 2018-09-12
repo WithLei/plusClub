@@ -182,6 +182,6 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.mipmap.pluslogo_round));
             printLog("onActivityResult");
         }
-
+        hideKeyBoard();
     }
 }
