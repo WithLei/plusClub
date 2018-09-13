@@ -35,12 +35,30 @@ public class App extends Application {
     public static boolean IS_SCHOOL_NET = false;
 
     public static boolean ISLOGIN(Context context) {
-        return !TextUtils.isEmpty(App.getUid(context));
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        if (sp.getBoolean(IS_LOGIN, false) && !TextUtils.isEmpty(sp.getString(USER_UID_KEY, "")))
+            return true;
+        else
+            return false;
+    }
+
+    public static void setIsLogin(Context context){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(IS_LOGIN, true);
+        editor.apply();
+    }
+
+    public static void setIsLogout(Context context){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(IS_LOGIN, false);
+        editor.apply();
     }
 
     public static String getUid(Context context) {
-        SharedPreferences shp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        return shp.getString(USER_UID_KEY, "");
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getString(USER_UID_KEY, "");
     }
 
     public static void setUid(Context context, String uid) {
@@ -151,4 +169,5 @@ public class App extends Application {
     public static final String START_DARK_TIME_KEY = "start_dart_time";
     public static final String END_DARK_TIME_KEY = "end_dark_time";
     public static final String IS_REMEBER_PWD_USER = "is_remember_pwd_user";
+    public static final String IS_LOGIN ="is_login";
 }

@@ -107,7 +107,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
             tvMineUserGrade.setText("大二");
         }else {
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
-            tvMineUserName.setText(App.getUid(getActivity()));
+            tvMineUserName.setText("点击头像登陆");
             tvMineUserGrade.setVisibility(View.GONE);
         }
     }
@@ -138,7 +138,8 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     getActivity().startActivityForResult(intent, LoginActivity.requestCode);
                 }else{
-                    gotoActivity(UserDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), UserDetailActivity.class);
+                    getActivity().startActivityForResult(intent, UserDetailActivity.requestCode);
                 }
                 break;
             case R.id.ll_mine_history:
@@ -178,10 +179,18 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ThemeActivity.requestCode && resultCode == RESULT_OK) {
-            ciMineUserImg.setImageDrawable(getResources().getDrawable(R.mipmap.pluslogo_round));
-            printLog("onActivityResult");
-        }
+        printLog("onActivityResult");
+        if (resultCode == RESULT_OK)
+            switch (requestCode){
+                case ThemeActivity.requestCode:
+                    ciMineUserImg.setImageDrawable(getResources().getDrawable(R.mipmap.pluslogo_round));
+                    printLog("onActivityResult ThemeActivity");
+                    break;
+                case UserDetailActivity.requestCode:
+                    getActivity().recreate();
+                    printLog("onActivityResult UserDetailActivity");
+                    break;
+            }
         hideKeyBoard();
     }
 }

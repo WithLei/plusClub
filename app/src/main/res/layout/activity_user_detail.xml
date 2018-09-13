@@ -87,6 +87,16 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:background="?android:attr/colorPrimary"
+        android:textColor="@color/white"
+        android:text="退出登录"
+        android:layout_gravity="center"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

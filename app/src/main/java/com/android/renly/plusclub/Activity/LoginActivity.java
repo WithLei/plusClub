@@ -5,6 +5,7 @@ import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
@@ -44,11 +45,14 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        if (App.isRemeberPwdUser(this)){
+        if (App.isRemeberPwdUser(this)) {
             etLoginName.setText(App.getUid(this));
             etLoginPas.setText(App.getPwd(this));
-        }else
+            cbRemUser.setChecked(true);
+        } else{
             etLoginName.setText(App.getUid(this));
+            cbRemUser.setChecked(false);
+        }
 
         etLoginName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -101,20 +105,28 @@ public class LoginActivity extends BaseActivity {
         unbinder = ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.btn_login)
-    public void onViewClicked() {
-        String Uid = etLoginName.getText().toString().trim();
-        String pwd = etLoginPas.getText().toString().trim();
-        printLog("Uid" + Uid + " pwd" + pwd);
-        if (!TextUtils.isEmpty(Uid) && !TextUtils.isEmpty(pwd))
-            doLogin(Uid, pwd);
+    @OnClick({R.id.iv_toolbar_back, R.id.btn_login})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.iv_toolbar_back:
+                finish();
+                break;
+            case R.id.btn_login:
+                String Uid = etLoginName.getText().toString().trim();
+                String pwd = etLoginPas.getText().toString().trim();
+                printLog("Uid" + Uid + " pwd" + pwd);
+                if (!TextUtils.isEmpty(Uid) && !TextUtils.isEmpty(pwd))
+                    doLogin(Uid, pwd);
+                break;
+        }
     }
 
     private void doLogin(String uid, String pwd) {
-        App.setUid(this,uid);
-        App.setPwd(this,pwd);
+        App.setUid(this, uid);
+        App.setPwd(this, pwd);
         if (cbRemUser.isChecked())
-            App.setRemeberPwdUser(this,true);
+            App.setRemeberPwdUser(this, true);
+        App.setIsLogin(this);
         printLog("登录成功");
         finish();
     }

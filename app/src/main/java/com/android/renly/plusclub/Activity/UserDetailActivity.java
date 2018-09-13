@@ -7,8 +7,10 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
@@ -16,6 +18,7 @@ import com.android.renly.plusclub.UI.GradeProgressView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class UserDetailActivity extends BaseActivity {
@@ -37,6 +40,10 @@ public class UserDetailActivity extends BaseActivity {
     FloatingActionButton fab;
     @BindView(R.id.main_window)
     CoordinatorLayout mainWindow;
+    @BindView(R.id.btn_logout)
+    Button btnLogout;
+
+    public static final int requestCode = 128;
 
     private Unbinder unbinder;
     private String username = "";
@@ -68,5 +75,18 @@ public class UserDetailActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.btn_logout)
+    public void onViewClicked() {
+        onLogout();
+    }
+
+    /**
+     * 点击退出登录按钮后
+     */
+    private void onLogout() {
+        App.setIsLogout(this);
+        finish();
     }
 }
