@@ -54,6 +54,8 @@ public class LoginActivity extends BaseActivity {
             cbRemUser.setChecked(false);
         }
 
+        btnLoginSetEnabled();
+
         etLoginName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -67,12 +69,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (!TextUtils.isEmpty(etLoginName.getText().toString().trim())
-                        && !TextUtils.isEmpty(etLoginPas.getText().toString().trim()))
-                    btnLogin.setEnabled(true);
-                else
-                    btnLogin.setEnabled(false);
-
+                btnLoginSetEnabled();
             }
         });
 
@@ -89,14 +86,20 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (!TextUtils.isEmpty(etLoginName.getText().toString().trim())
-                        && !TextUtils.isEmpty(etLoginPas.getText().toString().trim()))
-                    btnLogin.setEnabled(true);
-                else
-                    btnLogin.setEnabled(false);
-
+                btnLoginSetEnabled();
             }
         });
+    }
+
+    /**
+     * 设置判断按钮是否可以点击
+     */
+    private void btnLoginSetEnabled() {
+        if (!TextUtils.isEmpty(etLoginName.getText().toString().trim())
+                && !TextUtils.isEmpty(etLoginPas.getText().toString().trim()))
+            btnLogin.setEnabled(true);
+        else
+            btnLogin.setEnabled(false);
     }
 
     @Override
@@ -128,6 +131,7 @@ public class LoginActivity extends BaseActivity {
             App.setRemeberPwdUser(this, true);
         App.setIsLogin(this);
         printLog("登录成功");
+        setResult(RESULT_OK);
         finish();
     }
 

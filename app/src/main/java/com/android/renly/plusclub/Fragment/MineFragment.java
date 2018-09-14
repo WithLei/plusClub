@@ -176,21 +176,4 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        printLog("onActivityResult");
-        if (resultCode == RESULT_OK)
-            switch (requestCode){
-                case ThemeActivity.requestCode:
-                    ciMineUserImg.setImageDrawable(getResources().getDrawable(R.mipmap.pluslogo_round));
-                    printLog("onActivityResult ThemeActivity");
-                    break;
-                case UserDetailActivity.requestCode:
-                    getActivity().recreate();
-                    printLog("onActivityResult UserDetailActivity");
-                    break;
-            }
-        hideKeyBoard();
-    }
 }

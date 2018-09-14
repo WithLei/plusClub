@@ -87,6 +87,7 @@ public class UserDetailActivity extends BaseActivity {
      */
     private void onLogout() {
         App.setIsLogout(this);
+        setResult(RESULT_OK);
         finish();
     }
 }

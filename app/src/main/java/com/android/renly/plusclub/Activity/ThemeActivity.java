@@ -91,6 +91,7 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         initToolBar(true, "主题设置");
         addToolbarMenu(R.drawable.ic_done_black_24dp).setOnClickListener(v -> {
             onChooseTheme();
+            setResult(RESULT_OK);
             finish();
         });
         adapter = new ColorAdapter();

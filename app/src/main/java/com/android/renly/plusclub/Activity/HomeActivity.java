@@ -57,18 +57,34 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ThemeActivity.requestCode && resultCode == RESULT_OK){
-            // 切换主题
-            printLog("切换主题");
-            recreate();
-        }
+        printLog("onActivityResult");
+        if (resultCode == RESULT_OK){
+            printLog("resultCode == RESULT_OK");
+            switch (requestCode){
+                case ThemeActivity.requestCode:
+                    recreate();
+                    printLog("onActivityResult ThemeActivity");
+                    break;
+                case UserDetailActivity.requestCode:
+                    recreate();
+                    printLog("onActivityResult UserDetailActivity");
+                    break;
+                case LoginActivity.requestCode:
+                    recreate();
+                    printLog("onActivityResult LoginActivity");
+                    break;
+            }
+        }else
+            printLog("resultCode != RESULT_OK");
+        hideKeyBoard();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideKeyBoard();
         unbinder = ButterKnife.bind(this);
     }
 
