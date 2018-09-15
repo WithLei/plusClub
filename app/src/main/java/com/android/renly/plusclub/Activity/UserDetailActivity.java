@@ -9,9 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.UI.GradeProgressView;
@@ -88,6 +90,7 @@ public class UserDetailActivity extends BaseActivity {
     private void onLogout() {
         App.setIsLogout(this);
         setResult(RESULT_OK);
+        MyToast.showText(this,"退出登录成功", Toast.LENGTH_SHORT,true);
         finish();
     }
 }

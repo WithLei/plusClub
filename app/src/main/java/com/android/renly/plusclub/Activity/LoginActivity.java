@@ -9,9 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.R;
 
 import butterknife.BindView;
@@ -130,6 +132,7 @@ public class LoginActivity extends BaseActivity {
         if (cbRemUser.isChecked())
             App.setRemeberPwdUser(this, true);
         App.setIsLogin(this);
+        MyToast.showText(this,"登录成功", Toast.LENGTH_SHORT,true);
         printLog("登录成功");
         setResult(RESULT_OK);
         finish();
