@@ -89,7 +89,7 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
     @Override
     protected void initView() {
         initToolBar(true, "主题设置");
-        addToolbarMenu(R.drawable.ic_done_black_24dp).setOnClickListener(v -> {
+        addToolbarMenu(R.drawable.ic_done_24dp).setOnClickListener(v -> {
             onChooseTheme();
             setResult(RESULT_OK);
             finish();

@@ -113,7 +113,7 @@ public class MyToast extends Toast {
             if (imgType == TYPE_TRUE) {
                 toast_img.setBackgroundResource(R.drawable.ic_check_circle_black_24dp);
             } else {
-                toast_img.setBackgroundResource(R.drawable.ic_cancel_black_128dp);
+                toast_img.setBackgroundResource(R.drawable.ic_cancel_128dp);
             }
             toast_img.setVisibility(View.VISIBLE);
 

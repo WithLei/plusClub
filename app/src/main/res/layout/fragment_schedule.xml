@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/myToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbarHeight"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/tv_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:maxEms="10"
+            android:text="课程表"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_toolbar_menu"
+            android:layout_width="@dimen/toolbarHeight"
+            android:layout_height="@dimen/toolbarHeight"
+            android:background="?android:attr/colorPrimary"
+            android:layout_gravity="end"
+            android:padding="13dp"
+            android:src="@drawable/ic_menu_24dp" />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="msgfragment" />
+
+</LinearLayout>

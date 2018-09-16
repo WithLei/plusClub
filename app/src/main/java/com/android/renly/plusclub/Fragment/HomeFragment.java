@@ -55,13 +55,6 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ThemeActivity.requestCode && resultCode == RESULT_OK)
-            ciHomeImg.setImageDrawable(getResources().getDrawable(R.mipmap.pluslogo_round));
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
@@ -82,7 +75,7 @@ public class HomeFragment extends BaseFragment {
                     Intent intent = new Intent(getActivity(), UserDetailActivity.class);
                     intent.putExtra("userName",App.getUid(getActivity()));
                     intent.putExtra("avatarUrl","");
-                    getActivity().startActivity(intent);
+                    getActivity().startActivityForResult(intent,UserDetailActivity.requestCode);
                 }else{
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     getActivity().startActivityForResult(intent,LoginActivity.requestCode);

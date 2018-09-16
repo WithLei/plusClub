@@ -2,10 +2,7 @@ package com.android.renly.plusclub.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.widget.Toast;
 
 import com.android.renly.plusclub.Adapter.MainPageAdapter;
@@ -14,7 +11,7 @@ import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.Fragment.HomeFragment;
 import com.android.renly.plusclub.Fragment.HotNewsFragment;
 import com.android.renly.plusclub.Fragment.MineFragment;
-import com.android.renly.plusclub.Fragment.MsgFragment;
+import com.android.renly.plusclub.Fragment.ScheduleFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.MyBottomTab;
 
@@ -94,7 +91,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         viewPager.addOnPageChangeListener(this);
         fragments.add(new HomeFragment());
         fragments.add(new HotNewsFragment());
-        fragments.add(new MsgFragment());
+        fragments.add(new ScheduleFragment());
         fragments.add(new MineFragment());
         MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(adapter);

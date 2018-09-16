@@ -1,11 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="hotnews"/>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbarHeight"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="4dp">
+
+        <RadioGroup
+            android:layout_width="140dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:checkedButton="@+id/btn_1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.android.renly.plusclub.UI.BatchRadioButton
+                android:id="@+id/btn_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/switch_left_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="新帖"
+                android:textColor="@color/text_primary_white"
+                android:textSize="13sp" />
+
+            <com.android.renly.plusclub.UI.BatchRadioButton
+                android:id="@+id/btn_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:background="@drawable/switch_center_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="消息"
+                android:textColor="@color/text_primary_white"
+                android:textSize="13sp" />
+
+            <com.android.renly.plusclub.UI.BatchRadioButton
+                android:id="@+id/btn_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/switch_right_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="热帖"
+                android:textColor="@color/text_primary_white"
+                android:textSize="13sp" />
+
+        </RadioGroup>
+
+    </FrameLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh_hotnews"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hotnews" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_hotnews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_primary" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </LinearLayout>

@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.Activity.AboutActivity;
+import com.android.renly.plusclub.Activity.LabActivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
@@ -157,21 +159,28 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         switch (position) {
             case 0:
+                // 主题设置
                 Intent intent = new Intent(getActivity(), ThemeActivity.class);
                 getActivity().startActivityForResult(intent, ThemeActivity.requestCode);
                 break;
             case 1:
-
+                // 设置
                 break;
             case 2:
+                // 关于本程序
+                gotoActivity(AboutActivity.class);
                 break;
             case 3:
+                // 分享Plus客户端
                 String data = "这个手机Plus客户端非常不错，分享给你们。";
                 IntentUtils.shareApp(getActivity(), data);
                 break;
             case 4:
+                // 到商店评分
                 break;
             case 5:
+                // 实验室功能
+                gotoActivity(LabActivity.class);
                 break;
         }
     }

@@ -131,6 +131,8 @@ public class LoginActivity extends BaseActivity {
         App.setPwd(this, pwd);
         if (cbRemUser.isChecked())
             App.setRemeberPwdUser(this, true);
+        else
+            App.setRemeberPwdUser(this, false);
         App.setIsLogin(this);
         MyToast.showText(this,"登录成功", Toast.LENGTH_SHORT,true);
         printLog("登录成功");

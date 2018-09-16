@@ -149,7 +149,7 @@ public class App extends Application {
 
     public static boolean isRemeberPwdUser(Context context){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        return sp.getBoolean(IS_REMEBER_PWD_USER,true);
+        return sp.getBoolean(IS_REMEBER_PWD_USER,false);
     }
 
     public static void setRemeberPwdUser(Context context,boolean isRemeber){
@@ -170,4 +170,6 @@ public class App extends Application {
     public static final String END_DARK_TIME_KEY = "end_dark_time";
     public static final String IS_REMEBER_PWD_USER = "is_remember_pwd_user";
     public static final String IS_LOGIN ="is_login";
+
+    public static final String GitHubURL = "https://github.com/WithLei/plusClub";
 }

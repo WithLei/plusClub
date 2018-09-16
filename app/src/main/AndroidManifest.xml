@@ -36,17 +36,27 @@
             android:name=".Activity.ThemeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".Activity.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".Activity.UserDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".Activity.AboutActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme" />
+
+        <activity android:name=".Activity.LabActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
