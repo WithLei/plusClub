@@ -57,6 +57,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme" />
+
+        <activity android:name=".Activity.ScheduleActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

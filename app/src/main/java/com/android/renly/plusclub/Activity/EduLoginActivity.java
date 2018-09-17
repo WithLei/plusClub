@@ -316,14 +316,18 @@ public class EduLoginActivity extends BaseActivity {
         Elements names = doc.select("#xhxm");
 
         for (Element link : success) {
-            //获取所要查询的URL,这里相应地址button的名字叫成绩查询
+            // 获取所要查询的URL,这里相应地址button的名字叫成绩查询
             if (link.text().equals("等级考试查询")) {
                 printLog("登陆成功");
 
-                //登陆成功后获取学生姓名，此处获取到的学生姓名为xx同学
+                // 登陆成功后获取学生姓名，此处获取到的学生姓名为xx同学
                 String stuName = "";
                 for(Element name : names)
                     stuName = name.text();
+                // 去掉尾缀
+                int index = stuName.lastIndexOf("同学");
+                if (index >= 0)
+                    stuName = stuName.substring(0,stuName.length()-2);
                 printLog("stuName " + stuName);
 
                 Message msg = new Message();
@@ -366,7 +370,7 @@ public class EduLoginActivity extends BaseActivity {
         SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(App.COOKIE,cookie);
-        editor.putString(App.USER_UID_KEY,"16103220237");
+        editor.putString(App.USER_EDUID_KEY,"16103220237");
         editor.putString(App.USER_PWD_KEY,"zl11471583210");
         editor.putString(App.USER_NAME_KEY,stuName);
         editor.apply();

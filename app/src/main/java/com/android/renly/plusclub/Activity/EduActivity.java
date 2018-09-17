@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,8 @@ public class EduActivity extends BaseActivity {
     Button btnMainExit;
     @BindView(R.id.tv_main_name)
     TextView tvMainName;
+    @BindView(R.id.btn_main_jump)
+    Button btnMainJump;
 
     private Unbinder unbinder;
 
@@ -68,7 +71,7 @@ public class EduActivity extends BaseActivity {
 
     @Override
     protected int getLayoutID() {
-        return R.layout.activity_main;
+        return R.layout.activity_edumain;
     }
 
     @Override
@@ -76,19 +79,14 @@ public class EduActivity extends BaseActivity {
         sp = getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
         Cookie = sp.getString(App.COOKIE, "");
         id = sp.getString(App.USER_UID_KEY, "");
-        stuName = sp.getString(App.USER_NAME_KEY,"");
+        stuName = sp.getString(App.USER_NAME_KEY, "");
     }
 
 
     @Override
     protected void initView() {
         if (!stuName.isEmpty() && stuName != null)
-            tvMainName.setText("你好，" + stuName );
-    }
-
-    @OnClick(R.id.btn_main_exit)
-    public void onViewClicked() {
-        doLogout();
+            tvMainName.setText("你好，" + stuName + "同学");
     }
 
     @Override
@@ -144,7 +142,7 @@ public class EduActivity extends BaseActivity {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        printLog(response);
+//                        printLog(response);
                         writeData("/sdcard/Test/LogoutGetHTML.txt", response);
                         checkLogoutSuccess(response);
                     }
@@ -161,8 +159,7 @@ public class EduActivity extends BaseActivity {
         editor.putString("Cookie", Cookie);
         editor.apply();
         printLog("退出登录成功");
-        MyToast.showText(this,"退出登录成功", Toast.LENGTH_SHORT,true);
-        gotoActivity(EduLoginActivity.class);
+        MyToast.showText(this, "退出登录成功", Toast.LENGTH_SHORT, true);
         finish();
     }
 
@@ -189,4 +186,15 @@ public class EduActivity extends BaseActivity {
         }
     }
 
+    @OnClick({R.id.btn_main_exit, R.id.btn_main_jump})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_main_exit:
+                doLogout();
+                break;
+            case R.id.btn_main_jump:
+                gotoActivity(ScheduleActivity.class);
+                break;
+        }
+    }
 }

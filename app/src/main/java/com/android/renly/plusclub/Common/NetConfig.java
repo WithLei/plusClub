@@ -8,7 +8,7 @@ public class NetConfig {
     public static final String BASE_EDU_RS = "https://jwgl.webvpn.lsu.edu.cn/default2.aspx";
 
     // 教务系统登陆基地址 - 内网登陆
-    public static final String BASE_EDU_IN = "https://jwgl.webvpn.lsu.edu.cn/default2.aspx";
+    public static final String BASE_EDU_IN = "http://jwgl.lsu.edu.cn/";
 
     // 教务系统主页基地址 - 外/内网都可登陆
     public static final String BASE_EDU_HOST_ME = "https://jwgl.webvpn.lsu.edu.cn/xs_main.aspx?xh=";
@@ -18,4 +18,7 @@ public class NetConfig {
 
     // 二次get请求登出 URL
     public static final String GET_LOGOUT_URL = "https://jwgl.webvpn.lsu.edu.cn/logout.aspx";
+
+    // 查询各种信息基地址
+    public static final String BASE_EDU_GETINFO = "https://jwgl.webvpn.lsu.edu.cn/xskbcx.aspx";
 }

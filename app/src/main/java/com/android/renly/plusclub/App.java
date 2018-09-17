@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Checknet.NetworkReceiver;
+import com.android.renly.plusclub.Common.MyToast;
 
 public class App extends Application {
 
@@ -65,6 +66,18 @@ public class App extends Application {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(USER_UID_KEY, uid);
+        editor.apply();
+    }
+
+    public static String getEduid(Context context){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getString(USER_EDUID_KEY,"");
+    }
+
+    public static void setEduid(Context context, String eduid){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(USER_EDUID_KEY, eduid);
         editor.apply();
     }
 
@@ -161,8 +174,9 @@ public class App extends Application {
 
     public static final String MY_SP_NAME = "PlusClub";
     public static final String USER_UID_KEY = "user_uid";
-    public static final String USER_NAME_KEY = "user_name";
     public static final String USER_PWD_KEY = "user_pwd";
+    public static final String USER_EDUID_KEY = "xh";
+    public static final String USER_NAME_KEY = "user_name";
     public static final String COOKIE = "cookie";
     public static final String THEME_KEY = "theme";
     public static final String AUTO_DARK_MODE_KEY = "auto_dark_mode";
@@ -172,4 +186,8 @@ public class App extends Application {
     public static final String IS_LOGIN ="is_login";
 
     public static final String GitHubURL = "https://github.com/WithLei/plusClub";
+
+    // 查询学生课程表信息参数及值
+    public static final String queryScheduleParam = "gnmkdm";
+    public static final String queryScheduleValue = "N121603";
 }
