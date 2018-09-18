@@ -131,7 +131,7 @@ public class EduActivity extends BaseActivity {
      */
     private void getLogout() {
         OkHttpUtils.get()
-                .url(NetConfig.GET_LOGOUT_URL)
+                .url(NetConfig.GET_LOGOUT_URL_RS)
                 .addHeader("Cookie", Cookie)
                 .build()
                 .execute(new StringCallback() {

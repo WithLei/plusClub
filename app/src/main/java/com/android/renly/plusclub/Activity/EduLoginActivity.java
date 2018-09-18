@@ -242,7 +242,7 @@ public class EduLoginActivity extends BaseActivity {
      */
     private void GetVerifation() {
         OkHttpUtils.post()
-                .url(NetConfig.CHECKIMG_URL)
+                .url(NetConfig.CHECKIMG_URL_RS)
                 .addHeader("Cookie",cookie)
                 .build()
                 .execute(new BitmapCallback() {

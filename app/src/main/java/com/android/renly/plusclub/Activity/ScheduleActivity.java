@@ -64,7 +64,7 @@ public class ScheduleActivity extends BaseActivity {
     }
 
     private void getSchedule() {
-        printLog("Cookie " + cookie);
+        printLog("Cookie " + cookie + " xh " + eduid );
         String gbkName = null;
         try {
             gbkName = new String(userName.getBytes("GB2312"));
@@ -73,11 +73,13 @@ public class ScheduleActivity extends BaseActivity {
             e.printStackTrace();
         }
         OkHttpUtils.get()
-                .url(NetConfig.BASE_EDU_GETINFO)
+                .url(NetConfig.BASE_EDU_GETINFO_RS)
                 .addParams("xh",eduid)
-                .addParams("xm","%D6%A3%D1%F6%D1%AB")
+                .addParams("xm",gbkName)
                 .addParams(App.queryScheduleParam,App.queryScheduleValue)
                 .addHeader("Cookie",cookie)
+                .addHeader("Host","jwgl.webvpn.lsu.edu.cn")
+                .addHeader("Referer",NetConfig.BASE_EDU_HOST_ME + eduid)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -85,14 +87,14 @@ public class ScheduleActivity extends BaseActivity {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
                         writeData("/sdcard/Test/getScheduleHTML.txt", responseHTML);
                         printLog(responseHTML);
-
+                        String scheduleHtml = findScheduleHtml(responseHTML);
                         return null;
                     }
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         printLog("getSchedule onError");
-                        printLog(e.getMessage() + call.toString());
+                        printLog(e.getMessage());
                     }
 
                     @Override
@@ -100,6 +102,16 @@ public class ScheduleActivity extends BaseActivity {
                         printLog("getSchedule onResponse");
                     }
                 });
+    }
+
+    /**
+     * 将接收到的HTML代码查找出课程表相关的HTML代码后返回
+     * @param responseHTML
+     * @return
+     */
+    private String findScheduleHtml(String responseHTML) {
+        String scheduleHtml = "";
+        return scheduleHtml;
     }
 
     @Override
