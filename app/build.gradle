@@ -35,4 +35,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     implementation 'org.jsoup:jsoup:1.11.3'
 
+    implementation 'com.alibaba:fastjson:1.2.49'
 }

@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Course;
 import com.android.renly.plusclub.Common.BaseActivity;
@@ -34,14 +36,18 @@ public class ScheduleActivity extends BaseActivity {
     private String userName;
     private String cookie;
 
-    private static final int SHOW_HTML = 1;
+    private static final int SHOW_SCHEDULE = 1;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case SHOW_HTML:
-                    String HTML = msg.getData().getString("html");
-                    showHTML(HTML);
+                case SHOW_SCHEDULE:
+                    String JsonObjs = msg.getData().getString("JsonObjs");
+                    List<Course>list = JSON.parseArray(JsonObjs, Course.class);
+                    String html = "";
+                    for (int i = 0;i < list.size();i++)
+                        html += list.get(i).toString();
+                    showHTML(html);
                     break;
             }
         }
@@ -91,11 +97,14 @@ public class ScheduleActivity extends BaseActivity {
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
                         writeData("/sdcard/Test/getScheduleHTML.txt", responseHTML);
-                        List<Course>scheduleList = getScheduleList(responseHTML);
-                        for (int i = 0;i < scheduleList.size();i++){
-                            for (int t = 0;t < scheduleList.get(i).getCourseInfo().length;t++)
-                                printLog(t + " " + scheduleList.get(i).getCourseInfo()[t] + " " + scheduleList.get(i).getRows() + " " + scheduleList.get(i).getCols());
-                        }
+                        List<Course> scheduleList = getScheduleList(responseHTML);
+                        String JsonObjs = JSON.toJSONString(scheduleList);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("JsonObjs",JsonObjs);
+                        Message msg = new Message();
+                        msg.what = SHOW_SCHEDULE;
+                        msg.setData(bundle);
+                        handler.sendMessage(msg);
                         return null;
                     }
 

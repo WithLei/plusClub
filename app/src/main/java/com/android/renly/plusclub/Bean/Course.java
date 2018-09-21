@@ -1,5 +1,7 @@
 package com.android.renly.plusclub.Bean;
 
+import android.util.Log;
+
 public class Course {
     /**
      * 课程信息
@@ -12,7 +14,7 @@ public class Course {
     /**
      * 课程表中的列
      */
-    private int cols;
+    private int weekday;
     /**
      * 课程名
      */
@@ -42,10 +44,14 @@ public class Course {
      */
     private int endWeek;
 
-    public Course(String[] CourseInfo, int rows, int cols) {
+    public Course(){
+        super();
+    }
+
+    public Course(String[] CourseInfo, int rows, int weekday) {
         this.CourseInfo = CourseInfo;
         this.rows = rows;
-        this.cols = cols;
+        this.weekday = weekday;
         this.courseName = CourseInfo[0];
         this.courseTime = CourseInfo[1];
         this.teacher = CourseInfo[2];
@@ -55,6 +61,13 @@ public class Course {
         else
             classNum = 1;
         // 需要分词操作
+        if (courseTime.contains("{") && courseTime.contains("}")){
+            String week = courseTime.substring(courseTime.indexOf("{"),courseTime.indexOf("}")).substring(1);
+            String startWeek = week.split("-")[0];
+            this.startWeek = Integer.parseInt(startWeek.substring(1,startWeek.length()));
+            String endWeek = week.split("-")[1];
+            this.endWeek = Integer.parseInt(endWeek.substring(0,endWeek.length()-1));
+        }
     }
 
     public String[] getCourseInfo() {
@@ -73,12 +86,12 @@ public class Course {
         this.rows = rows;
     }
 
-    public int getCols() {
-        return cols;
+    public int getWeekday() {
+        return weekday;
     }
 
-    public void setCols(int cols) {
-        this.cols = cols;
+    public void setWeekday(int weekday) {
+        this.weekday = weekday;
     }
 
     public String getCourseName() {
@@ -113,8 +126,28 @@ public class Course {
         this.classRoom = classRoom;
     }
 
+    public int getStartWeek() {
+        return startWeek;
+    }
+
+    public void setStartWeek(int startWeek) {
+        this.startWeek = startWeek;
+    }
+
+    public int getEndWeek() {
+        return endWeek;
+    }
+
+    public void setEndWeek(int endWeek) {
+        this.endWeek = endWeek;
+    }
+
     @Override
     public String toString() {
-        return super.toString();
+        return "Course[name=" + courseName +
+                ",teacher=" + teacher +
+                ",startWeek=" + startWeek +
+                ",endWeek" + endWeek +
+                "]";
     }
 }
