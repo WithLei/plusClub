@@ -18,9 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.EduActivity" />
-        <activity android:name=".Activity.EduLoginActivity">
-
-        </activity>
+        <activity android:name=".Activity.EduLoginActivity"/>
         <activity
             android:name=".Activity.HomeActivity"
             android:screenOrientation="portrait"
