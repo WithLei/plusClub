@@ -33,10 +33,6 @@
             android:src="@drawable/ic_menu_24dp" />
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tv_schedule_html"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="msgfragment" />
+    <include layout="@layout/layout_schedule" />
 
 </LinearLayout>
