@@ -144,10 +144,10 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course[name=" + courseName +
-                ",teacher=" + teacher +
-                ",startWeek=" + startWeek +
-                ",endWeek" + endWeek +
-                "]";
+        return "Course[ name = " + courseName +
+                ",teacher = " + teacher +
+                ",startWeek = " + startWeek +
+                ",endWeek = " + endWeek +
+                " ]";
     }
 }

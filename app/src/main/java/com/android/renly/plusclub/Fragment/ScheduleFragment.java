@@ -20,8 +20,6 @@ public class ScheduleFragment extends BaseFragment {
     Unbinder unbinder;
     @BindView(R.id.iv_toolbar_menu)
     ImageView ivToolbarMenu;
-    @BindView(R.id.tv_toolbar_title)
-    TextView tvToolbarTitle;
 
     @Override
     public int getLayoutid() {

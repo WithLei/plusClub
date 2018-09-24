@@ -171,6 +171,5 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@color/bg_primary"
-        android:elevation="1dp"
-        android:paddingBottom="@dimen/bottombarHeight" />
+        android:elevation="1dp" />
 </LinearLayout>

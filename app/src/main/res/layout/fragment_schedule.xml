@@ -4,24 +4,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:id="@+id/myToolBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbarHeight"
         android:background="?android:attr/colorPrimary"
         android:elevation="4dp">
 
-        <TextView
-            android:id="@+id/tv_toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+
+        <!--下拉方式选周数-->
+        <Spinner
+            android:id="@+id/switchWeek"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:maxEms="10"
-            android:text="课程表"
-            android:textColor="@color/white"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:entries="@array/scheduleWeek"
+            android:textAlignment="center"
+            android:gravity="center" />
 
         <ImageView
             android:id="@+id/iv_toolbar_menu"

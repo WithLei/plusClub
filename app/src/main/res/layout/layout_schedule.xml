@@ -1,91 +1,107 @@
 <?xml version="1" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="#F9F9F9"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/weekNames"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:weightSum="7.8"/>
-
+    <!--分隔线-->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/divider"/>
+        android:background="@color/colorDivider" />
+    <!--显示星期-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center">
 
-        <ScrollView
+        <com.android.renly.plusclub.UI.WeekTitleView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="40dp"
+            android:background="@color/bg_secondary" />
+    </LinearLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <!--显示多少节课-->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:background="@color/bg_secondary"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/sections"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
-                    android:orientation="vertical"/>
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="1" />
 
-                <LinearLayout
-                    android:id="@+id/weekPanel_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"/>
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="2" />
 
-                <LinearLayout
-                    android:id="@+id/weekPanel_2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"/>
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="3" />
 
-                <LinearLayout
-                    android:id="@+id/weekPanel_3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"/>
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="4" />
 
-                <LinearLayout
-                    android:id="@+id/weekPanel_4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"/>
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="5" />
 
-                <LinearLayout
-                    android:id="@+id/weekPanel_5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"/>
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="6" />
 
-                <LinearLayout
-                    android:id="@+id/weekPanel_6"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"/>
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="7" />
 
-                <LinearLayout
-                    android:id="@+id/weekPanel_7"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"/>
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="8" />
+
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="9" />
+
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="10" />
+
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="11" />
+
+                <TextView
+                    style="@style/text_schedule_sectionNum"
+                    android:text="12" />
 
             </LinearLayout>
 
-        </ScrollView>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorDivider" />
 
+            <GridView
+                android:id="@+id/courceDetail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:horizontalSpacing="1dp"
+                android:numColumns="7"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="1dp"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
