@@ -8,7 +8,7 @@
     <dimen name="toolbarHeight">52dp</dimen>
     <dimen name="bottombarHeight">52dp</dimen>
     <dimen name="scheduleSectionHeight">56dp</dimen>
-    <dimen name="scheduleCourseHeight">80dp</dimen>
+    <dimen name="scheduleCourseHeight">106dp</dimen>
     <dimen name="scheduleCourseMargin">3dp</dimen>
     <dimen name="scheduleCoursePadding">3dp</dimen>
 </resources>

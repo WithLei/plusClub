@@ -67,6 +67,8 @@ public class EduLoginActivity extends BaseActivity {
 
     private Unbinder unbinder;
 
+    private String user_eduid = "";
+    private String user_edupwd = "";
     private String cookie = "";
     private Bitmap bm;
     private SharedPreferences sp;
@@ -263,11 +265,11 @@ public class EduLoginActivity extends BaseActivity {
     /**
      * 登录操作
      *
-     * @param id
+     * @param eduid
      * @param pwd
      * @param checkid
      */
-    private void doLogin(String id, String pwd, String checkid) {
+    private void doLogin(String eduid, String pwd, String checkid) {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_EDU_RS)
                 .addParams("__VIEWSTATE", "dDwtNTE2MjI4MTQ7Oz7pB/NTSIblf9AJanMrSjcqz4d8cA==")
@@ -278,7 +280,7 @@ public class EduLoginActivity extends BaseActivity {
                 .addParams("RadioButtonList1", "%D1%A7%C9%FA")
                 .addParams("TextBox2", pwd)
                 .addParams("txtSecretCode", checkid)
-                .addParams("txtUserName", id)
+                .addParams("txtUserName", eduid)
                 .addHeader("Cookie",cookie)
                 .build()
                 .execute(new Callback() {
@@ -286,6 +288,8 @@ public class EduLoginActivity extends BaseActivity {
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
 //                        printLog(responseHTML);
+                        user_eduid = eduid;
+                        user_edupwd = pwd;
                         checkLoginSuccess(responseHTML);
                         writeData("/sdcard/Test/doLoginHTML.txt", responseHTML);
 //                        openHostPage();
@@ -370,8 +374,8 @@ public class EduLoginActivity extends BaseActivity {
         SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(App.COOKIE,cookie);
-        editor.putString(App.USER_EDUID_KEY,"16103220237");
-        editor.putString(App.USER_PWD_KEY,"zl11471583210");
+        editor.putString(App.USER_EDUID_KEY,user_eduid);
+        editor.putString(App.USER_PWD_KEY,user_edupwd);
         editor.putString(App.USER_NAME_KEY,stuName);
         editor.apply();
         gotoActivity(EduActivity.class);

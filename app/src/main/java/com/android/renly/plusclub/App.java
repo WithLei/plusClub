@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Checknet.NetworkReceiver;
 import com.android.renly.plusclub.Common.MyToast;
+import com.android.renly.plusclub.DataBase.SQLiteHelper;
 
 public class App extends Application {
 
@@ -21,6 +22,25 @@ public class App extends Application {
         this.context = getApplicationContext();
 
         regReciever();
+    }
+
+    @Override
+    public void onTerminate() {
+        // 关闭数据库
+        new SQLiteHelper(context).close();
+        unRegRecieve();
+
+        context = null;
+        super.onTerminate();
+    }
+
+    private void unRegRecieve() {
+        if (receiver != null)
+            return ;
+        receiver = new NetworkReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(receiver, intentFilter);
     }
 
     public void regReciever() {

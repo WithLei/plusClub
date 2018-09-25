@@ -5,11 +5,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
+import com.android.renly.plusclub.App;
+import com.android.renly.plusclub.Bean.Course;
 import com.android.renly.plusclub.Common.BaseFragment;
+import com.android.renly.plusclub.DataBase.MyDB;
 import com.android.renly.plusclub.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,6 +29,14 @@ public class ScheduleFragment extends BaseFragment {
     Unbinder unbinder;
     @BindView(R.id.iv_toolbar_menu)
     ImageView ivToolbarMenu;
+    @BindView(R.id.switchWeek)
+    Spinner switchWeek;
+    @BindView(R.id.courceDetail)
+    GridView courceDetail;
+
+    private String[][] contents;
+    private ScheduleGridAdapter adapter;
+    List<Course> scheduleList = new ArrayList<>();
 
     @Override
     public int getLayoutid() {
@@ -28,6 +45,31 @@ public class ScheduleFragment extends BaseFragment {
 
     @Override
     protected void initData(Context content) {
+        contents = new String[6][7];
+        initView();
+    }
+
+    private void initView() {
+        MyDB db = new MyDB(getActivity());
+        if (db.isScheduleExist())
+            initScheduleDataFromDB();
+    }
+
+    private void initScheduleDataFromDB() {
+        MyDB db = new MyDB(getActivity());
+        scheduleList = db.getSchedule();
+        contents = new String[6][7];
+        for (int x = 0; x < 6; x++)
+            for (int y = 0; y < 7; y++)
+                contents[x][y] = "";
+        for (int i = 0; i < scheduleList.size(); i++) {
+            Course course = scheduleList.get(i);
+            printLog(course.toString());
+            contents[(course.getRows() - 1) / 2][course.getWeekday() - 1] = course.getCourseName() + "\n\n" + course.getClassRoom();
+        }
+        adapter = new ScheduleGridAdapter(getActivity());
+        adapter.setContent(contents, 6, 7);
+        courceDetail.setAdapter(adapter);
     }
 
     @Override
