@@ -212,6 +212,24 @@ public class Course {
                 ",teacher = " + teacher +
                 ",startWeek = " + startWeek +
                 ",endWeek = " + endWeek +
+                ", " + printSD_week(sd_week) +
                 " ]";
+    }
+    /**
+     * 单双周
+     * 单:1
+     * 双:2
+     * both:0
+     */
+    private String printSD_week(int sd_week) {
+        switch (sd_week){
+            case 0:
+                return "单双周";
+            case 1:
+                return "单周";
+            case 2:
+                return "双周";
+        }
+        return "";
     }
 }

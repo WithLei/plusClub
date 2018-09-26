@@ -199,7 +199,7 @@ public class App extends Application {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         long nowTime = System.currentTimeMillis();
-        long startWeekTime = nowTime - DateUtils.weekToMiles(nowWeek);
+        long startWeekTime = nowTime - DateUtils.weekToMiles(nowWeek - 1);
         editor.putLong(SCHEDULE_START_WEEK,startWeekTime);
         editor.apply();
     }

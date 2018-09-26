@@ -52,7 +52,16 @@ public class ScheduleFragment extends BaseFragment {
     protected void initData(Context content) {
         contents = new String[6][7];
         nowWeek = App.getScheduleNowWeek(getActivity());
+        if (nowWeek <= 0)
+            App.setScheduleStartWeek(getActivity(),1);
+        nowWeek = App.getScheduleNowWeek(getActivity());
+        printLog("nowWeek:" + nowWeek);
+    }
+
+    @Override
+    public void onResume() {
         initView();
+        super.onResume();
     }
 
     private void initView() {
@@ -81,6 +90,7 @@ public class ScheduleFragment extends BaseFragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 nowWeek = pos+1;
                 App.setScheduleStartWeek(getActivity(),nowWeek);
+                initScheduleDataFromDB();
             }
 
             @Override
@@ -99,10 +109,15 @@ public class ScheduleFragment extends BaseFragment {
                 contents[x][y] = "";
         for (int i = 0; i < scheduleList.size(); i++) {
             Course course = scheduleList.get(i);
-            if (course.getSd_week() == 1 && nowWeek%2 == 1)
+            printLog(course.toString());
+            if (course.getSd_week() == 1 && nowWeek%2 == 0){
+                printLog("nowWeek=" + nowWeek);
                 continue;
-            else if (course.getSd_week() == 2 && nowWeek%2 == 0)
+            }
+            else if (course.getSd_week() == 2 && nowWeek%2 == 1){
+                printLog("nowWeek=" + nowWeek);
                 continue;
+            }
             else
                 contents[(course.getRows() - 1) / 2][course.getWeekday() - 1] = course.getCourseName() + "\n\n" + course.getClassRoom();
         }
@@ -134,10 +149,11 @@ public class ScheduleFragment extends BaseFragment {
     @OnClick(R.id.iv_toolbar_menu)
     public void onViewClicked() {
         if (isChecked) {
-            ivToolbarMenu.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_24dp));
+            // 下拉状态
+            ivToolbarMenu.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_24dp));
             isChecked = false;
         } else {
-            ivToolbarMenu.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_24dp));
+            ivToolbarMenu.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_24dp));
             isChecked = true;
         }
     }

@@ -108,7 +108,6 @@ public class ScheduleGridAdapter extends BaseAdapter{
      */
     public void setContent(String[][] contents, int row, int column) {
         this.contents = contents;
-        Log.e("print","content.lenth == " + contents.length);
         this.rowTotal = row;
         this.columnTotal = column;
         positionTotal = rowTotal * columnTotal;
