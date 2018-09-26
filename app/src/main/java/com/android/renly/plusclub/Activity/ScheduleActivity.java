@@ -5,8 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.widget.GridView;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
@@ -19,7 +17,7 @@ import com.android.renly.plusclub.R;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
-import org.jsoup.helper.StringUtil;
+import org.angmarch.views.NiceSpinner;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -34,8 +32,6 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 public class ScheduleActivity extends BaseActivity {
-    @BindView(R.id.switchWeek)
-    Spinner switchWeek;
     @BindView(R.id.courceDetail)
     GridView courceDetail;
 

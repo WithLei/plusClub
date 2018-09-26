@@ -10,6 +10,9 @@ import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Checknet.NetworkReceiver;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.DataBase.SQLiteHelper;
+import com.android.renly.plusclub.Utils.DateUtils;
+
+import java.text.SimpleDateFormat;
 
 public class App extends Application {
 
@@ -192,6 +195,25 @@ public class App extends Application {
         editor.apply();
     }
 
+    public static void setScheduleStartWeek(Context context,int nowWeek){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        long nowTime = System.currentTimeMillis();
+        long startWeekTime = nowTime - DateUtils.weekToMiles(nowWeek);
+        editor.putLong(SCHEDULE_START_WEEK,startWeekTime);
+        editor.apply();
+    }
+
+    public static int getScheduleNowWeek(Context context){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        long startWeekTime = sp.getLong(SCHEDULE_START_WEEK,0);
+        if (startWeekTime == 0)
+            return 1;
+        long nowTime = System.currentTimeMillis();
+        int week = (int)(nowTime - startWeekTime)/1000/3600/24/7;
+        return week + 1;
+    }
+
     public static final String MY_SP_NAME = "PlusClub";
     public static final String USER_UID_KEY = "user_uid";
     public static final String USER_PWD_KEY = "user_pwd";
@@ -204,6 +226,7 @@ public class App extends Application {
     public static final String END_DARK_TIME_KEY = "end_dark_time";
     public static final String IS_REMEBER_PWD_USER = "is_remember_pwd_user";
     public static final String IS_LOGIN ="is_login";
+    public static final String SCHEDULE_START_WEEK = "schedule_start_week";
 
     public static final String GitHubURL = "https://github.com/WithLei/plusClub";
 

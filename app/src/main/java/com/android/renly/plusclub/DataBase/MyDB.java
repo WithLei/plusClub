@@ -36,7 +36,7 @@ public class MyDB {
     }
 
     private String getTime() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss", Locale.CHINA);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         Date curDate = new Date(System.currentTimeMillis());
 
         return format.format(curDate);
@@ -67,8 +67,9 @@ public class MyDB {
             String classRoom = result.getString(6);
             int startWeek = result.getInt(7);
             int endWeek = result.getInt(8);
-            String create_time = result.getString(9);
-            datas.add(new Course(rows,weekday,courseName,courseTime,teacher,classRoom,startWeek,endWeek,create_time,cid));
+            int sd_week = result.getInt(9);
+            String create_time = result.getString(10);
+            datas.add(new Course(rows,weekday,courseName,courseTime,teacher,classRoom,startWeek,endWeek,create_time,sd_week,cid));
         }
         result.close();
         this.db.close();
@@ -78,12 +79,12 @@ public class MyDB {
     // 插入操作
     private void insertSchedule(Course course) {
         getDb();
-        String sql = "INSERT INTO " + TABLE_READ_SCHEDULE + " (cid,crows,cweekday,courseName,courseTime,teacher,classRoom,startWeek,endWeek,create_time)"
-                 + " VALUES(?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO " + TABLE_READ_SCHEDULE + " (cid,crows,cweekday,courseName,courseTime,teacher,classRoom,startWeek,endWeek,sd_week,create_time)"
+                 + " VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         String create_time = getTime();
         Object args[] = new Object[]{course.getCid(),course.getRows(),course.getWeekday(),
                 course.getCourseName(),course.getCourseTime(),course.getTeacher(),
-                course.getClassRoom(),course.getStartWeek(),course.getEndWeek(),create_time};
+                course.getClassRoom(),course.getStartWeek(),course.getEndWeek(),course.getSd_week(),create_time};
         this.db.execSQL(sql, args);
         this.db.close();
     }
@@ -92,17 +93,17 @@ public class MyDB {
     private void updateSchedule(Course course) {
         getDb();
         String create_time = getTime();
-        String sql = "UPDATE " + TABLE_READ_SCHEDULE + " SET crows=?,cweekday=?,courseName=?,courseTime=?,teacher=?,classRoom=?,startWeek=?,endWeek=?,create_time=? WHERE cid=?";
+        String sql = "UPDATE " + TABLE_READ_SCHEDULE + " SET crows=?,cweekday=?,courseName=?,courseTime=?,teacher=?,classRoom=?,startWeek=?,endWeek=?,sd_week=?,create_time=? WHERE cid=?";
         Object args[] = new Object[]{course.getRows(),course.getWeekday(),course.getCourseName(),
                 course.getCourseTime(),course.getTeacher(),course.getClassRoom(),
-                course.getStartWeek(),course.getEndWeek(),create_time,course.getCid()};
+                course.getStartWeek(),course.getEndWeek(),course.getSd_week(),create_time,course.getCid()};
         this.db.execSQL(sql, args);
         this.db.close();
     }
 
     private boolean isCourseExist(int cid) {
         getDb();
-        String sql = "SELECT cid from " + TABLE_READ_SCHEDULE + " where cid = ?";
+        String sql = "SELECT cid FROM " + TABLE_READ_SCHEDULE + " where cid = ?";
         String args[] = new String[]{String.valueOf(cid)};
         Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();

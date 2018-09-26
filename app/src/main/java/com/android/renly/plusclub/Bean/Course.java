@@ -103,7 +103,7 @@ public class Course {
         }
     }
 
-    public Course(int rows, int weekday, String courseName, String courseTime, String teacher, String classRoom, int startWeek, int endWeek, String create_time, int cid) {
+    public Course(int rows, int weekday, String courseName, String courseTime, String teacher, String classRoom, int startWeek, int endWeek, String create_time, int sd_week, int cid) {
         this.rows = rows;
         this.weekday = weekday;
         this.courseName = courseName;
@@ -114,6 +114,7 @@ public class Course {
         this.startWeek = startWeek;
         this.endWeek = endWeek;
         this.cid = cid;
+        this.sd_week = sd_week;
         this.create_time = create_time;
     }
 
@@ -195,6 +196,14 @@ public class Course {
 
     public void setCid(int cid) {
         this.cid = cid;
+    }
+
+    public int getSd_week() {
+        return sd_week;
+    }
+
+    public void setSd_week(int sd_week) {
+        this.sd_week = sd_week;
     }
 
     @Override

@@ -1,14 +1,14 @@
 package com.android.renly.plusclub.Fragment;
 
 import android.content.Context;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
 import com.android.renly.plusclub.App;
@@ -17,7 +17,11 @@ import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.DataBase.MyDB;
 import com.android.renly.plusclub.R;
 
+import org.angmarch.views.NiceSpinner;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,13 +33,14 @@ public class ScheduleFragment extends BaseFragment {
     Unbinder unbinder;
     @BindView(R.id.iv_toolbar_menu)
     ImageView ivToolbarMenu;
-    @BindView(R.id.switchWeek)
-    Spinner switchWeek;
     @BindView(R.id.courceDetail)
     GridView courceDetail;
+    @BindView(R.id.switchWeek)
+    NiceSpinner spinner;
 
     private String[][] contents;
     private ScheduleGridAdapter adapter;
+    private int nowWeek;
     List<Course> scheduleList = new ArrayList<>();
 
     @Override
@@ -46,13 +51,43 @@ public class ScheduleFragment extends BaseFragment {
     @Override
     protected void initData(Context content) {
         contents = new String[6][7];
+        nowWeek = App.getScheduleNowWeek(getActivity());
         initView();
     }
 
     private void initView() {
+        initSpinner();
         MyDB db = new MyDB(getActivity());
         if (db.isScheduleExist())
             initScheduleDataFromDB();
+    }
+
+    /**
+     * 初始化spinner
+     */
+    private void initSpinner() {
+        List<String>dataset = new LinkedList<>(Arrays.asList(getResources().getStringArray(R.array.scheduleWeek)));
+        spinner.attachDataSource(dataset);
+        spinner.setBackgroundResource(R.drawable.tv_round_border);
+        spinner.setTextColor(getResources().getColor(R.color.white));
+//        StateListDrawable drawable = new StateListDrawable();
+//        drawable.addState(new int[]{android.R.attr.state_window_focused},getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
+//        drawable.addState(new int[]{android.R.attr.state_focused},getResources().getDrawable(R.drawable.ic_expand_less_black_24dp));
+        spinner.setSelectedIndex(nowWeek-1);
+        spinner.setArrowDrawable(getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
+        spinner.setArrowTintColor(R.color.white);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                nowWeek = pos+1;
+                App.setScheduleStartWeek(getActivity(),nowWeek);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void initScheduleDataFromDB() {
@@ -64,8 +99,12 @@ public class ScheduleFragment extends BaseFragment {
                 contents[x][y] = "";
         for (int i = 0; i < scheduleList.size(); i++) {
             Course course = scheduleList.get(i);
-            printLog(course.toString());
-            contents[(course.getRows() - 1) / 2][course.getWeekday() - 1] = course.getCourseName() + "\n\n" + course.getClassRoom();
+            if (course.getSd_week() == 1 && nowWeek%2 == 1)
+                continue;
+            else if (course.getSd_week() == 2 && nowWeek%2 == 0)
+                continue;
+            else
+                contents[(course.getRows() - 1) / 2][course.getWeekday() - 1] = course.getCourseName() + "\n\n" + course.getClassRoom();
         }
         adapter = new ScheduleGridAdapter(getActivity());
         adapter.setContent(contents, 6, 7);
@@ -94,10 +133,10 @@ public class ScheduleFragment extends BaseFragment {
 
     @OnClick(R.id.iv_toolbar_menu)
     public void onViewClicked() {
-        if (isChecked){
+        if (isChecked) {
             ivToolbarMenu.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_24dp));
             isChecked = false;
-        }else{
+        } else {
             ivToolbarMenu.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_24dp));
             isChecked = true;
         }

@@ -26,6 +26,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 + "classRoom VARCHAR(30) NOT NULL,"
                 + "startWeek INT NOT NULL,"
                 + "endWeek INT NOT NULL,"
+                + "sd_week INT NOT NULL,"
                 + "create_time DATETIME NOT NULL"
                 + ")";
         db.execSQL(sql);

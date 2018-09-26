@@ -2,31 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/myToolBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbarHeight"
-        android:background="?android:attr/colorPrimary"
-        android:elevation="4dp">
+        android:background="?android:attr/colorPrimary">
 
 
         <!--下拉方式选周数-->
-        <Spinner
+        <org.angmarch.views.NiceSpinner
             android:id="@+id/switchWeek"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:entries="@array/scheduleWeek"
-            android:textAlignment="center"
-            android:gravity="center" />
+            app:textTint="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:dropDownListPaddingBottom="@dimen/spinnerMaxHeight" />
 
         <ImageView
             android:id="@+id/iv_toolbar_menu"
             android:layout_width="@dimen/toolbarHeight"
             android:layout_height="@dimen/toolbarHeight"
-            android:background="?android:attr/colorPrimary"
             android:layout_gravity="end"
             android:padding="13dp"
             android:src="@drawable/ic_menu_24dp" />

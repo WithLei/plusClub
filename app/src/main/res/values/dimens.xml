@@ -9,6 +9,7 @@
     <dimen name="bottombarHeight">52dp</dimen>
     <dimen name="scheduleSectionHeight">56dp</dimen>
     <dimen name="scheduleCourseHeight">106dp</dimen>
+    <dimen name="spinnerMaxHeight">200dp</dimen>
     <dimen name="scheduleCourseMargin">3dp</dimen>
     <dimen name="scheduleCoursePadding">3dp</dimen>
 </resources>
