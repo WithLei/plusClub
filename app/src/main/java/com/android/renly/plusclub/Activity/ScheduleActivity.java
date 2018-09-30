@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.alibaba.fastjson.JSON;
@@ -21,6 +23,8 @@ import org.angmarch.views.NiceSpinner;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,12 +38,15 @@ import okhttp3.Response;
 public class ScheduleActivity extends BaseActivity {
     @BindView(R.id.courceDetail)
     GridView courceDetail;
+    @BindView(R.id.switchWeek)
+    NiceSpinner spinner;
 
     private Unbinder unbinder;
 
     private String eduid;
     private String userName;
     private String cookie;
+    private int nowWeek = 1;
 
     private String[][] contents;
     private ScheduleGridAdapter adapter;
@@ -77,6 +84,7 @@ public class ScheduleActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        initSpinner();
         clearOldSchedule();
         getScheduleFromEdu();
     }
@@ -86,6 +94,37 @@ public class ScheduleActivity extends BaseActivity {
         db.clearSchedule();
     }
 
+    /**
+     * 初始化spinner
+     */
+    private void initSpinner() {
+        List<String>dataset = new LinkedList<>(Arrays.asList(getResources().getStringArray(R.array.scheduleWeek)));
+        spinner.attachDataSource(dataset);
+        spinner.setBackgroundResource(R.drawable.tv_round_border);
+        spinner.setTextColor(getResources().getColor(R.color.white));
+//        StateListDrawable drawable = new StateListDrawable();
+//        drawable.addState(new int[]{android.R.attr.state_window_focused},getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
+//        drawable.addState(new int[]{android.R.attr.state_focused},getResources().getDrawable(R.drawable.ic_expand_less_black_24dp));
+        spinner.setSelectedIndex(nowWeek-1);
+        spinner.setArrowDrawable(getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
+        spinner.setArrowTintColor(R.color.white);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                nowWeek = pos+1;
+                initScheduleDataFromDB();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    /**
+     * 从教务系统抓取课程表
+     */
     private void getScheduleFromEdu() {
         printLog("Cookie " + cookie + " xh " + eduid);
         String gbkName = null;

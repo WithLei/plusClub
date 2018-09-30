@@ -5,14 +5,12 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.TextInputEditText;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +19,7 @@ import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
+import com.android.renly.plusclub.UI.DrawableTextView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.Callback;
@@ -38,22 +37,34 @@ import okhttp3.Call;
 import okhttp3.Headers;
 import okhttp3.Response;
 
-public class EduLoginActivity extends BaseActivity {
-
-    @BindView(R.id.iv_toolbar_back)
-    ImageView ivToolbarBack;
-    @BindView(R.id.tv_toolbar_title)
-    TextView title;
-    @BindView(R.id.et_login_name)
-    TextInputEditText etMobile;
-    @BindView(R.id.et_login_pas)
-    TextInputEditText etPassword;
-    @BindView(R.id.et_login_check)
-    TextInputEditText etCheck;
-    @BindView(R.id.iv_check)
-    ImageView ivCheck;
+public class EduLoginActivity2 extends BaseActivity {
+    @BindView(R.id.logo)
+    DrawableTextView logo;
+    @BindView(R.id.et_mobile)
+    EditText etMobile;
+    @BindView(R.id.iv_clean_phone)
+    ImageView ivCleanPhone;
+    @BindView(R.id.et_password)
+    EditText etPassword;
+    @BindView(R.id.clean_password)
+    ImageView cleanPassword;
+    @BindView(R.id.iv_show_pwd)
+    ImageView ivShowPwd;
     @BindView(R.id.btn_login)
     Button btnLogin;
+    @BindView(R.id.regist)
+    TextView regist;
+    @BindView(R.id.forget_password)
+    TextView forgetPassword;
+    @BindView(R.id.body)
+    LinearLayout body;
+    @BindView(R.id.root)
+    LinearLayout root;
+    @BindView(R.id.et_check)
+    EditText etCheck;
+    @BindView(R.id.iv_check)
+    ImageView ivCheck;
+
     private Unbinder unbinder;
 
     private String user_eduid = "";
@@ -123,54 +134,19 @@ public class EduLoginActivity extends BaseActivity {
 
     @Override
     protected int getLayoutID() {
-        return R.layout.activity_edu_login;
+        return R.layout.activity_edu_login2;
     }
 
     @Override
     protected void initData() {
-        sp = getSharedPreferences("userInfo", MODE_PRIVATE);
+        sp = getSharedPreferences("userInfo",MODE_PRIVATE);
         GetCookies();
         isLogin();
     }
 
     @Override
     protected void initView() {
-        title.setText("教务系统登陆");
         GetVerifation();
-        btnLoginSetEnabled();
-        etMobile.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                btnLoginSetEnabled();
-            }
-        });
-
-        etPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                btnLoginSetEnabled();
-            }
-        });
     }
 
     @Override
@@ -179,12 +155,12 @@ public class EduLoginActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    @OnClick({R.id.btn_login, R.id.iv_check, R.id.iv_toolbar_back})
+    @OnClick({R.id.btn_login, R.id.iv_check})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                String id = etMobile.getText().toString().equals("1") ? "16103220237" : etMobile.getText().toString();
-                String pwd = etPassword.getText().toString().equals("1") ? "zl11471583210" : etPassword.getText().toString();
+                String id = etMobile.getText().toString().isEmpty() ? "16103220237" : etMobile.getText().toString();
+                String pwd = etPassword.getText().toString().isEmpty() ? "zl11471583210" : etPassword.getText().toString();
                 String checkid = etCheck.getText().toString();
 
                 doLogin(id, pwd, checkid);
@@ -192,21 +168,7 @@ public class EduLoginActivity extends BaseActivity {
             case R.id.iv_check:
                 GetVerifation();
                 break;
-            case R.id.iv_toolbar_back:
-                finish();
-                break;
         }
-    }
-
-    /**
-     * 设置判断按钮是否可以点击
-     */
-    private void btnLoginSetEnabled() {
-        if (!TextUtils.isEmpty(etMobile.getText().toString().trim())
-                && !TextUtils.isEmpty(etPassword.getText().toString().trim()))
-            btnLogin.setEnabled(true);
-        else
-        btnLogin.setEnabled(false);
     }
 
     /**
@@ -250,18 +212,18 @@ public class EduLoginActivity extends BaseActivity {
      * 判断是否登录
      */
     private void isLogin() {
-        if (sp.getString("id", "").isEmpty())
-            return;
+        if (sp.getString("id","").isEmpty())
+            return ;
         OkHttpUtils.post()
                 .url(NetConfig.BASE_EDU_HOST_ME)
-                .addHeader("Cookie", cookie)
+                .addHeader("Cookie",cookie)
                 .build()
                 .execute(new Callback() {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
-                        String responseHTML = new String(response.body().bytes(), "GB2312");
+                        String responseHTML = new String(response.body().bytes(),"GB2312");
                         checkLoginSuccess(responseHTML);
-                        writeData("/sdcard/Test/isLoginHTML.txt", responseHTML);
+                        writeData("/sdcard/Test/isLoginHTML.txt",responseHTML);
                         return null;
                     }
 
@@ -283,7 +245,7 @@ public class EduLoginActivity extends BaseActivity {
     private void GetVerifation() {
         OkHttpUtils.post()
                 .url(NetConfig.CHECKIMG_URL_RS)
-                .addHeader("Cookie", cookie)
+                .addHeader("Cookie",cookie)
                 .build()
                 .execute(new BitmapCallback() {
                     @Override
@@ -319,7 +281,7 @@ public class EduLoginActivity extends BaseActivity {
                 .addParams("TextBox2", pwd)
                 .addParams("txtSecretCode", checkid)
                 .addParams("txtUserName", eduid)
-                .addHeader("Cookie", cookie)
+                .addHeader("Cookie",cookie)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -364,17 +326,17 @@ public class EduLoginActivity extends BaseActivity {
 
                 // 登陆成功后获取学生姓名，此处获取到的学生姓名为xx同学
                 String stuName = "";
-                for (Element name : names)
+                for(Element name : names)
                     stuName = name.text();
                 // 去掉尾缀
                 int index = stuName.lastIndexOf("同学");
                 if (index >= 0)
-                    stuName = stuName.substring(0, stuName.length() - 2);
+                    stuName = stuName.substring(0,stuName.length()-2);
                 printLog("stuName " + stuName);
 
                 Message msg = new Message();
                 Bundle bundle = new Bundle();
-                bundle.putString("stuName", stuName);
+                bundle.putString("stuName",stuName);
                 msg.setData(bundle);
                 msg.what = LOGIN_SUCCESS;
                 handler.sendMessage(msg);
@@ -397,8 +359,8 @@ public class EduLoginActivity extends BaseActivity {
                 return;
             }
         }
-        for (Element link : err) {
-            if (link.text().equals("错误原因：系统正忙！"))
+        for(Element link : err){
+            if(link.text().equals("错误原因：系统正忙！"))
                 handler.sendEmptyMessage(LOGIN_FAIL_SYSTEMBUSY);
         }
     }
@@ -408,13 +370,13 @@ public class EduLoginActivity extends BaseActivity {
      */
     private void AfterSuccessLogin(String stuName) {
 //        ToastShort("登陆成功");
-        MyToast.showText(this, "登录成功", Toast.LENGTH_SHORT, true);
-        SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
+        MyToast.showText(this,"登录成功", Toast.LENGTH_SHORT,true);
+        SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(App.COOKIE, cookie);
-        editor.putString(App.USER_EDUID_KEY, user_eduid);
-        editor.putString(App.USER_PWD_KEY, user_edupwd);
-        editor.putString(App.USER_NAME_KEY, stuName);
+        editor.putString(App.COOKIE,cookie);
+        editor.putString(App.USER_EDUID_KEY,user_eduid);
+        editor.putString(App.USER_PWD_KEY,user_edupwd);
+        editor.putString(App.USER_NAME_KEY,stuName);
         editor.apply();
         gotoActivity(EduActivity.class);
         finish();
