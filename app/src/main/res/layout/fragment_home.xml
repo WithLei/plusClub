@@ -15,9 +15,9 @@
             android:id="@+id/ci_home_img"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:scaleType="centerCrop"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="12dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/image_placeholder"
             app:civ_border_color="@color/white"
             app:civ_border_width="1dp" />
@@ -44,11 +44,18 @@
             android:padding="13dp"
             android:src="@drawable/ic_search_white_24dp" />
     </FrameLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_home_view"
+    <com.tuesda.walker.circlerefresh.CircleRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_primary" />
+        app:AniBackColor="?android:colorPrimary"
+        app:AniForeColor="@color/white">
+
+        <se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white" />
+    </com.tuesda.walker.circlerefresh.CircleRefreshLayout>
 </LinearLayout>
 

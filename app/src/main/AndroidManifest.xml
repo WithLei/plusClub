@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.android.renly.plusclub">
 
     <!-- 联网权限 -->
@@ -12,6 +13,7 @@
 
     <application
         android:allowBackup="true"
+        tools:replace="android:icon"
         android:icon="@mipmap/pluslogo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/pluslogo_round"

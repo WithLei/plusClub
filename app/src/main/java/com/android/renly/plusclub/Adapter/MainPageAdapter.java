@@ -9,6 +9,9 @@ import com.android.renly.plusclub.Common.BaseFragment;
 
 import java.util.List;
 
+/**
+ * 主页切换Adapter
+ */
 
 public class MainPageAdapter extends FragmentStatePagerAdapter {
 
