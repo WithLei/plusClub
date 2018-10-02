@@ -8,11 +8,14 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.Activity.LabActivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
+import com.android.renly.plusclub.Activity.PostActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.ForumAdapter;
 import com.android.renly.plusclub.App;
@@ -137,7 +140,7 @@ public class HomeFragment extends BaseFragment {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     getActivity().startActivityForResult(intent, LoginActivity.requestCode);
                 }
-                getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_in);
+                getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
                 break;
             case R.id.iv_home_search:
                 break;

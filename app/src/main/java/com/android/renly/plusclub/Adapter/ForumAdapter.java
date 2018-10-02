@@ -1,6 +1,7 @@
 package com.android.renly.plusclub.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.Activity.PostActivity;
 import com.android.renly.plusclub.Bean.Forum;
 import com.android.renly.plusclub.R;
 
@@ -74,6 +76,11 @@ public class ForumAdapter extends BaseAdapter implements StickyListHeadersAdapte
             convertView = inflater.inflate(R.layout.item_forum_name, viewGroup, false);
             holder.img = convertView.findViewById(R.id.img);
             holder.title = convertView.findViewById(R.id.title);
+            convertView.setOnClickListener(view -> {
+                Intent intent = new Intent(context, PostActivity.class);
+                intent.putExtra("Title",forumList.get(pos).getTitle());
+                context.startActivity(intent);
+            });
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

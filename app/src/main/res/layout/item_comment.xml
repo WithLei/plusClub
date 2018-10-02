@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_window"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_primary"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="12dp">
+
+    <com.android.renly.plusclub.UI.CircleImageView
+        android:id="@+id/article_user_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image_placeholder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/replay_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorAuthor"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/article_user_image"
+        app:layout_constraintTop_toTopOf="@+id/article_user_image"
+        tools:text="authorName" />
+
+    <TextView
+        android:id="@+id/bt_lable_lz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/badge"
+        android:paddingBottom="2dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="2dp"
+        android:text="楼主"
+        android:textColor="@android:color/white"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@+id/replay_author"
+        app:layout_constraintStart_toEndOf="@+id/replay_author" />
+
+    <TextView
+        android:id="@+id/btn_reply_cz"
+        style="@style/text_16_sec"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="0dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/fontawesome"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="&#xf27b;"
+        app:layout_constraintEnd_toStartOf="@+id/btn_more"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/btn_more"
+        style="@style/text_16_sec"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="0dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/fontawesome"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="&#xf142;"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/replay_index"
+        style="@style/text_12_sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="4dp"
+        android:maxLines="1"
+        app:layout_constraintStart_toStartOf="@+id/replay_author"
+        app:layout_constraintTop_toBottomOf="@+id/replay_author"
+        tools:text="1楼" />
+
+    <TextView
+        android:id="@+id/replay_time"
+        style="@style/text_12_sec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/replay_index"
+        android:maxLines="1"
+        app:layout_constraintBaseline_toBaselineOf="@+id/replay_index"
+        app:layout_constraintStart_toEndOf="@+id/replay_index"
+        tools:text="1小时前" />
+
+    <TextView
+        android:id="@+id/html_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        android:autoLink="web"
+        android:lineSpacingMultiplier="1.4"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/replay_author"
+        app:layout_constraintTop_toBottomOf="@+id/article_user_image"
+        tools:text="在点(110,10)处绘制一个宽和高均为50像素的正方形边框 context.strokeRect(110,10,50,50); //在点(30,10)处绘制一个宽和高均为50像素的正方形边框 " />
+
+</android.support.constraint.ConstraintLayout>

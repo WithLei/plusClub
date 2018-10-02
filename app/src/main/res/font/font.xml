@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <font
+        android:font="@font/fontawesome"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        app:font="@font/fontawesome"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
+    <!--app 对于android 8.0之前使用compact库-->
+    <font
+        android:font="@font/fontawesome"
+        android:fontStyle="italic"
+        android:fontWeight="400"
+        app:font="@font/fontawesome"
+        app:fontStyle="italic"
+        app:fontWeight="400" />
+</font-family>

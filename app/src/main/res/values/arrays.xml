@@ -24,4 +24,13 @@
         <item>第21周</item>
         <item>第22周</item>
     </string-array>
+    <string-array name="font_size">
+        <item>1号</item>
+        <item>2号</item>
+        <item>3号</item>
+        <item>4号</item>
+        <item>5号</item>
+        <item>6号</item>
+        <item>7号</item>
+    </string-array>
 </resources>

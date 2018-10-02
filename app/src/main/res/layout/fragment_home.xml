@@ -48,6 +48,7 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
         app:AniBackColor="?android:colorPrimary"
         app:AniForeColor="@color/white">
 
