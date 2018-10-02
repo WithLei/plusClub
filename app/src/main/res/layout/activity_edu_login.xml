@@ -1,8 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/bg_primary"
     android:orientation="vertical">
 
     <include layout="@layout/my_toolbar" />
@@ -63,7 +64,8 @@
         <ImageView
             android:id="@+id/iv_check"
             android:layout_width="100dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:background="@color/bg_secondary"/>
     </LinearLayout>
 
     <CheckBox
@@ -108,7 +110,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:padding="8dp"
-        android:text=""
+        android:text="如遇到系统错误，请尝试重新登陆。多次登陆失败，请联系我们：个人 - 关于本程序 - bug反馈"
         android:textColor="?android:textColorSecondary"
         android:textSize="12sp" />
 

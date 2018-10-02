@@ -64,6 +64,7 @@ public class UserDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        initSlidr();
         toolbarLayout.setTitle(username);
     }
 
@@ -91,6 +92,6 @@ public class UserDetailActivity extends BaseActivity {
         App.setIsLogout(this);
         setResult(RESULT_OK);
         MyToast.showText(this,"退出登录成功", Toast.LENGTH_SHORT,true);
-        finish();
+        finishActivity();
     }
 }

@@ -40,7 +40,7 @@ public class AboutActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
+        initSlidr();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class AboutActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_back:
-                finish();
+                finishActivity();
                 break;
             case R.id.tv_about_url:
                 // 跳转GitHub项目地址

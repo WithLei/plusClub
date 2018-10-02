@@ -135,6 +135,7 @@ public class EduLoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        initSlidr();
         title.setText("教务系统登陆");
         GetVerifation();
         btnLoginSetEnabled();
@@ -193,7 +194,7 @@ public class EduLoginActivity extends BaseActivity {
                 GetVerifation();
                 break;
             case R.id.iv_toolbar_back:
-                finish();
+                finishActivity();
                 break;
         }
     }
@@ -417,7 +418,7 @@ public class EduLoginActivity extends BaseActivity {
         editor.putString(App.USER_NAME_KEY, stuName);
         editor.apply();
         gotoActivity(EduActivity.class);
-        finish();
+        finishActivity();
     }
 
 }

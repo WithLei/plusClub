@@ -84,6 +84,7 @@ public class ScheduleActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        initSlidr();
         initSpinner();
         clearOldSchedule();
         getScheduleFromEdu();

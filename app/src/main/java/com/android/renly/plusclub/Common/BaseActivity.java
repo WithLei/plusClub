@@ -22,6 +22,9 @@ import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.Utils.DimmenUtils;
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrPosition;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -127,6 +130,7 @@ public abstract class BaseActivity extends FragmentActivity {
      */
     public void gotoActivity(Class<?> targetActivity){
         startActivity(new Intent(this,targetActivity));
+        overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
     }
 
     /**
@@ -139,7 +143,7 @@ public abstract class BaseActivity extends FragmentActivity {
         if (toolbar != null) {
             ((TextView) toolbar.findViewById(R.id.tv_toolbar_title)).setText(text);
             if (isshowBack) {
-                findViewById(R.id.iv_toolbar_back).setOnClickListener(view -> finish());
+                findViewById(R.id.iv_toolbar_back).setOnClickListener(view -> finishActivity());
             } else {
                 findViewById(R.id.iv_toolbar_back).setVisibility(View.GONE);
             }
@@ -231,6 +235,29 @@ public abstract class BaseActivity extends FragmentActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         // 隐藏软键盘
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+    }
+
+    public void finishActivity(){
+        finish();
+        overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
+    }
+
+    /**
+     * 初始化滑动事件
+     */
+    public void initSlidr() {
+        SlidrConfig config=new SlidrConfig.Builder()
+                .position(SlidrPosition.LEFT)//滑动起始方向
+                .edge(true)
+                .edgeSize(0.18f)//距离左边界占屏幕大小的18%
+                .build();
+        Slidr.attach(this,config);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
     }
 
     @Override

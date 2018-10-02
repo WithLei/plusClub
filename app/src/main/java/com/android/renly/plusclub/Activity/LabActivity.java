@@ -55,6 +55,7 @@ public class LabActivity extends BaseActivity implements AdapterView.OnItemClick
 
     @Override
     protected void initView() {
+        initSlidr();
         tvToolbarTitle.setText("实验室功能");
     }
 
@@ -81,6 +82,6 @@ public class LabActivity extends BaseActivity implements AdapterView.OnItemClick
 
     @OnClick(R.id.iv_toolbar_back)
     public void onViewClicked() {
-        finish();
+        finishActivity();
     }
 }

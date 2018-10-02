@@ -143,6 +143,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                     Intent intent = new Intent(getActivity(), UserDetailActivity.class);
                     getActivity().startActivityForResult(intent, UserDetailActivity.requestCode);
                 }
+                getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_in);
                 break;
             case R.id.ll_mine_history:
                 break;
@@ -162,6 +163,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 // 主题设置
                 Intent intent = new Intent(getActivity(), ThemeActivity.class);
                 getActivity().startActivityForResult(intent, ThemeActivity.requestCode);
+                getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_in);
                 break;
             case 1:
                 // 设置

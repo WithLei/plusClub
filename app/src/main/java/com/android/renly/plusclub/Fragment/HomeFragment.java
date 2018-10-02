@@ -137,6 +137,7 @@ public class HomeFragment extends BaseFragment {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     getActivity().startActivityForResult(intent, LoginActivity.requestCode);
                 }
+                getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_in);
                 break;
             case R.id.iv_home_search:
                 break;

@@ -15,6 +15,9 @@ import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.R;
+import com.r0adkll.slidr.Slidr;
+import com.r0adkll.slidr.model.SlidrConfig;
+import com.r0adkll.slidr.model.SlidrPosition;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,11 +45,11 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
     }
 
     @Override
     protected void initView() {
+        initSlidr();
         if (App.isRemeberPwdUser(this)) {
             etLoginName.setText(App.getUid(this));
             etLoginPas.setText(App.getPwd(this));
@@ -114,7 +117,7 @@ public class LoginActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_toolbar_back:
-                finish();
+                finishActivity();
                 break;
             case R.id.btn_login:
                 String Uid = etLoginName.getText().toString().trim();
@@ -137,7 +140,7 @@ public class LoginActivity extends BaseActivity {
         MyToast.showText(this,"登录成功", Toast.LENGTH_SHORT,true);
         printLog("登录成功");
         setResult(RESULT_OK);
-        finish();
+        finishActivity();
     }
 
     @Override

@@ -88,11 +88,10 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
 
     @Override
     protected void initView() {
+        initSlidr();
         initToolBar(true, "主题设置");
         addToolbarMenu(R.drawable.ic_done_24dp).setOnClickListener(v -> {
             onChooseTheme();
-            setResult(RESULT_OK);
-            finish();
         });
         adapter = new ColorAdapter();
         gridView.setAdapter(adapter);
@@ -176,6 +175,7 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         if (isChange) {
             ToastShort("已更改主题");
             setResult(RESULT_OK);
+            finishActivity();
         }
     }
 

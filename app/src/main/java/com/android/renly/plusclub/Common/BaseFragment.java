@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import com.android.renly.plusclub.R;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -48,6 +50,8 @@ public abstract class BaseFragment extends Fragment {
      */
     public void gotoActivity(Class<?> targetActivity){
         startActivity(new Intent(getActivity(),targetActivity));
+        getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
+
     }
 
     /**

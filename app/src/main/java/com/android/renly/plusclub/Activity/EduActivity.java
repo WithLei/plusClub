@@ -85,6 +85,7 @@ public class EduActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        initSlidr();
         if (!stuName.isEmpty() && stuName != null)
             tvMainName.setText("你好，" + stuName + "同学");
     }
@@ -160,7 +161,7 @@ public class EduActivity extends BaseActivity {
         editor.apply();
         printLog("退出登录成功");
         MyToast.showText(this, "退出登录成功", Toast.LENGTH_SHORT, true);
-        finish();
+        finishActivity();
     }
 
     /**
