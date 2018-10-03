@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_window"
-    android:background="@color/bg_primary"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/bg_primary">
 
     <View
         android:layout_width="6dp"
@@ -18,106 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
-        android:textStyle="bold"
-        tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重,尴尬，Xbox One 2" />
-
-    <com.android.renly.plusclub.UI.CircleImageView
-        android:id="@+id/article_user_image"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_below="@+id/article_title"
-        android:layout_marginStart="12dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/image_placeholder" />
-
-    <TextView
-        android:id="@+id/article_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/article_user_image"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="4dp"
-        android:layout_toEndOf="@+id/article_user_image"
-        android:textColor="@color/colorAuthor"
-        android:textSize="14sp"
-        tools:text="author" />
-
-    <TextView
-        android:id="@+id/bt_lable_lz"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/article_username"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/article_username"
-        android:background="@drawable/badge"
-        android:paddingBottom="2dp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingTop="2dp"
-        android:text="楼主"
-        android:textColor="@android:color/white"
-        android:textSize="10sp"
+        android:text="尴尬，Xbox One 2与PS4.5太快推出压力重重,尴尬，Xbox One 2"
         android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/article_post_time"
-        style="@style/text_12_sec"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/article_username"
-        android:layout_below="@+id/article_username"
-        android:layout_marginTop="4dp"
-        android:maxLines="1"
-        tools:text="发布于：2天前" />
-
-    <TextView
-        android:id="@+id/btn_more"
-        style="@style/text_16_sec"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/article_user_image"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="0dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:fontFamily="@font/fontawesome"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="&#xf142;" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="0.8dp"
-        android:layout_below="@+id/article_user_image"
-        android:layout_marginEnd="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorDivider" />
-
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/divider"
-        android:autoLink="web"
-        android:lineSpacingMultiplier="1.4"
-        android:paddingBottom="4dp"
-        android:paddingEnd="12dp"
-        android:paddingStart="12dp"
-        android:paddingTop="8dp"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="16sp"
-        tools:text="在点(110,10)处绘制一个宽和高均为50像素的正方形边框 context.strokeRect(110,10,50,50); //在点(30,10)处绘制一个宽和高均为50像素的正方形边框 " />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="12dp"
-        android:layout_below="@+id/content"
-        android:layout_marginTop="4dp"
-        android:background="@color/bg_secondary" />
 </RelativeLayout>
 

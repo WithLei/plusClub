@@ -1,32 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
-    <include layout="@layout/my_toolbar" />
+    android:background="@color/bg_primary">
+
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
+        app:umanoDragView="@+id/mainView"
+        app:umanoOverlay="true"
         app:umanoPanelHeight="68dp"
         app:umanoShadowHeight="4dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Main Content"
-            android:textSize="16sp" />
+            android:orientation="vertical">
 
-        <TextView
+            <include layout="@layout/my_toolbar" />
+            <!-- MAIN CONTENT -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_post"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <!-- MAIN CONTENT -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center|top"
-            android:text="The Awesome Sliding Up Panel"
-            android:textSize="16sp" />
+            android:orientation="vertical">
+
+            <include layout="@layout/item_content" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_reply"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-</LinearLayout>
+</FrameLayout>
