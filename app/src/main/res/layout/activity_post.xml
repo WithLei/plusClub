@@ -5,15 +5,15 @@
     android:layout_height="match_parent"
     android:background="@color/bg_primary">
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        android:id="@+id/sliding_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        app:umanoDragView="@+id/mainView"
-        app:umanoOverlay="true"
-        app:umanoPanelHeight="68dp"
-        app:umanoShadowHeight="4dp">
+    <!--<com.sothree.slidinguppanel.SlidingUpPanelLayout-->
+        <!--android:id="@+id/sliding_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="bottom"-->
+        <!--app:umanoDragView="@+id/mainView"-->
+        <!--app:umanoOverlay="true"-->
+        <!--app:umanoPanelHeight="68dp"-->
+        <!--app:umanoShadowHeight="4dp">-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,23 +24,16 @@
             <!-- MAIN CONTENT -->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_post"
+                android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
-        <!-- MAIN CONTENT -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include layout="@layout/item_content" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_reply"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+        <!-- Panel CONTENT -->
+        <!--<ScrollView-->
+            <!--android:id="@+id/sv_postcontent"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical"/>-->
+    <!--</com.sothree.slidinguppanel.SlidingUpPanelLayout>-->
 
 </FrameLayout>
