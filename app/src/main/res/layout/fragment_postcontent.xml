@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     android:background="@color/bg_primary"
     android:orientation="vertical">
-    <include layout="@layout/item_content" />
+    <include layout="@layout/item_content_title" />
+    <include layout="@layout/item_content_content" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_reply"
+        android:id="@+id/rv_comment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

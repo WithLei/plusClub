@@ -30,18 +30,29 @@ import butterknife.Unbinder;
 public class PostActivity extends BaseActivity {
     @BindView(R.id.myToolBar)
     FrameLayout myToolBar;
-//    @BindView(R.id.sliding_layout)
-//    SlidingUpPanelLayout slidingLayout;
+    @BindView(R.id.sliding_layout)
+    SlidingUpPanelLayout slidingLayout;
     @BindView(R.id.rv_post)
     RecyclerView rvPost;
 
     private Unbinder unbinder;
+
     /**
      * 帖子区的标题
      */
     private String title;
+    /**
+     * 帖子列表
+     */
     private List<Post>postList;
+    /**
+     * Panel Fragment管理器
+     */
     private FragmentManager fragmentManager;
+    /**
+     * Panel Fragment池
+     */
+    private List<PostContentFragment>fragmentPool;
 
     @Override
     protected int getLayoutID() {
@@ -58,7 +69,7 @@ public class PostActivity extends BaseActivity {
     @Override
     protected void initView() {
         initToolBar(true, title);
-//        initSlidr();
+        initSlidr();
         initSlidingLayout();
         initpostList();
     }
@@ -72,64 +83,75 @@ public class PostActivity extends BaseActivity {
     }
 
     private void initpostList() {
+        // 初始化fragmentPool池
+        fragmentPool = new ArrayList<>();
         PostAdapter adapter = new PostAdapter(this,postList);
-        //设置监听事件
+        // 设置监听事件
         rvPost.setAdapter(adapter);
         adapter.setOnItemClickListener(pos -> {
             PostContentFragment fragment = new PostContentFragment();
-            loadPanel(fragment);
-            ToastShort("点击了" + pos);
-            printLog("点击了" + pos);
+            fragmentPool.add(fragment);
+            if (fragmentPool.size() == 1)
+
+            loadPanel(fragment,fragmentPool.size() == 1 ? null : fragmentPool.get(fragmentPool.size()-2));
         });
         rvPost.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         rvPost.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
         // 调整draw缓存,加速recyclerview加载
-//        rvPost.setItemViewCacheSize(20);
-//        rvPost.setDrawingCacheEnabled(true);
-//        rvPost.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        rvPost.setItemViewCacheSize(20);
+        rvPost.setDrawingCacheEnabled(true);
+        rvPost.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
     }
 
     /**
      * 加载panel布局
      */
-    private void loadPanel(Fragment targetFragment) {
-        // 加载fragment
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//
-//        transaction.add(R.id.sv_postcontent,targetFragment);
-//
-//        transaction.commit();
-//        //显示
-//        slidingLayout.setPanelState(PanelState.COLLAPSED);
+    private void loadPanel(Fragment targetFragment, Fragment lastFragment) {
+        slidingLayout.setPanelState(PanelState.HIDDEN);
+
+        //加载fragment
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        if (lastFragment != null)
+            transaction.remove(lastFragment);
+        transaction.add(R.id.sv_postcontent,targetFragment);
+
+        transaction.commit();
+        //显示
+        slidingLayout.setPanelState(PanelState.COLLAPSED);
     }
 
+    /**
+     *
+     */
+
     private void initSlidingLayout() {
-//        slidingLayout.setAnchorPoint(0.7f);
-//        slidingLayout.setPanelState(PanelState.HIDDEN);
-//        slidingLayout.setFadeOnClickListener(view -> {
-//            doDownAnimation();
-//            slidingLayout.setPanelState(PanelState.COLLAPSED);
-//        });
-//        slidingLayout.addPanelSlideListener(new SlidingUpPanelLayout.SimplePanelSlideListener() {
-//            @Override
-//            public void onPanelSlide(View panel, float slideOffset) {
-//                super.onPanelSlide(panel, slideOffset);
-//            }
-//
-//            @Override
-//            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-//                if (newState == PanelState.DRAGGING) {
-//                    ppState = previousState;
-//                    return;
-//                }
-//                if (newState == PanelState.HIDDEN
-//                        || newState == PanelState.COLLAPSED
-//                        || (previousState == PanelState.DRAGGING && newState == PanelState.ANCHORED && ppState == PanelState.EXPANDED))
-//                    animToolBar(false);
-//                else
-//                    animToolBar(true);
-//            }
-//        });
+        slidingLayout.setAnchorPoint(0.7f);
+        slidingLayout.setPanelState(PanelState.HIDDEN);
+        slidingLayout.setFadeOnClickListener(view -> {
+            doDownAnimation();
+            slidingLayout.setPanelState(PanelState.COLLAPSED);
+        });
+        slidingLayout.addPanelSlideListener(new SlidingUpPanelLayout.SimplePanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                super.onPanelSlide(panel, slideOffset);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+                if (newState == PanelState.DRAGGING) {
+                    ppState = previousState;
+                    return;
+                }
+                if (newState == PanelState.HIDDEN
+                        || newState == PanelState.COLLAPSED
+                        || (previousState == PanelState.DRAGGING && newState == PanelState.ANCHORED && ppState == PanelState.EXPANDED))
+                    animToolBar(false);
+                else
+                    animToolBar(true);
+            }
+        });
     }
 
     // 前前次的状态
@@ -149,84 +171,84 @@ public class PostActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-//        if (slidingLayout != null &&
-//                (slidingLayout.getPanelState() == PanelState.EXPANDED || slidingLayout.getPanelState() == PanelState.ANCHORED)) {
-//            slidingLayout.setPanelState(PanelState.COLLAPSED);
-//        } else {
-//            super.onBackPressed();
-//        }
+        if (slidingLayout != null &&
+                (slidingLayout.getPanelState() == PanelState.EXPANDED || slidingLayout.getPanelState() == PanelState.ANCHORED)) {
+            slidingLayout.setPanelState(PanelState.COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     Animator upAnimator,downAnimator;
     boolean isShow = true;
 
     public void animToolBar(boolean isUP) {
-//        if (upAnimator != null && downAnimator != null &&
-//                (upAnimator.isRunning() || downAnimator.isRunning())) {
-//            return;
-//        }
-//        if (isUP && isShow) {
-//            // 向上滑动
-//            doUpAnimation();
-//        } else if (!isUP && !isShow) {
-//            // 向下滑动
-//            doDownAnimation();
-//        }
+        if (upAnimator != null && downAnimator != null &&
+                (upAnimator.isRunning() || downAnimator.isRunning())) {
+            return;
+        }
+        if (isUP && isShow) {
+            // 向上滑动
+            doUpAnimation();
+        } else if (!isUP && !isShow) {
+            // 向下滑动
+            doDownAnimation();
+        }
     }
 
     private void doUpAnimation(){
-//        isShow = false;
-//        upAnimator = new ObjectAnimator().ofFloat(myToolBar, "translationY", myToolBar.getTranslationY(), -myToolBar.getHeight());
-//        upAnimator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-//                myToolBar.setVisibility(View.GONE);
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//
-//            }
-//        });
-//        upAnimator.start();
-//        printLog("向上滑动");
+        isShow = false;
+        upAnimator = new ObjectAnimator().ofFloat(myToolBar, "translationY", myToolBar.getTranslationY(), -myToolBar.getHeight());
+        upAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                myToolBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        upAnimator.start();
+        printLog("向上滑动");
     }
 
     private void doDownAnimation(){
-//        isShow = true;
-//        downAnimator = new ObjectAnimator().ofFloat(myToolBar, "translationY", myToolBar.getTranslationY(), 0);
-//        downAnimator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animator) {
-//                myToolBar.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animator) {
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animator) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animator) {
-//
-//            }
-//        });
-//        downAnimator.start();
-//        printLog("向下滑动");
+        isShow = true;
+        downAnimator = new ObjectAnimator().ofFloat(myToolBar, "translationY", myToolBar.getTranslationY(), 0);
+        downAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                myToolBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        downAnimator.start();
+        printLog("向下滑动");
     }
 
 }

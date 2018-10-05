@@ -5,15 +5,16 @@
     android:layout_height="match_parent"
     android:background="@color/bg_primary">
 
-    <!--<com.sothree.slidinguppanel.SlidingUpPanelLayout-->
-        <!--android:id="@+id/sliding_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:gravity="bottom"-->
-        <!--app:umanoDragView="@+id/mainView"-->
-        <!--app:umanoOverlay="true"-->
-        <!--app:umanoPanelHeight="68dp"-->
-        <!--app:umanoShadowHeight="4dp">-->
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        app:umanoDragView="@+id/mainView"
+        app:umanoScrollInterpolator="@id/sv_postcontent"
+        app:umanoOverlay="true"
+        app:umanoPanelHeight="68dp"
+        app:umanoShadowHeight="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,11 +30,11 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
         <!-- Panel CONTENT -->
-        <!--<ScrollView-->
-            <!--android:id="@+id/sv_postcontent"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:orientation="vertical"/>-->
-    <!--</com.sothree.slidinguppanel.SlidingUpPanelLayout>-->
+        <ScrollView
+            android:id="@+id/sv_postcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </FrameLayout>

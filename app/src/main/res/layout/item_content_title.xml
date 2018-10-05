@@ -18,7 +18,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
+        android:layout_marginEnd="68dp"
+        android:maxLines="2"
         android:text="尴尬，Xbox One 2与PS4.5太快推出压力重重,尴尬，Xbox One 2"
         android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_share_24dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_collapse_24dp"/>
+    </LinearLayout>
 </RelativeLayout>
 

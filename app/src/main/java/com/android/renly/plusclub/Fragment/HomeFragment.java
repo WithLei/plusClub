@@ -84,6 +84,11 @@ public class HomeFragment extends BaseFragment {
         list.setPadding(0, 0, 0, 0);
         StickyListHeadersAdapter adapter = new ForumAdapter(getContext(), forumList, headers);
         list.setAdapter(adapter);
+        list.setOnItemClickListener((adapterView, view, pos, l) -> {
+            Intent intent = new Intent(getActivity(), PostActivity.class);
+            intent.putExtra("Title",forumList.get(pos).getTitle());
+            startActivity(intent);
+        });
         list.setOnHeaderClickListener((l, header, itemPosition, headerId, currentlySticky) -> {
             if (list.isHeaderCollapsed(headerId)) {
                 list.expand(headerId);
@@ -91,6 +96,7 @@ public class HomeFragment extends BaseFragment {
                 list.collapse(headerId);
             }
         });
+
     }
 
     private void initView() {

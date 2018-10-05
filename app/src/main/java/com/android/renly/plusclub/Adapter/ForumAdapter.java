@@ -72,15 +72,8 @@ public class ForumAdapter extends BaseAdapter implements StickyListHeadersAdapte
         ViewHolder holder;
 
         if (convertView == null) {
-            holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.item_forum_name, viewGroup, false);
-            holder.img = convertView.findViewById(R.id.img);
-            holder.title = convertView.findViewById(R.id.title);
-            convertView.setOnClickListener(view -> {
-                Intent intent = new Intent(context, PostActivity.class);
-                intent.putExtra("Title",forumList.get(pos).getTitle());
-                context.startActivity(intent);
-            });
+            holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -93,10 +86,14 @@ public class ForumAdapter extends BaseAdapter implements StickyListHeadersAdapte
         return convertView;
     }
 
-
     static class ViewHolder {
         ImageView img;
         TextView title;
+
+        public ViewHolder(View view){
+            img = view.findViewById(R.id.img);
+            title = view.findViewById(R.id.title);
+        }
     }
 
     static class HeaderViewHolder {

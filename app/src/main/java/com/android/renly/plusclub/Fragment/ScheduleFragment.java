@@ -56,11 +56,11 @@ public class ScheduleFragment extends BaseFragment {
             App.setScheduleStartWeek(getActivity(),1);
         nowWeek = App.getScheduleNowWeek(getActivity());
         printLog("nowWeek:" + nowWeek);
+        initView();
     }
 
     @Override
     public void onResume() {
-        initView();
         super.onResume();
     }
 
