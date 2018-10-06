@@ -11,9 +11,9 @@
         android:layout_height="match_parent"
         android:gravity="bottom"
         app:umanoDragView="@+id/mainView"
-        app:umanoScrollInterpolator="@id/sv_postcontent"
         app:umanoOverlay="true"
         app:umanoPanelHeight="68dp"
+        app:umanoScrollableView="@id/sv_postcontent"
         app:umanoShadowHeight="4dp">
 
         <LinearLayout
@@ -23,18 +23,24 @@
 
             <include layout="@layout/my_toolbar" />
             <!-- MAIN CONTENT -->
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_post"
-                android:clickable="true"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swiperefresh_post"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true" />
+            </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
         <!-- Panel CONTENT -->
         <ScrollView
             android:id="@+id/sv_postcontent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </FrameLayout>

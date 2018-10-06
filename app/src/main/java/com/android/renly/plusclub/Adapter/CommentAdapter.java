@@ -42,7 +42,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         Comment object = commentList.get(position);
         holder.replayAuthor.setText(object.getName());
-        holder.replayIndex.setText(position+1 + "");
+        holder.replayIndex.setText(position+1 + "楼");
         holder.replayTime.setText(object.getFromNowOnTime());
         holder.htmlText.setText(object.getContent());
         holder.articleUserImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_mine_friend));

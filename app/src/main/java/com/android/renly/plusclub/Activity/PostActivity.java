@@ -6,17 +6,20 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ScrollView;
 
 import com.android.renly.plusclub.Adapter.PostAdapter;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Fragment.PostContentFragment;
 import com.android.renly.plusclub.R;
+import com.android.renly.plusclub.UI.ThemeUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
@@ -34,6 +37,10 @@ public class PostActivity extends BaseActivity {
     SlidingUpPanelLayout slidingLayout;
     @BindView(R.id.rv_post)
     RecyclerView rvPost;
+    @BindView(R.id.sv_postcontent)
+    ScrollView svPostcontent;
+    @BindView(R.id.swiperefresh_post)
+    SwipeRefreshLayout refreshLayout;
 
     private Unbinder unbinder;
 
@@ -44,7 +51,7 @@ public class PostActivity extends BaseActivity {
     /**
      * 帖子列表
      */
-    private List<Post>postList;
+    private List<Post> postList;
     /**
      * Panel Fragment管理器
      */
@@ -52,7 +59,8 @@ public class PostActivity extends BaseActivity {
     /**
      * Panel Fragment池
      */
-    private List<PostContentFragment>fragmentPool;
+    private List<PostContentFragment> fragmentPool;
+    private Fragment nowFragment = null;
 
     @Override
     protected int getLayoutID() {
@@ -70,33 +78,55 @@ public class PostActivity extends BaseActivity {
     protected void initView() {
         initToolBar(true, title);
         initSlidr();
+        initRefreshLayout();
         initSlidingLayout();
         initpostList();
     }
+
+    /**
+     * 下拉刷新样式
+     */
+    private void initRefreshLayout() {
+        refreshLayout.setColorSchemeColors(ThemeUtil.getThemeColor(this,R.attr.colorAccent));
+        refreshLayout.setOnRefreshListener(() -> new Thread(){
+            @Override
+            public void run() {
+                try {
+                    sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(() -> {
+                    if (refreshLayout.isRefreshing())
+                        refreshLayout.setRefreshing(false);
+                });
+            }
+        }.start());
+    }
+
     /**
      * 准备测试的帖子列表数据
      */
     private void initPostListData() {
         postList = new ArrayList<>();
-        for (int i = 0;i < 10 ;i++)
-            postList.add(new Post(i,"测试标题" + i,"测试姓名" + i,"2018-1-1 19:20:15",233,128));
+        for (int i = 0; i < 10; i++)
+            postList.add(new Post(i, "测试标题" + i, "测试姓名" + i, "2018-1-1 19:20:15", 233, 128));
     }
 
     private void initpostList() {
         // 初始化fragmentPool池
         fragmentPool = new ArrayList<>();
-        PostAdapter adapter = new PostAdapter(this,postList);
+        PostAdapter adapter = new PostAdapter(this, postList);
         // 设置监听事件
         rvPost.setAdapter(adapter);
         adapter.setOnItemClickListener(pos -> {
             PostContentFragment fragment = new PostContentFragment();
             fragmentPool.add(fragment);
-            if (fragmentPool.size() == 1)
-
-            loadPanel(fragment,fragmentPool.size() == 1 ? null : fragmentPool.get(fragmentPool.size()-2));
+            nowFragment = fragment;
+            loadPanel(fragment, fragmentPool.size() == 1 ? null : fragmentPool.get(fragmentPool.size() - 2));
         });
-        rvPost.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        rvPost.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        rvPost.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rvPost.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         // 调整draw缓存,加速recyclerview加载
         rvPost.setItemViewCacheSize(20);
         rvPost.setDrawingCacheEnabled(true);
@@ -114,7 +144,7 @@ public class PostActivity extends BaseActivity {
 
         if (lastFragment != null)
             transaction.remove(lastFragment);
-        transaction.add(R.id.sv_postcontent,targetFragment);
+        transaction.add(R.id.sv_postcontent, targetFragment);
 
         transaction.commit();
         //显示
@@ -174,12 +204,16 @@ public class PostActivity extends BaseActivity {
         if (slidingLayout != null &&
                 (slidingLayout.getPanelState() == PanelState.EXPANDED || slidingLayout.getPanelState() == PanelState.ANCHORED)) {
             slidingLayout.setPanelState(PanelState.COLLAPSED);
+            if (nowFragment != null) {
+                svPostcontent.stopNestedScroll();
+                svPostcontent.scrollTo(0, 0);
+            }
         } else {
             super.onBackPressed();
         }
     }
 
-    Animator upAnimator,downAnimator;
+    Animator upAnimator, downAnimator;
     boolean isShow = true;
 
     public void animToolBar(boolean isUP) {
@@ -196,7 +230,7 @@ public class PostActivity extends BaseActivity {
         }
     }
 
-    private void doUpAnimation(){
+    private void doUpAnimation() {
         isShow = false;
         upAnimator = new ObjectAnimator().ofFloat(myToolBar, "translationY", myToolBar.getTranslationY(), -myToolBar.getHeight());
         upAnimator.addListener(new Animator.AnimatorListener() {
@@ -224,7 +258,7 @@ public class PostActivity extends BaseActivity {
         printLog("向上滑动");
     }
 
-    private void doDownAnimation(){
+    private void doDownAnimation() {
         isShow = true;
         downAnimator = new ObjectAnimator().ofFloat(myToolBar, "translationY", myToolBar.getTranslationY(), 0);
         downAnimator.addListener(new Animator.AnimatorListener() {

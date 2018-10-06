@@ -79,7 +79,18 @@ public class PostContentFragment extends BaseFragment {
     private void initCommentList() {
         CommentAdapter adapter = new CommentAdapter(getContext(),commentList);
         rvComment.setAdapter(adapter);
-        rvComment.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        rvComment.setLayoutManager(new LinearLayoutManager(getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        // 解决数据加载不全的问题
+        rvComment.setNestedScrollingEnabled(false);
+        rvComment.setHasFixedSize(true);
+        //解决数据加载完成后，没有停留在顶部的问题
+        rvComment.setFocusable(false);
+
         rvComment.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         // 调整draw缓存,加速recyclerview加载
         rvComment.setItemViewCacheSize(20);
