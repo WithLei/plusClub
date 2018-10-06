@@ -83,8 +83,8 @@ public class ScheduleFragment extends BaseFragment {
 //        drawable.addState(new int[]{android.R.attr.state_window_focused},getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
 //        drawable.addState(new int[]{android.R.attr.state_focused},getResources().getDrawable(R.drawable.ic_expand_less_black_24dp));
         spinner.setSelectedIndex(nowWeek-1);
-        spinner.setArrowDrawable(getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
         spinner.setArrowTintColor(R.color.white);
+        spinner.setArrowDrawable(getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
@@ -121,7 +121,7 @@ public class ScheduleFragment extends BaseFragment {
             else
                 contents[(course.getRows() - 1) / 2][course.getWeekday() - 1] = course.getCourseName() + "\n\n" + course.getClassRoom();
         }
-        adapter = new ScheduleGridAdapter(getActivity());
+        adapter = new ScheduleGridAdapter(getActivity(), scheduleList);
         adapter.setContent(contents, 6, 7);
         courceDetail.setAdapter(adapter);
     }

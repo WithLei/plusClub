@@ -63,7 +63,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
-        android:fontFamily="@font/fontawesome"
+        android:fontFamily="@fonts/fontawesome"
         android:gravity="center"
         android:padding="8dp"
         android:text="&#xf142;" />

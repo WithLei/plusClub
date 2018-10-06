@@ -17,6 +17,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 帖子列表adapter
+ */
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private List<Post> postList;
     private Context context;
@@ -41,7 +44,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         Post object = postList.get(position);
         holder.articleTitle.setText(object.getTitle());
         holder.authorName.setText("\uf2c0 " + object.getName());
-        holder.postTime.setText("\uf017 " + object.getPostTime());
+        holder.postTime.setText("\uf017  " + object.getPostTime());
         holder.replyCount.setText("\uf0e6 " + object.getCommentsCount());
         holder.viewCount.setText("\uf06e " + object.getPageViewsCount());
         holder.authorImg.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_mine_collect));

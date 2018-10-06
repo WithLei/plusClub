@@ -144,4 +144,26 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="text_schedule_detail">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableRight">@drawable/ic_chevron_right_black_24dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_color_sec</item>
+    </style>
+
+    <style name="text_schedule_detail_info">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical|right</item>
+        <item name="android:layout_marginRight">50dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_color_pri</item>
+    </style>
+
 </resources>

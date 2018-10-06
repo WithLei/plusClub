@@ -77,6 +77,9 @@ public class PostActivity extends BaseActivity {
     @Override
     protected void initView() {
         initToolBar(true, title);
+        addToolbarMenu(R.drawable.ic_create_black_24dp).setOnClickListener(view -> {
+            gotoActivity(EditAcitivity.class);
+        });
         initSlidr();
         initRefreshLayout();
         initSlidingLayout();

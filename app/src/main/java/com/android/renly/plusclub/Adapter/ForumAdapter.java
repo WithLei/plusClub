@@ -17,6 +17,9 @@ import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
+/**
+ * 首页论坛模块adapter
+ */
 public class ForumAdapter extends BaseAdapter implements StickyListHeadersAdapter {
     private Context context;
     private LayoutInflater inflater;

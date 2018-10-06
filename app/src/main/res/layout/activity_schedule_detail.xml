@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_secondary"
+    android:orientation="vertical">
+
+    <include layout="@layout/my_toolbar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/bg_primary">
+
+        <FrameLayout
+            android:id="@+id/fl_setCourseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                style="@style/text_schedule_detail"
+                android:text="课名" />
+
+            <TextView
+                android:id="@+id/tv_schedule_setCourseName"
+                style="@style/text_schedule_detail_info"
+                android:layout_marginRight="45dp"
+                tool:text="JavaEE应用开发" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/bg_primary">
+
+        <FrameLayout
+            android:id="@+id/fl_setClass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                style="@style/text_schedule_detail"
+                android:text="教室" />
+
+            <TextView
+                android:id="@+id/tv_schedule_setClass"
+                style="@style/text_schedule_detail_info"
+                android:layout_marginRight="45dp"
+                tool:text="15#303" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_primary">
+
+        <FrameLayout
+            android:id="@+id/fl_setWeeks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                style="@style/text_schedule_detail"
+                android:text="周数" />
+
+            <TextView
+                android:id="@+id/tv_schedule_setWeeks"
+                style="@style/text_schedule_detail_info"
+                android:layout_marginRight="45dp"
+                tool:text="1 - 16周" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_primary">
+
+        <FrameLayout
+            android:id="@+id/fl_setSDweek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                style="@style/text_schedule_detail"
+                android:text="单双周" />
+
+            <TextView
+                android:id="@+id/tv_schedule_setSDweek"
+                style="@style/text_schedule_detail_info"
+                android:layout_marginRight="45dp"
+                tool:text="单双周" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_primary">
+
+        <FrameLayout
+            android:id="@+id/fl_setJS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                style="@style/text_schedule_detail"
+                android:text="节数" />
+
+            <TextView
+                android:id="@+id/tv_schedule_setJS"
+                style="@style/text_schedule_detail_info"
+                android:layout_marginRight="45dp"
+                tool:text="周一 3~4节" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_primary">
+
+        <FrameLayout
+            android:id="@+id/fl_setTeacher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                style="@style/text_schedule_detail"
+                android:text="老师" />
+
+            <TextView
+                android:id="@+id/tv_schedule_setTeacher"
+                style="@style/text_schedule_detail_info"
+                android:layout_marginRight="45dp"
+                tool:text="三石" />
+        </FrameLayout>
+    </FrameLayout>
+
+</LinearLayout>

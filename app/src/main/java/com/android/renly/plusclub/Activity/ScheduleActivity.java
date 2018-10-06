@@ -187,7 +187,7 @@ public class ScheduleActivity extends BaseActivity {
             printLog(course.toString());
             contents[(course.getRows() - 1) / 2][course.getWeekday() - 1] = course.getCourseName() + "\n" + course.getClassRoom();
         }
-        adapter = new ScheduleGridAdapter(this);
+        adapter = new ScheduleGridAdapter(this, scheduleList);
         adapter.setContent(contents, 6, 7);
         courceDetail.setAdapter(adapter);
     }

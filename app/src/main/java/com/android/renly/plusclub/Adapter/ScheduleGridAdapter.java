@@ -1,6 +1,7 @@
 package com.android.renly.plusclub.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,12 +11,20 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.android.renly.plusclub.Activity.ScheduleDetailActivity;
+import com.android.renly.plusclub.Bean.Course;
 import com.android.renly.plusclub.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScheduleGridAdapter extends BaseAdapter{
     private Context mContext;
 
     private String[][] contents;
+    List<Course> scheduleList = new ArrayList<>();
+
 
     private int rowTotal;
 
@@ -23,8 +32,9 @@ public class ScheduleGridAdapter extends BaseAdapter{
 
     private int positionTotal;
 
-    public ScheduleGridAdapter(Context context) {
+    public ScheduleGridAdapter(Context context, List<Course> scheduleList) {
         this.mContext = context;
+        this.scheduleList = scheduleList;
     }
 
     public int getCount() {
@@ -96,8 +106,15 @@ public class ScheduleGridAdapter extends BaseAdapter{
             convertView.setOnClickListener(v -> {
                 int row = position / columnTotal;
                 int column = position % columnTotal;
-                String con = "当前选中的是" + contents[row][column] + "课";
-                Toast.makeText(mContext, con, Toast.LENGTH_SHORT).show();
+                Course obj = new Course();
+                for (int i = 0;i < scheduleList.size();i++)
+                    if ((scheduleList.get(i).getRows() - 1) / 2 == row && scheduleList.get(i).getWeekday() - 1 == column)
+                        obj = scheduleList.get(i);
+                String str = obj.getRows() + " " + obj.getWeekday();
+                Log.e("print",str);
+                Intent intent = new Intent(mContext, ScheduleDetailActivity.class);
+                intent.putExtra("JsonObj", JSON.toJSONString(obj));
+                mContext.startActivity(intent);
             });
         }
         return convertView;

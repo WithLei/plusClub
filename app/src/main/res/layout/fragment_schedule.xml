@@ -18,7 +18,7 @@
             android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            app:textTint="@color/colorAccent"
+            app:textTint="?android:colorPrimary"
             android:textSize="14sp"
             android:textStyle="bold"
             app:dropDownListPaddingBottom="@dimen/spinnerMaxHeight" />
@@ -27,6 +27,7 @@
             android:id="@+id/iv_toolbar_menu"
             android:layout_width="@dimen/toolbarHeight"
             android:layout_height="@dimen/toolbarHeight"
+            android:background="?android:selectableItemBackgroundBorderless"
             android:layout_gravity="end"
             android:padding="13dp"
             android:src="@drawable/ic_menu_24dp" />
