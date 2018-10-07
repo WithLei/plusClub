@@ -18,6 +18,13 @@
         android:layout_gravity="center"
         android:text="跳转课程表"
         />
+    <Button
+        android:id="@+id/btn_main_ecard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="一卡通查询"
+        />
     <TextView
         android:id="@+id/tv_main_name"
         android:layout_width="wrap_content"

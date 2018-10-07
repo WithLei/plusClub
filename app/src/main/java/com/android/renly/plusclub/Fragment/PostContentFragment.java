@@ -11,17 +11,20 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.Activity.PostActivity;
 import com.android.renly.plusclub.Adapter.CommentAdapter;
 import com.android.renly.plusclub.Bean.Comment;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
+import com.android.renly.plusclub.Utils.IntentUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class PostContentFragment extends BaseFragment {
@@ -47,7 +50,7 @@ public class PostContentFragment extends BaseFragment {
     RecyclerView rvComment;
     Unbinder unbinder;
 
-    private List<Comment>commentList;
+    private List<Comment> commentList;
 
     @Override
     public int getLayoutid() {
@@ -66,20 +69,20 @@ public class PostContentFragment extends BaseFragment {
 
     private void initCommentListData() {
         commentList = new ArrayList<>();
-        commentList.add(new Comment("测试回复","2018-10-4 15:03:01","一天前测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复","2018-10-5 15:03:01","几小时内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复","2018-10-5 18:01:01","1-2小时测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复","2018-10-5 18:59:01","1小时内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复","2018-10-4 19:10:01","5分钟内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复","2018-10-4 19:03:01","1分钟内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复","2015-10-4 15:03:01","几年前测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
+        commentList.add(new Comment("测试回复", "2018-10-4 15:03:01", "一天前测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
+        commentList.add(new Comment("测试回复", "2018-10-5 15:03:01", "几小时内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
+        commentList.add(new Comment("测试回复", "2018-10-5 18:01:01", "1-2小时测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
+        commentList.add(new Comment("测试回复", "2018-10-5 18:59:01", "1小时内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
+        commentList.add(new Comment("测试回复", "2018-10-4 19:10:01", "5分钟内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
+        commentList.add(new Comment("测试回复", "2018-10-4 19:03:01", "1分钟内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
+        commentList.add(new Comment("测试回复", "2015-10-4 15:03:01", "几年前测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
 
     }
 
     private void initCommentList() {
-        CommentAdapter adapter = new CommentAdapter(getContext(),commentList);
+        CommentAdapter adapter = new CommentAdapter(getContext(), commentList);
         rvComment.setAdapter(adapter);
-        rvComment.setLayoutManager(new LinearLayoutManager(getContext()){
+        rvComment.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
                 return false;
@@ -91,7 +94,7 @@ public class PostContentFragment extends BaseFragment {
         //解决数据加载完成后，没有停留在顶部的问题
         rvComment.setFocusable(false);
 
-        rvComment.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        rvComment.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         // 调整draw缓存,加速recyclerview加载
         rvComment.setItemViewCacheSize(20);
         rvComment.setDrawingCacheEnabled(true);
@@ -114,5 +117,19 @@ public class PostContentFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick({R.id.share_panel, R.id.close_panel})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.share_panel:
+                String data = "这篇文章不错，分享给你们 【" + articleTitle.getText() + "】";
+                IntentUtils.sharePost(getActivity(), data);
+                break;
+            case R.id.close_panel:
+                PostActivity postActivity = (PostActivity)getActivity();
+                postActivity.hidePanel();
+                break;
+        }
     }
 }

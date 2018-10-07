@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/bg_primary"
+    android:orientation="vertical">
+    <include layout="@layout/my_toolbar" />
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/text_18_pri"
+        android:padding="10dp"
+        tools:text="一卡通详情"/>
+
+</LinearLayout>

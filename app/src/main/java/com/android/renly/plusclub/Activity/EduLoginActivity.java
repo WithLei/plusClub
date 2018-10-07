@@ -59,6 +59,7 @@ public class EduLoginActivity extends BaseActivity {
     private String user_eduid = "";
     private String user_edupwd = "";
     private String cookie = "";
+    private String __VIEWSTATE = "";
     private Bitmap bm;
     private SharedPreferences sp;
 
@@ -216,19 +217,21 @@ public class EduLoginActivity extends BaseActivity {
     private void GetCookies() {
         cookie = "";
         OkHttpUtils.get()
-                .url(NetConfig.BASE_EDU_RS)
+                .url(NetConfig.BASE_EDU_PLUS)
                 .build()
                 .execute(new Callback() {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         Headers headers = response.headers();
-                        for (int i = 0; i < headers.size(); i++)
+                        for (int i = 0; i < headers.size(); i++){
                             if (headers.name(i).equals("Set-Cookie"))
                                 if (headers.value(i).endsWith(" Path=/"))
                                     cookie += headers.value(i).substring(0, headers.value(i).length() - 7);
                                 else
                                     cookie += headers.value(i);
+                        }
                         printLog("cookie:" + cookie);
+                        GetVIEWSTATE(response.body().string());
                         //刷新验证码
                         GetVerifation();
                         return null;
@@ -245,6 +248,18 @@ public class EduLoginActivity extends BaseActivity {
                         Log.e("print", "GetCookies onResponse");
                     }
                 });
+    }
+
+
+    /**
+     * 获取__VIEWSTATE
+     */
+    private void GetVIEWSTATE(String body) {
+        String x = body.split("name=\"__VIEWSTATE\" value=\"")[1];
+        x = x.split("\" />")[0];
+        printLog(x);
+        __VIEWSTATE = x;
+        App.set__VIEWSTATE(this,x);
     }
 
     /**
@@ -310,8 +325,8 @@ public class EduLoginActivity extends BaseActivity {
      */
     private void doLogin(String eduid, String pwd, String checkid) {
         OkHttpUtils.post()
-                .url(NetConfig.BASE_EDU_RS)
-                .addParams("__VIEWSTATE", "dDwtNTE2MjI4MTQ7Oz7pB/NTSIblf9AJanMrSjcqz4d8cA==")
+                .url(NetConfig.BASE_EDU_PLUS)
+                .addParams("__VIEWSTATE", App.get__VIEWSTATE(this))
                 .addParams("Button1", "")
                 .addParams("hidPdrs", "")
                 .addParams("hidsc", "")
@@ -414,7 +429,7 @@ public class EduLoginActivity extends BaseActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(App.COOKIE, cookie);
         editor.putString(App.USER_EDUID_KEY, user_eduid);
-        editor.putString(App.USER_PWD_KEY, user_edupwd);
+        editor.putString(App.USER_EDUPWD_KEY, user_edupwd);
         editor.putString(App.USER_NAME_KEY, stuName);
         editor.apply();
         gotoActivity(EduActivity.class);

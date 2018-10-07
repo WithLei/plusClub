@@ -104,7 +104,7 @@ public class EduActivity extends BaseActivity {
                 .addParams("__EVENTARGUMENT", "")
                 .addParams("__EVENTTARGET", "likTc")
                 //无__VIEWSTATE参数不能够正常post
-                .addParams("__VIEWSTATE", "dDwxMjg4MjkxNjE4Ozs+AHTwpKTHnvjKgKNdCxSpAhxJyXQ=")
+                .addParams("__VIEWSTATE", App.get__VIEWSTATE(this))
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -187,7 +187,7 @@ public class EduActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.btn_main_exit, R.id.btn_main_jump})
+    @OnClick({R.id.btn_main_exit, R.id.btn_main_jump, R.id.btn_main_ecard})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_main_exit:
@@ -196,6 +196,10 @@ public class EduActivity extends BaseActivity {
             case R.id.btn_main_jump:
                 gotoActivity(ScheduleActivity.class);
                 break;
+            case R.id.btn_main_ecard:
+                gotoActivity(ECardActivity.class);
+                break;
         }
     }
+
 }

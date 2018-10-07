@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.renly.plusclub.R;
 
@@ -52,6 +53,15 @@ public abstract class BaseFragment extends Fragment {
         getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
 
     }
+
+    public void ToastLong(String msg){
+        MyToast.showText(getContext(),msg, Toast.LENGTH_LONG);
+    }
+
+    public void ToastShort(String msg){
+        MyToast.showText(getContext(),msg,Toast.LENGTH_SHORT);
+    }
+
 
     /**
      * Log输出

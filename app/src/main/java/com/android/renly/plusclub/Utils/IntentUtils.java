@@ -12,4 +12,12 @@ public class IntentUtils {
         shareIntent.setType("text/plain");
         context.startActivity(Intent.createChooser(shareIntent, "分享Plus客户端到:"));
     }
+
+    public static void sharePost(Context context, String data) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, data);
+        shareIntent.setType("text/plain");
+        context.startActivity(Intent.createChooser(shareIntent, "分享帖子到:"));
+    }
 }

@@ -31,6 +31,7 @@
         android:padding="10dp">
 
         <ImageView
+            android:id="@+id/share_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -38,6 +39,7 @@
             android:src="@drawable/ic_share_24dp" />
 
         <ImageView
+            android:id="@+id/close_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"

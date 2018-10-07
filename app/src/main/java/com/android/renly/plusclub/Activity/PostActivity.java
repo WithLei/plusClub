@@ -288,4 +288,8 @@ public class PostActivity extends BaseActivity {
         printLog("向下滑动");
     }
 
+    public void hidePanel(){
+        slidingLayout.setPanelState(PanelState.HIDDEN);
+    }
+
 }
