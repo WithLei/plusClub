@@ -3,6 +3,7 @@ package com.android.renly.plusclub.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import com.android.renly.plusclub.App;
@@ -44,6 +45,7 @@ public class ECardActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        tv.setMovementMethod(ScrollingMovementMethod.getInstance());
         doLogin();
     }
 
@@ -53,6 +55,7 @@ public class ECardActivity extends BaseActivity {
     private void getlt() {
         OkHttpUtils.get()
                 .url(NetConfig.BASE_ECARD_PLUS)
+                .addHeader("User-Agent",NetConfig.User_Agent_KEY)
                 .build()
                 .execute(new Callback() {
                     @Override
@@ -60,6 +63,7 @@ public class ECardActivity extends BaseActivity {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
                         lt = responseHTML.split("<input type=\"hidden\" name=\"lt\" value=\"")[1];
                         lt = lt.split("\" />")[0];
+                        printLog("lt = " + lt);
 
                         Headers headers = response.headers();
                         for (int i = 0; i < headers.size(); i++){
@@ -68,7 +72,6 @@ public class ECardActivity extends BaseActivity {
 //                                    cookie += headers.value(i).substring(0, headers.value(i).length() - 7);
 //                                else
                                     cookie += headers.value(i);
-                            printLog("paramName = " + headers.name(i) + " value = " + headers.value(i));
                         }
                         printLog("cookie = " + cookie);
                         handler.sendEmptyMessage(DO_LOGIN);
@@ -98,10 +101,11 @@ public class ECardActivity extends BaseActivity {
         OkHttpUtils.post()
                 .url(NetConfig.ECARD_LOGIN_PLUS)
                 .addHeader("Cookie",cookie)
+                .addHeader("User-Agent",NetConfig.User_Agent_KEY)
+                .addParams("_eventId","submit")
                 .addParams("ip","")
                 .addParams("isremenberme","0")
                 .addParams("losetime","240")
-                .addParams("rememberUser","true")
                 .addParams("lt",lt)
                 .addParams("password",App.getEduPwd(this))
                 .addParams("submit1","")
@@ -112,7 +116,7 @@ public class ECardActivity extends BaseActivity {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
-                        writeData("/sdcard/Test/ECard.txt", responseHTML);
+                        writeData(getFilesDir().getAbsolutePath() + "/output/ECard.txt", responseHTML);
                         new Thread() {
                             @Override
                             public void run() {

@@ -1,6 +1,7 @@
 package com.android.renly.plusclub.Common;
 
 public class NetConfig {
+    public static final String User_Agent_KEY = "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko";
     // VPN 登陆官网
     public static final String vpnSigninURL = "https://webvpn.lsu.edu.cn/users/sign_in";
 
@@ -38,6 +39,6 @@ public class NetConfig {
     public static final String BASE_ECARD_IN = "http://ca.lsu.edu.cn/zfca/login";
 
     // 信息门户登陆请求 - 外/内网
-    public static final String ECARD_LOGIN_PLUS = "http://ca.lsu.edu.cn/zfca/login;jsessionid=BB3E151306331D2AB17C59943A0B1D39?service=http%3A%2F%2Fportal.lsu.edu.cn%2Fportal.do";
+    public static final String ECARD_LOGIN_PLUS = "https://ca.webvpn.lsu.edu.cn/zfca/login";
 
 }
