@@ -41,4 +41,16 @@ public class NetConfig {
     // 信息门户登陆请求 - 外/内网
     public static final String ECARD_LOGIN_PLUS = "https://ca.webvpn.lsu.edu.cn/zfca/login";
 
+
+    // PlusClub api基地址
+    public static final String BASE_PLUSCLUB = "http://118.24.0.78/api/";
+
+    // PlusClub 登陆
+    public static final String BASE_LOGIN_PLUS = BASE_PLUSCLUB + "login";
+
+    // PlusClub 注册
+    public static final String BASE_REGISTER_PLUS = BASE_PLUSCLUB + "register";
+
+    // PlusClub 获取用户个人信息
+    public static final String BASE_USERDETAIL_PLUS = BASE_PLUSCLUB + "get_user_details";
 }

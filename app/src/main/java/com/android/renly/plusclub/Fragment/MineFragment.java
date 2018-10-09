@@ -3,6 +3,8 @@ package com.android.renly.plusclub.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.AboutActivity;
 import com.android.renly.plusclub.Activity.LabActivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
@@ -20,9 +24,13 @@ import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseFragment;
+import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.IntentUtils;
+import com.squareup.picasso.Picasso;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -56,8 +65,8 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     Unbinder unbinder;
     @BindView(R.id.tv_mine_user_name)
     TextView tvMineUserName;
-    @BindView(R.id.tv_mine_user_grade)
-    TextView tvMineUserGrade;
+    @BindView(R.id.tv_mine_user_email)
+    TextView tvMineUserEmail;
     private String username, uid;
     //记录上次创建时候是否登录
     private boolean isLoginLast = false;
@@ -102,15 +111,17 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     }
 
     private void initView() {
-        if (App.ISLOGIN(getActivity())){
-            ciMineUserImg.setImageDrawable(getResources().getDrawable(R.mipmap.pluslogo_round));
-            tvMineUserName.setText(App.getUid(getActivity()));
-            tvMineUserGrade.setVisibility(View.VISIBLE);
-            tvMineUserGrade.setText("大二");
-        }else {
+        initInfo();
+
+    }
+
+    private void initInfo() {
+        if (App.ISLOGIN(getActivity())) {
+            getInfo();
+        } else {
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
             tvMineUserName.setText("点击头像登陆");
-            tvMineUserGrade.setVisibility(View.GONE);
+            tvMineUserEmail.setVisibility(View.GONE);
         }
     }
 
@@ -139,11 +150,11 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 if (!App.ISLOGIN(getActivity())) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     getActivity().startActivityForResult(intent, LoginActivity.requestCode);
-                }else{
+                } else {
                     Intent intent = new Intent(getActivity(), UserDetailActivity.class);
                     getActivity().startActivityForResult(intent, UserDetailActivity.requestCode);
                 }
-                getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
+                getActivity().overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
                 break;
             case R.id.ll_mine_history:
                 break;
@@ -163,7 +174,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 // 主题设置
                 Intent intent = new Intent(getActivity(), ThemeActivity.class);
                 getActivity().startActivityForResult(intent, ThemeActivity.requestCode);
-                getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
+                getActivity().overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
                 break;
             case 1:
                 // 设置
@@ -187,4 +198,57 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         }
     }
 
+    public void getInfo() {
+        OkHttpUtils.get()
+                .url(NetConfig.BASE_USERDETAIL_PLUS)
+                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        printLog("getUserAvator onError" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        if (jsonObject.getInteger("code") == 20000) {
+                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+                            String avatarSrc = obj.getString("avatar");
+                            String name = obj.getString("name");
+                            Message msg = new Message();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("avatar", avatarSrc);
+                            bundle.putString("name",name);
+                            msg.setData(bundle);
+                            msg.what = GET_INFO;
+                            handler.sendMessage(msg);
+                        }
+
+                    }
+                });
+    }
+
+    private static final int GET_INFO = 2;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case GET_INFO:
+                    setInfo(msg.getData().getString("avatar"),msg.getData().getString("name"));
+                    break;
+            }
+        }
+    };
+
+    private void setInfo(String avatarSrc, String userName) {
+        Picasso.get()
+                .load(avatarSrc)
+                .placeholder(R.drawable.image_placeholder)
+                .into(ciMineUserImg);
+
+        tvMineUserName.setText(userName);
+        tvMineUserEmail.setVisibility(View.VISIBLE);
+        tvMineUserEmail.setText(App.getUid(getActivity()));
+    }
 }

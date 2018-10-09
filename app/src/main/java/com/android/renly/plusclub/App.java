@@ -92,6 +92,18 @@ public class App extends Application {
         editor.apply();
     }
 
+    public static String getToken(Context context){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getString(USER_TOKEN_KEY, "");
+    }
+
+    public static void setToken(Context context, String token) {
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(USER_TOKEN_KEY, token);
+        editor.apply();
+    }
+
     public static String getEduid(Context context){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_EDUID_KEY,"");
@@ -241,6 +253,7 @@ public class App extends Application {
     public static final String MY_SP_NAME = "PlusClub";
     public static final String USER_UID_KEY = "user_uid";
     public static final String USER_PWD_KEY = "user_pwd";
+    public static final String USER_TOKEN_KEY = "user_token";
     public static final String USER_EDUID_KEY = "xh";
     public static final String USER_EDUPWD_KEY = "edu_pwd";
     public static final String USER_NAME_KEY = "user_name";

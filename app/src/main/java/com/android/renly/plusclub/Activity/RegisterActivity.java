@@ -1,21 +1,23 @@
 package com.android.renly.plusclub.Activity;
 
 import android.os.Bundle;
-import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
-public class EditAcitivity extends BaseActivity {
-    @BindView(R.id.editor)
-    EditText editor;
+public class RegisterActivity extends BaseActivity {
+    @BindView(R.id.myToolBar)
+    FrameLayout myToolBar;
+    private Unbinder unbinder;
 
     @Override
     protected int getLayoutID() {
-        return R.layout.activity_edit;
+        return R.layout.activity_register;
     }
 
     @Override
@@ -25,19 +27,19 @@ public class EditAcitivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        initEditor();
-    }
-
-    /**
-     * 初始化输入框
-     */
-    private void initEditor() {
-        editor.setSelection(editor.getText().length());
+        initToolBar(true,"用户注册");
+        initSlidr();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 }

@@ -43,12 +43,6 @@
             android:textSize="16sp" />
     </android.support.design.widget.TextInputLayout>
 
-    <CheckBox
-        android:id="@+id/cb_rem_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="记住帐号密码" />
 
     <EditText
         android:id="@+id/et_anwser_text"
@@ -62,6 +56,34 @@
         android:maxLines="1"
         android:textSize="16sp"
         android:visibility="gone" />
+
+    <CheckBox
+        android:id="@+id/cb_rem_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="记住帐号密码" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/text_14_sec"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/dimen_4"
+            android:text="注册账号"/>
+        <TextView
+            android:id="@+id/tv_forgetPwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/text_14_sec"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/dimen_4"
+            android:text="忘记密码"/>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btn_login"

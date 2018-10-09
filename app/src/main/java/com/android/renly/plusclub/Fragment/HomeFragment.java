@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.LabActivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Activity.PostActivity;
@@ -21,9 +23,13 @@ import com.android.renly.plusclub.Adapter.ForumAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Forum;
 import com.android.renly.plusclub.Common.BaseFragment;
+import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
+import com.squareup.picasso.Picasso;
 import com.tuesda.walker.circlerefresh.CircleRefreshLayout;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
 import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -58,7 +65,7 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initData(Context content) {
         if (App.ISLOGIN(getActivity()))
-            ciHomeImg.setImageDrawable(getResources().getDrawable(R.mipmap.pluslogo_round));
+            getUserAvator();
         else
             ciHomeImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
         forumList = new ArrayList<>();
@@ -139,8 +146,6 @@ public class HomeFragment extends BaseFragment {
             case R.id.ci_home_img:
                 if (App.ISLOGIN(getActivity())) {
                     Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-                    intent.putExtra("userName", App.getUid(getActivity()));
-                    intent.putExtra("avatarUrl", "");
                     getActivity().startActivityForResult(intent, UserDetailActivity.requestCode);
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -154,6 +159,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     private static final int REFRESH_END = 2;
+    private static final int GET_AVATAR = 4;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -161,7 +167,42 @@ public class HomeFragment extends BaseFragment {
                 case REFRESH_END:
                     refreshLayout.finishRefreshing();
                     break;
+                case GET_AVATAR:
+                    Picasso.get()
+                            .load(msg.getData().getString("avatar"))
+                            .placeholder(R.drawable.image_placeholder)
+                            .into(ciHomeImg);
+                    break;
             }
         }
     };
+
+    public void getUserAvator() {
+        OkHttpUtils.get()
+                .url(NetConfig.BASE_USERDETAIL_PLUS)
+                .addHeader("Authorization","Bearer " + App.getToken(getActivity()))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        printLog("getUserAvator onError" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        if (jsonObject.getInteger("code") == 20000){
+                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+                            String avatarSrc = obj.getString("avatar");
+                            Message msg = new Message();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("avatar",avatarSrc);
+                            msg.setData(bundle);
+                            msg.what = GET_AVATAR;
+                            handler.sendMessage(msg);
+                        }
+
+                    }
+                });
+    }
 }
