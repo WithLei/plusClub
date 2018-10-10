@@ -11,9 +11,29 @@ import java.util.Date;
 
 public class Comment {
     /**
-     * 用户头像链接
+     * 评论ID
      */
-    private String avatorSrc;
+    private long id;
+    /**
+     * 评论内容
+     */
+    private String body;
+    /**
+     * 用户id
+     */
+    private String user_id;
+    /**
+     * 帖子id
+     */
+    private long discussion_id;
+    /**
+     * 发布时间
+     */
+    private String created_at;
+    /**
+     * 更新时间
+     */
+    private String updated_at;
     /**
      * 用户名
      */
@@ -31,12 +51,8 @@ public class Comment {
      */
     private String content;
 
-    public Comment(String avatorSrc, String name, long floorCount, Date postTime, String content) {
-        this.avatorSrc = avatorSrc;
-        this.name = name;
-        this.floorCount = floorCount;
-        this.postTime = postTime;
-        this.content = content;
+    public Comment() {
+        super();
     }
 
     /**
@@ -51,14 +67,6 @@ public class Comment {
             e.printStackTrace();
         }
         this.content = content;
-    }
-
-    public String getAvatorSrc() {
-        return avatorSrc;
-    }
-
-    public void setAvatorSrc(String avatorSrc) {
-        this.avatorSrc = avatorSrc;
     }
 
     public String getName() {
@@ -85,38 +93,6 @@ public class Comment {
         return DateUtils.dateToString(postTime);
     }
 
-    /**
-     * 获取从发布到现在的时间
-     * @return
-     */
-    public String getFromNowOnTime(){
-        long x =  System.currentTimeMillis() - postTime.getTime();
-        if (x < 0) {
-            return "error";
-        }
-
-        // 一分钟内
-        x /= 60000;
-        if (x < 1)
-            return "刚刚";
-
-        // 一小时内
-        if (x/60 < 1)
-            return x%60 + "分钟前";
-        x /= 60;
-
-        // 24小时内
-        if (x/24 < 1)
-            return x%24 + "小时前";
-        x /= 24;
-
-        // 一年内
-        if (x/365 < 1)
-            return x%365 + "天前";
-
-        return x/365 + "年前";
-    }
-
     public void setPostTime(Date postTime) {
         this.postTime = postTime;
     }
@@ -135,5 +111,53 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public long getDiscussion_id() {
+        return discussion_id;
+    }
+
+    public void setDiscussion_id(long discussion_id) {
+        this.discussion_id = discussion_id;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 }

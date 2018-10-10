@@ -53,4 +53,7 @@ public class NetConfig {
 
     // PlusClub 获取用户个人信息
     public static final String BASE_USERDETAIL_PLUS = BASE_PLUSCLUB + "get_user_details";
+
+    // PlusClub 获取所有帖子
+    public static final String BASE_POST_PLUS = BASE_PLUSCLUB + "discussions";
 }

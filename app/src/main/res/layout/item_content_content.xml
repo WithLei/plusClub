@@ -51,7 +51,7 @@
         android:maxLines="1"
         android:text="发布于：2天前" />
 
-    <TextView
+    <ImageView
         android:id="@+id/btn_more"
         style="@style/text_16_sec"
         android:layout_width="36dp"
@@ -60,13 +60,13 @@
         android:layout_alignTop="@+id/article_user_image"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="0dp"
+        android:src="@drawable/ic_more_horiz_black_24dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
         android:fontFamily="@fonts/fontawesome"
         android:gravity="center"
-        android:padding="8dp"
-        android:text="&#xf142;" />
+        android:padding="8dp" />
 
     <View
         android:id="@+id/divider"

@@ -3,6 +3,8 @@ package com.android.renly.plusclub.Activity;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,14 +16,20 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Adapter.PostAdapter;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.Fragment.PostContentFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.ThemeUtil;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.Call;
 
 public class PostActivity extends BaseActivity {
     @BindView(R.id.myToolBar)
@@ -53,6 +62,10 @@ public class PostActivity extends BaseActivity {
      */
     private List<Post> postList;
     /**
+     * 当前帖子页面
+     */
+    private int current_page = 0;
+    /**
      * Panel Fragment管理器
      */
     private FragmentManager fragmentManager;
@@ -61,6 +74,23 @@ public class PostActivity extends BaseActivity {
      */
     private List<PostContentFragment> fragmentPool;
     private Fragment nowFragment = null;
+
+    private static final int GET_POST_SUCCESS = 2;
+    private static final int GET_POST_FAIL = 4;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case GET_POST_SUCCESS:
+                    initPostListData(msg.getData().getString("data"));
+                    initpostList();
+                    break;
+                case GET_POST_FAIL:
+                    ToastShort("获取列表数据失败");
+                    break;
+            }
+        }
+    };
 
     @Override
     protected int getLayoutID() {
@@ -71,7 +101,7 @@ public class PostActivity extends BaseActivity {
     protected void initData() {
         title = getIntent().getStringExtra("Title");
         fragmentManager = getSupportFragmentManager();
-        initPostListData();
+        getPostListData(1);
     }
 
     @Override
@@ -83,7 +113,6 @@ public class PostActivity extends BaseActivity {
         initSlidr();
         initRefreshLayout();
         initSlidingLayout();
-        initpostList();
     }
 
     /**
@@ -108,12 +137,50 @@ public class PostActivity extends BaseActivity {
     }
 
     /**
+     * 从服务器获取帖子
+     */
+    private void getPostListData(int page) {
+        OkHttpUtils.get()
+                .url(NetConfig.BASE_POST_PLUS)
+                .addParams("page",page+"")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+//                        printLog(response);
+                        if (!response.contains("code")){
+                            ToastShort("请检查网络设置");
+                            return;
+                        }
+
+                        JSONObject dataObj = JSON.parseObject(response);
+                        if (dataObj.getInteger("code") != 20000){
+                            ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
+                        }else{
+                            current_page = current_page >= page ? current_page : page;
+                            Message msg = new Message();
+                            msg.what = GET_POST_SUCCESS;
+                            Bundle bundle = new Bundle();
+                            bundle.putString("data",dataObj.getString("data"));
+                            msg.setData(bundle);
+                            handler.sendMessage(msg);
+                        }
+                    }
+                });
+    }
+
+    /**
      * 准备测试的帖子列表数据
      */
-    private void initPostListData() {
+    private void initPostListData(String JsonDataArray) {
         postList = new ArrayList<>();
-        for (int i = 0; i < 10; i++)
-            postList.add(new Post(i, "测试标题" + i, "测试姓名" + i, "2018-1-1 19:20:15", 233, 128));
+        JSONObject jsonObject = JSON.parseObject(JsonDataArray);
+        postList = JSON.parseArray(jsonObject.getString("data"),Post.class);
     }
 
     private void initpostList() {
@@ -126,6 +193,9 @@ public class PostActivity extends BaseActivity {
             PostContentFragment fragment = new PostContentFragment();
             fragmentPool.add(fragment);
             nowFragment = fragment;
+            Bundle bundle = new Bundle();
+            bundle.putString("PostJsonObject",JSON.toJSONString(postList.get(pos)));
+            fragment.setArguments(bundle);
             loadPanel(fragment, fragmentPool.size() == 1 ? null : fragmentPool.get(fragmentPool.size() - 2));
         });
         rvPost.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));

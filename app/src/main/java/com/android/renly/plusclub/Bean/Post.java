@@ -1,5 +1,9 @@
 package com.android.renly.plusclub.Bean;
 
+import com.alibaba.fastjson.JSONArray;
+
+import java.util.List;
+
 /**
  * 帖子
  */
@@ -7,7 +11,7 @@ public class Post {
     /**
      * 帖子ID
      */
-    private long p_id;
+    private long id;
     /**
      * 帖子标题
      */
@@ -21,17 +25,48 @@ public class Post {
     /**
      * 头像src - 网络路径
      */
-    private String avatorSrc;
+    private String avatar;
     /**
      * 头像path
      */
-    private String avatorPath;
+    private String avatarPath;
+    /**
+     * 帖子内容
+     */
+    private String body;
+
+    private long user_id;
+    private long last_user_id;
     /**
      * 发布时间
      * eg:
      * &#xf017; 2015-1-1 19:20:15
      */
-    private String postTime;
+    private String created_at;
+    /**
+     * 更新时间
+     */
+    private String updated_at;
+    /**
+     * 分类
+     */
+    private String categories;
+    /**
+     * 评论人数
+     */
+    private long comments_total;
+    /**
+     * 发布者
+     */
+    private User user;
+    /**
+     * 最后回复者
+     */
+    private User last_user;
+    /**
+     * 回复
+     */
+    private List<Comment> commmets;
     /**
      * 浏览量
      */
@@ -41,21 +76,25 @@ public class Post {
      */
     private long commentsCount;
 
-    public Post(long p_id, String title, String name, String postTime, long pageViewsCount, long commentsCount) {
-        this.p_id = p_id;
+    public Post() {
+        super();
+    }
+
+    public Post(long id, String title, String name, String created_at, long pageViewsCount, long commentsCount) {
+        this.id = id;
         this.title = title;
         this.name = name;
-        this.postTime = postTime;
+        this.created_at = created_at;
         this.pageViewsCount = pageViewsCount;
         this.commentsCount = commentsCount;
     }
 
-    public long getP_id() {
-        return p_id;
+    public long getId() {
+        return id;
     }
 
-    public void setP_id(long p_id) {
-        this.p_id = p_id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -74,28 +113,28 @@ public class Post {
         this.name = name;
     }
 
-    public String getAvatorSrc() {
-        return avatorSrc;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvatorSrc(String avatorSrc) {
-        this.avatorSrc = avatorSrc;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public String getAvatorPath() {
-        return avatorPath;
+    public String getAvatarPath() {
+        return avatarPath;
     }
 
-    public void setAvatorPath(String avatorPath) {
-        this.avatorPath = avatorPath;
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
     }
 
-    public String getPostTime() {
-        return postTime;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setPostTime(String postTime) {
-        this.postTime = postTime;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
     public long getPageViewsCount() {
@@ -112,5 +151,77 @@ public class Post {
 
     public void setCommentsCount(long commentsCount) {
         this.commentsCount = commentsCount;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(long user_id) {
+        this.user_id = user_id;
+    }
+
+    public long getLast_user_id() {
+        return last_user_id;
+    }
+
+    public void setLast_user_id(long last_user_id) {
+        this.last_user_id = last_user_id;
+    }
+
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public User getLast_user() {
+        return last_user;
+    }
+
+    public void setLast_user(User last_user) {
+        this.last_user = last_user;
+    }
+
+    public long getComments_total() {
+        return comments_total;
+    }
+
+    public void setComments_total(long comments_total) {
+        this.comments_total = comments_total;
+    }
+
+    public List<Comment> getCommmets() {
+        return commmets;
+    }
+
+    public void setCommmets(List<Comment> commmets) {
+        this.commmets = commmets;
     }
 }

@@ -110,7 +110,6 @@ public class Course {
         this.courseTime = courseTime;
         this.teacher = teacher;
         this.classRoom = classRoom;
-        this.classNum = classNum;
         this.startWeek = startWeek;
         this.endWeek = endWeek;
         this.cid = cid;

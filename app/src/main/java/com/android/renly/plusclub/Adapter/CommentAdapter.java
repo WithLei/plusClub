@@ -13,6 +13,8 @@ import com.android.renly.plusclub.Bean.Comment;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
+import com.android.renly.plusclub.Utils.DateUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -41,10 +43,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Comment object = commentList.get(position);
-        holder.replayAuthor.setText(object.getName());
+        holder.replayAuthor.setText(object.getUser_id());
         holder.replayIndex.setText(position+1 + "#");
-        holder.replayTime.setText(object.getFromNowOnTime());
-        holder.htmlText.setText(object.getContent());
+        holder.replayTime.setText(DateUtils.getFromNowOnTime(DateUtils.stringToMiles(object.getCreated_at())));
+        holder.htmlText.setText(object.getBody());
         holder.articleUserImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_mine_friend));
 
     }

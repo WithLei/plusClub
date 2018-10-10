@@ -8,16 +8,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.PostActivity;
 import com.android.renly.plusclub.Adapter.CommentAdapter;
 import com.android.renly.plusclub.Bean.Comment;
+import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
+import com.android.renly.plusclub.Utils.DateUtils;
 import com.android.renly.plusclub.Utils.IntentUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +48,7 @@ public class PostContentFragment extends BaseFragment {
     @BindView(R.id.article_post_time)
     TextView articlePostTime;
     @BindView(R.id.btn_more)
-    TextView btnMore;
+    ImageView btnMore;
     @BindView(R.id.divider)
     View divider;
     @BindView(R.id.content)
@@ -51,6 +58,8 @@ public class PostContentFragment extends BaseFragment {
     Unbinder unbinder;
 
     private List<Comment> commentList;
+    private Post postObj;
+    private String PostJsonString;
 
     @Override
     public int getLayoutid() {
@@ -59,24 +68,44 @@ public class PostContentFragment extends BaseFragment {
 
     @Override
     protected void initData(Context content) {
+        getPostObj();
         initCommentListData();
         initView();
     }
 
     private void initView() {
+        initHead();
         initCommentList();
+    }
+
+    /**
+     * 从activity 获取帖子对象
+     */
+    private void getPostObj() {
+        PostJsonString = getArguments().getString("PostJsonObject");
+        postObj = JSON.parseObject(PostJsonString,Post.class);
     }
 
     private void initCommentListData() {
         commentList = new ArrayList<>();
-        commentList.add(new Comment("测试回复", "2018-10-4 15:03:01", "一天前测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复", "2018-10-5 15:03:01", "几小时内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复", "2018-10-5 18:01:01", "1-2小时测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复", "2018-10-5 18:59:01", "1小时内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复", "2018-10-4 19:10:01", "5分钟内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复", "2018-10-4 19:03:01", "1分钟内测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
-        commentList.add(new Comment("测试回复", "2015-10-4 15:03:01", "几年前测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容测试内容内容"));
+        printLog("PostJsonString " + PostJsonString);
+        JSONObject obj = JSON.parseObject(PostJsonString);
+        printLog("obj.getString(\"comments\")"+obj.getString("comments"));
+        commentList = JSON.parseArray(obj.getString("comments"),Comment.class);
+    }
 
+    /**
+     * 初始化标题等等信息
+     */
+    private void initHead() {
+        articleTitle.setText(postObj.getTitle());
+        articleUsername.setText(postObj.getUser().getName());
+        articlePostTime.setText(postObj.getCreated_at());
+        content.setText(postObj.getBody());
+        Picasso.get()
+                .load(postObj.getUser().getAvatar())
+                .placeholder(R.drawable.image_placeholder)
+                .into(articleUserImage);
     }
 
     private void initCommentList() {
