@@ -21,7 +21,7 @@ public class Comment {
     /**
      * 用户id
      */
-    private String user_id;
+    private long user_id;
     /**
      * 帖子id
      */
@@ -37,44 +37,22 @@ public class Comment {
     /**
      * 用户名
      */
-    private String name;
+    private User user;
     /**
      * 楼数
      */
     private long floorCount;
-    /**
-     * 发布时间
-     */
-    private Date postTime;
-    /**
-     * 评论内容
-     */
-    private String content;
 
     public Comment() {
         super();
     }
 
-    /**
-     * 测试用构造器
-     */
-    public Comment(String name,String postTime, String content) {
-        this.name = name;
-        this.floorCount = floorCount;
-        try {
-            this.postTime = DateUtils.stringToDate(postTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        this.content = content;
+    public User getUser() {
+        return user;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public long getFloorCount() {
@@ -83,34 +61,6 @@ public class Comment {
 
     public void setFloorCount(long floorCount) {
         this.floorCount = floorCount;
-    }
-
-    public Date getPostTime() {
-        return postTime;
-    }
-
-    public String getPostTimeString(){
-        return DateUtils.dateToString(postTime);
-    }
-
-    public void setPostTime(Date postTime) {
-        this.postTime = postTime;
-    }
-
-    public void setPostTime(String postTime) {
-        try {
-            this.postTime = DateUtils.stringToDate(postTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public long getId() {
@@ -129,11 +79,11 @@ public class Comment {
         this.body = body;
     }
 
-    public String getUser_id() {
+    public long getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(String user_id) {
+    public void setUser_id(long user_id) {
         this.user_id = user_id;
     }
 

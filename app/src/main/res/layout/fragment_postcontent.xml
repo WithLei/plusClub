@@ -11,6 +11,17 @@
         android:id="@+id/rv_comment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_comment_suggest"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_secondary"
+        android:gravity="center"
+        style="@style/text_14_sec"
+        android:text="暂无评论，趁没人抢个沙发吧 ( • ̀ω•́ )✧"
+        android:visibility="visible"/>
 
 </LinearLayout>

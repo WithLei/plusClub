@@ -40,6 +40,7 @@
             android:id="@+id/sv_postcontent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fillViewport="true"
             android:orientation="vertical" />
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 

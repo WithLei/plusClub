@@ -2,9 +2,12 @@ package com.android.renly.plusclub.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +16,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.PostActivity;
 import com.android.renly.plusclub.Adapter.CommentAdapter;
 import com.android.renly.plusclub.Bean.Comment;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Common.BaseFragment;
+import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
-import com.android.renly.plusclub.Utils.DateUtils;
 import com.android.renly.plusclub.Utils.IntentUtils;
 import com.squareup.picasso.Picasso;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
 
 public class PostContentFragment extends BaseFragment {
     @BindView(R.id.article_title)
@@ -56,10 +61,26 @@ public class PostContentFragment extends BaseFragment {
     @BindView(R.id.rv_comment)
     RecyclerView rvComment;
     Unbinder unbinder;
+    @BindView(R.id.tv_comment_suggest)
+    TextView tvCommentSuggest;
 
     private List<Comment> commentList;
     private Post postObj;
+    private long postID;
     private String PostJsonString;
+
+    private static final int GET_COMMENTDATA = 2;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case GET_COMMENTDATA:
+                    initCommentListData(msg.getData().getString("CommentJsonObj"));
+                    initCommentList();
+                    break;
+            }
+        }
+    };
 
     @Override
     public int getLayoutid() {
@@ -69,7 +90,7 @@ public class PostContentFragment extends BaseFragment {
     @Override
     protected void initData(Context content) {
         getPostObj();
-        initCommentListData();
+        getCommentListData();
         initView();
     }
 
@@ -83,15 +104,53 @@ public class PostContentFragment extends BaseFragment {
      */
     private void getPostObj() {
         PostJsonString = getArguments().getString("PostJsonObject");
-        postObj = JSON.parseObject(PostJsonString,Post.class);
+        postObj = JSON.parseObject(PostJsonString, Post.class);
+        postID = postObj.getId();
     }
 
-    private void initCommentListData() {
+    /**
+     * 根据acitivity获取的POSTID从服务器获取[回复对象含User对象]详情
+     */
+    private void getCommentListData() {
+        OkHttpUtils.get()
+                .url(NetConfig.BASE_POST_PLUS + "/" + postID)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject obj = JSON.parseObject(response);
+                        if (obj.getInteger("code") != 20000){
+                            ToastShort("获取评论失败惹，再试试( • ̀ω•́ )✧");
+                        }else{
+                            Message msg = new Message();
+                            msg.what = GET_COMMENTDATA;
+                            Bundle bundle = new Bundle();
+                            bundle.putString("CommentJsonObj",obj.getString("data"));
+                            msg.setData(bundle);
+                            handler.sendMessage(msg);
+                        }
+                    }
+                });
+    }
+
+    private void initCommentListData(String CommentJsonObj) {
         commentList = new ArrayList<>();
-        printLog("PostJsonString " + PostJsonString);
-        JSONObject obj = JSON.parseObject(PostJsonString);
-        printLog("obj.getString(\"comments\")"+obj.getString("comments"));
-        commentList = JSON.parseArray(obj.getString("comments"),Comment.class);
+        JSONObject postObj = JSON.parseObject(CommentJsonObj);
+        commentList = JSON.parseArray(postObj.getString("comments"),Comment.class);
+        if (commentList.size() == 0) {
+            rvComment.setVisibility(View.GONE);
+            tvCommentSuggest.setVisibility(View.VISIBLE);
+        }else{
+            rvComment.setVisibility(View.VISIBLE);
+            tvCommentSuggest.setVisibility(View.GONE);
+        }
+//        JSONObject obj = JSON.parseObject(PostJsonString);
+//        commentList = JSON.parseArray(obj.getString("comments"),Comment.class);
     }
 
     /**
@@ -109,7 +168,7 @@ public class PostContentFragment extends BaseFragment {
     }
 
     private void initCommentList() {
-        CommentAdapter adapter = new CommentAdapter(getContext(), commentList);
+        CommentAdapter adapter = new CommentAdapter(getContext(), commentList, postObj.getUser_id());
         rvComment.setAdapter(adapter);
         rvComment.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
@@ -152,11 +211,11 @@ public class PostContentFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.share_panel:
-                String data = "这篇文章不错，分享给你们 【" + articleTitle.getText() + "】";
+                String data = "这篇文章不错，分享给你们 【" + articleTitle.getText() + " \n链接地址：http://118.24.0.78/#/forum/"+ postID +"】\n来自PlusClub客户端";
                 IntentUtils.sharePost(getActivity(), data);
                 break;
             case R.id.close_panel:
-                PostActivity postActivity = (PostActivity)getActivity();
+                PostActivity postActivity = (PostActivity) getActivity();
                 postActivity.hidePanel();
                 break;
         }

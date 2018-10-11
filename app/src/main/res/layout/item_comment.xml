@@ -50,7 +50,7 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/replay_author"
         app:layout_constraintStart_toEndOf="@+id/replay_author" />
 
-    <TextView
+    <ImageView
         android:id="@+id/btn_reply_cz"
         style="@style/text_16_sec"
         android:layout_width="36dp"
@@ -62,11 +62,11 @@
         android:fontFamily="@font/fontawesome"
         android:gravity="center"
         android:padding="8dp"
-        android:text="&#xf27b;"
+        android:src="@drawable/ic_sms_black_24dp"
         app:layout_constraintEnd_toStartOf="@+id/btn_more"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <ImageView
         android:id="@+id/btn_more"
         style="@style/text_16_sec"
         android:layout_width="36dp"
@@ -78,7 +78,7 @@
         android:fontFamily="@font/fontawesome"
         android:gravity="center"
         android:padding="8dp"
-        android:text="&#xf142;"
+        android:src="@drawable/ic_more_vert_black_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.renly.plusclub.Bean.Comment;
@@ -25,10 +26,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     private List<Comment> commentList;
     private Context context;
     private OnItemClickListener mItemClickListener = null;
+    // 楼主ID
+    private long lzid;
 
-    public CommentAdapter(Context context, List<Comment> commentList) {
+    public CommentAdapter(Context context, List<Comment> commentList,long lzid) {
         this.context = context;
         this.commentList = commentList;
+        this.lzid = lzid;
     }
 
     @NonNull
@@ -43,11 +47,18 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Comment object = commentList.get(position);
-        holder.replayAuthor.setText(object.getUser_id());
+        if (object.getUser_id() == lzid)
+            holder.btLableLz.setVisibility(View.VISIBLE);
+        else
+            holder.btLableLz.setVisibility(View.GONE);
+        holder.replayAuthor.setText(object.getUser().getName());
         holder.replayIndex.setText(position+1 + "#");
         holder.replayTime.setText(DateUtils.getFromNowOnTime(DateUtils.stringToMiles(object.getCreated_at())));
         holder.htmlText.setText(object.getBody());
-        holder.articleUserImage.setImageDrawable(context.getResources().getDrawable(R.drawable.icon_mine_friend));
+        Picasso.get()
+                .load(object.getUser().getAvatar())
+                .placeholder(R.drawable.image_placeholder)
+                .into(holder.articleUserImage);
 
     }
 
@@ -77,9 +88,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         @BindView(R.id.bt_lable_lz)
         TextView btLableLz;
         @BindView(R.id.btn_reply_cz)
-        TextView btnReplyCz;
+        ImageView btnReplyCz;
         @BindView(R.id.btn_more)
-        TextView btnMore;
+        ImageView btnMore;
         @BindView(R.id.replay_index)
         TextView replayIndex;
         @BindView(R.id.replay_time)

@@ -66,27 +66,14 @@ public class Post {
     /**
      * 回复
      */
-    private List<Comment> commmets;
+    private List<Comment> comments;
     /**
      * 浏览量
      */
     private long pageViewsCount;
-    /**
-     * 评论量
-     */
-    private long commentsCount;
 
     public Post() {
         super();
-    }
-
-    public Post(long id, String title, String name, String created_at, long pageViewsCount, long commentsCount) {
-        this.id = id;
-        this.title = title;
-        this.name = name;
-        this.created_at = created_at;
-        this.pageViewsCount = pageViewsCount;
-        this.commentsCount = commentsCount;
     }
 
     public long getId() {
@@ -143,14 +130,6 @@ public class Post {
 
     public void setPageViewsCount(long pageViewsCount) {
         this.pageViewsCount = pageViewsCount;
-    }
-
-    public long getCommentsCount() {
-        return commentsCount;
-    }
-
-    public void setCommentsCount(long commentsCount) {
-        this.commentsCount = commentsCount;
     }
 
     public String getBody() {
@@ -217,11 +196,11 @@ public class Post {
         this.comments_total = comments_total;
     }
 
-    public List<Comment> getCommmets() {
-        return commmets;
+    public List<Comment> getComments() {
+        return comments;
     }
 
-    public void setCommmets(List<Comment> commmets) {
-        this.commmets = commmets;
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

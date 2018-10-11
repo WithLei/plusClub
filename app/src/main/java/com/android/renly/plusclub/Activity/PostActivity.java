@@ -26,6 +26,7 @@ import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.Fragment.PostContentFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.ThemeUtil;
+import com.android.renly.plusclub.Utils.DimmenUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -62,9 +63,9 @@ public class PostActivity extends BaseActivity {
      */
     private List<Post> postList;
     /**
-     * 当前帖子页面
+     * 获取最大帖子页面
      */
-    private int current_page = 0;
+    private int max_page = 0;
     /**
      * Panel Fragment管理器
      */
@@ -107,12 +108,23 @@ public class PostActivity extends BaseActivity {
     @Override
     protected void initView() {
         initToolBar(true, title);
-        addToolbarMenu(R.drawable.ic_create_black_24dp).setOnClickListener(view -> {
-            gotoActivity(EditAcitivity.class);
-        });
+        addToolbarMenu(R.drawable.ic_create_black_24dp).setOnClickListener(view -> gotoActivity(EditAcitivity.class));
         initSlidr();
         initRefreshLayout();
         initSlidingLayout();
+        initRecyclerView();
+    }
+
+    /**
+     * 初始化recylerView的一些属性
+     */
+    private void initRecyclerView() {
+        rvPost.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rvPost.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        // 调整draw缓存,加速recyclerview加载
+        rvPost.setItemViewCacheSize(20);
+        rvPost.setDrawingCacheEnabled(true);
+        rvPost.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
     }
 
     /**
@@ -154,7 +166,7 @@ public class PostActivity extends BaseActivity {
                     public void onResponse(String response, int id) {
 //                        printLog(response);
                         if (!response.contains("code")){
-                            ToastShort("请检查网络设置");
+                            ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
                             return;
                         }
 
@@ -162,7 +174,7 @@ public class PostActivity extends BaseActivity {
                         if (dataObj.getInteger("code") != 20000){
                             ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
                         }else{
-                            current_page = current_page >= page ? current_page : page;
+                            max_page = max_page >= page ? max_page : page;
                             Message msg = new Message();
                             msg.what = GET_POST_SUCCESS;
                             Bundle bundle = new Bundle();
@@ -198,12 +210,6 @@ public class PostActivity extends BaseActivity {
             fragment.setArguments(bundle);
             loadPanel(fragment, fragmentPool.size() == 1 ? null : fragmentPool.get(fragmentPool.size() - 2));
         });
-        rvPost.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        rvPost.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        // 调整draw缓存,加速recyclerview加载
-        rvPost.setItemViewCacheSize(20);
-        rvPost.setDrawingCacheEnabled(true);
-        rvPost.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
     }
 
     /**
@@ -230,6 +236,7 @@ public class PostActivity extends BaseActivity {
 
     private void initSlidingLayout() {
         slidingLayout.setAnchorPoint(0.7f);
+        slidingLayout.setPanelHeight(DimmenUtils.dip2px(this,120));
         slidingLayout.setPanelState(PanelState.HIDDEN);
         slidingLayout.setFadeOnClickListener(view -> {
             doDownAnimation();
