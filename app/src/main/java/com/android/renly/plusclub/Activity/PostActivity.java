@@ -24,8 +24,8 @@ import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.Fragment.PostContentFragment;
+import com.android.renly.plusclub.Listener.LoadMoreListener;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.UI.ThemeUtil;
 import com.android.renly.plusclub.Utils.DimmenUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
@@ -40,7 +40,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import okhttp3.Call;
 
-public class PostActivity extends BaseActivity {
+import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOADING;
+import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_FAIL;
+import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_NOTHING;
+
+public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoadMoreListener{
     @BindView(R.id.myToolBar)
     FrameLayout myToolBar;
     @BindView(R.id.sliding_layout)
@@ -61,7 +65,7 @@ public class PostActivity extends BaseActivity {
     /**
      * 帖子列表
      */
-    private List<Post> postList;
+    private List<Post> postList = new ArrayList<>();
     /**
      * 获取最大帖子页面
      */
@@ -76,6 +80,8 @@ public class PostActivity extends BaseActivity {
     private List<PostContentFragment> fragmentPool;
     private Fragment nowFragment = null;
 
+    private PostAdapter adapter;
+
     private static final int GET_POST_SUCCESS = 2;
     private static final int GET_POST_FAIL = 4;
     private Handler handler = new Handler(){
@@ -84,10 +90,18 @@ public class PostActivity extends BaseActivity {
             switch (msg.what){
                 case GET_POST_SUCCESS:
                     initPostListData(msg.getData().getString("data"));
-                    initpostList();
+                    // 处理第一次刷新和后续刷新
+                    if (adapter == null)
+                        initpostList();
+                    else
+                        adapter.notifyDataSetChanged();
+                    //
+                    if (refreshLayout.isRefreshing())
+                        refreshLayout.setRefreshing(false);
                     break;
                 case GET_POST_FAIL:
                     ToastShort("获取列表数据失败");
+                    adapter.changeLoadMoreState(STATE_LOAD_FAIL);
                     break;
             }
         }
@@ -119,7 +133,6 @@ public class PostActivity extends BaseActivity {
      * 初始化recylerView的一些属性
      */
     private void initRecyclerView() {
-        rvPost.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rvPost.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         // 调整draw缓存,加速recyclerview加载
         rvPost.setItemViewCacheSize(20);
@@ -129,21 +142,19 @@ public class PostActivity extends BaseActivity {
 
     /**
      * 下拉刷新样式
+     * isRefresh
+     * true 有刷新请求
+     * false 无刷新请求
      */
+    private boolean isRefresh = false;
     private void initRefreshLayout() {
-        refreshLayout.setColorSchemeColors(ThemeUtil.getThemeColor(this,R.attr.colorAccent));
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
         refreshLayout.setOnRefreshListener(() -> new Thread(){
             @Override
             public void run() {
-                try {
-                    sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                runOnUiThread(() -> {
-                    if (refreshLayout.isRefreshing())
-                        refreshLayout.setRefreshing(false);
-                });
+                isRefresh = true;
+                getPostListData(1);
+                max_page = 1;
             }
         }.start());
     }
@@ -190,17 +201,35 @@ public class PostActivity extends BaseActivity {
      * 准备测试的帖子列表数据
      */
     private void initPostListData(String JsonDataArray) {
-        postList = new ArrayList<>();
+        if (isRefresh){
+            // 下拉刷新的请求
+            postList.clear();
+            isRefresh = false;
+            adapter.changeLoadMoreState(STATE_LOADING);
+        }
         JSONObject jsonObject = JSON.parseObject(JsonDataArray);
-        postList = JSON.parseArray(jsonObject.getString("data"),Post.class);
+        // 尾页处理
+        if (jsonObject.getInteger("current_page").equals(jsonObject.getInteger("last_page"))){
+            if (adapter != null)
+                adapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+            return ;
+        }
+        JSONArray array = JSON.parseArray(jsonObject.getString("data"));
+        for (int i = 0;i < array.size();i++){
+            postList.add(JSON.parseObject(array.getString(i), Post.class));
+            printLog(postList.get(postList.size()-1).toString());
+        }
     }
 
     private void initpostList() {
         // 初始化fragmentPool池
         fragmentPool = new ArrayList<>();
-        PostAdapter adapter = new PostAdapter(this, postList);
+        adapter = new PostAdapter(this, postList);
         // 设置监听事件
         rvPost.setAdapter(adapter);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rvPost.setLayoutManager(mLayoutManager);
+        rvPost.addOnScrollListener(new LoadMoreListener((LinearLayoutManager)mLayoutManager,this, 5));
         adapter.setOnItemClickListener(pos -> {
             PostContentFragment fragment = new PostContentFragment();
             fragmentPool.add(fragment);
@@ -231,9 +260,8 @@ public class PostActivity extends BaseActivity {
     }
 
     /**
-     *
+     * 初始化上拉布局
      */
-
     private void initSlidingLayout() {
         slidingLayout.setAnchorPoint(0.7f);
         slidingLayout.setPanelHeight(DimmenUtils.dip2px(this,120));
@@ -369,4 +397,8 @@ public class PostActivity extends BaseActivity {
         slidingLayout.setPanelState(PanelState.HIDDEN);
     }
 
+    @Override
+    public void onLoadMore() {
+        getPostListData(max_page+1);
+    }
 }

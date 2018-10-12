@@ -143,7 +143,6 @@ public class PostContentFragment extends BaseFragment {
         JSONObject postObj = JSON.parseObject(CommentJsonObj);
         commentList = JSON.parseArray(postObj.getString("comments"),Comment.class);
         if (commentList.size() == 0) {
-            rvComment.setVisibility(View.GONE);
             tvCommentSuggest.setVisibility(View.VISIBLE);
         }else{
             rvComment.setVisibility(View.VISIBLE);

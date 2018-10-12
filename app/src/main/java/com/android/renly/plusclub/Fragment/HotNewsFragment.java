@@ -30,7 +30,7 @@ public class HotNewsFragment extends BaseFragment {
     @BindView(R.id.rv_hotnews)
     RecyclerView rvHotnews;
     @BindView(R.id.swiperefresh_hotnews)
-    SwipeRefreshLayout swiperefreshHotnews;
+    SwipeRefreshLayout refreshLayout;
     Unbinder unbinder;
 
     @Override
@@ -40,7 +40,6 @@ public class HotNewsFragment extends BaseFragment {
 
     @Override
     protected void initData(Context content) {
-
         initView();
     }
 
@@ -52,6 +51,25 @@ public class HotNewsFragment extends BaseFragment {
             tvHotnewsShowlogin.setVisibility(View.VISIBLE);
             rvHotnews.setVisibility(View.GONE);
         }
+        initRefreshLayout();
+    }
+
+    /**
+     * 下拉刷新样式
+     */
+    private void initRefreshLayout() {
+        refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
+        refreshLayout.setOnRefreshListener(() -> new Thread(){
+            @Override
+            public void run() {
+                try {
+                    sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                getActivity().runOnUiThread(() -> refreshLayout.setRefreshing(false));
+            }
+        });
     }
 
     @Override
@@ -72,3 +90,4 @@ public class HotNewsFragment extends BaseFragment {
         unbinder.unbind();
     }
 }
+

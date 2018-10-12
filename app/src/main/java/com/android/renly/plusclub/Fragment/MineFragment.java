@@ -117,7 +117,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
     private void initInfo() {
         if (App.ISLOGIN(getActivity())) {
-            getInfo();
+            getUserAvator();
         } else {
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
             tvMineUserName.setText("点击头像登陆");
@@ -198,7 +198,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         }
     }
 
-    public void getInfo() {
+    public void getUserAvator() {
         OkHttpUtils.get()
                 .url(NetConfig.BASE_USERDETAIL_PLUS)
                 .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
@@ -207,12 +207,20 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         printLog("getUserAvator onError" + e.getMessage());
+                        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
+                        if (!response.contains("code")){
+                            ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
+                        }
                         JSONObject jsonObject = JSON.parseObject(response);
-                        if (jsonObject.getInteger("code") == 20000) {
+                        if (jsonObject.getInteger("code") == 50011){
+                            getNewToken();
+                        }else if (jsonObject.getInteger("code") != 20000) {
+                            ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
+                        }else{
                             JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
                             String avatarSrc = obj.getString("avatar");
                             String name = obj.getString("name");
@@ -250,5 +258,32 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         tvMineUserName.setText(userName);
         tvMineUserEmail.setVisibility(View.VISIBLE);
         tvMineUserEmail.setText(App.getUid(getActivity()));
+    }
+
+    /**
+     * 获取新的Token
+     */
+    private void getNewToken() {
+        OkHttpUtils.post()
+                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
+                .addHeader("Authorization","Bearer " + App.getToken(getActivity()))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        printLog("HomeFragment getNewToken onError");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject obj = JSON.parseObject(response);
+                        if (obj.getInteger("code") != 20000){
+                            printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
+                        }else{
+                            App.setToken(getContext(),obj.getString("result"));
+                            getUserAvator();
+                        }
+                    }
+                });
     }
 }

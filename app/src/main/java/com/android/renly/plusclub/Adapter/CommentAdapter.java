@@ -53,7 +53,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             holder.btLableLz.setVisibility(View.GONE);
         holder.replayAuthor.setText(object.getUser().getName());
         holder.replayIndex.setText(position+1 + "#");
-        holder.replayTime.setText(DateUtils.getFromNowOnTime(DateUtils.stringToMiles(object.getCreated_at())));
+        if (object.getCreated_at().contains("-"))
+            holder.replayTime.setText(DateUtils.getFromNowOnTime(DateUtils.stringToMiles(object.getCreated_at())));
+        else
+            holder.replayTime.setText(object.getCreated_at());
         holder.htmlText.setText(object.getBody());
         Picasso.get()
                 .load(object.getUser().getAvatar())

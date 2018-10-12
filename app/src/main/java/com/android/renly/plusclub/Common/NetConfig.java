@@ -60,4 +60,14 @@ public class NetConfig {
      */
     public static final String BASE_POST_PLUS = BASE_PLUSCLUB + "discussions";
 
+    /**
+     * 获取新的Token
+     */
+    public static final String BASE_GETNEWTOKEN_PLUS = BASE_PLUSCLUB + "refresh";
+
+    /**
+     * 修改密码
+     */
+    public static final String BASE_RESETPWD_PLUS = BASE_PLUSCLUB + "reset";
+
 }
