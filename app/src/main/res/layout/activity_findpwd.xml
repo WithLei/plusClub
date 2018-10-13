@@ -113,7 +113,7 @@
         android:layout_marginEnd="12dp"
         android:layout_marginStart="12dp"
         android:padding="8dp"
-        android:text="此提交可能会花很长一段时间(>10s)，如果提示网络错误,此时密码有可能已经修改成功了"
+        android:text="密码中必须包含数字、字母"
         android:textColor="?android:textColorSecondary"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"

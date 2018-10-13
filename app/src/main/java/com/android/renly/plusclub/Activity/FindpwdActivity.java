@@ -124,19 +124,20 @@ public class FindpwdActivity extends BaseActivity {
             return;
         }
 
-        if (!Objects.equals(newPwd, newPwd2)) {
+        if (newPwd.length() < 6) {
+            newPassC.setError("密码太短");
+        } else if (!checkSecurity(newPwd)) {
+            newPassC.setError("密码中必须包含数字、字母");
+        } else if (!Objects.equals(newPwd, newPwd2)) {
             newPassC2.setError("两次输入的密码不一致");
-        }else if (newPwd.length() < 6) {
-            newPassC2.setError("密码太短");
-        }else if (!checkSecurity(newPwd)) {
-            newPassC2.setError("密码中必须包含数字、字母");
-        }else {
+        } else {
             newPassC2.setError(null);
         }
     }
 
     /**
      * 检查密码中是否含有数字和字母
+     *
      * @param pwd
      * @return
      */
