@@ -62,6 +62,9 @@ public abstract class BaseFragment extends Fragment {
         MyToast.showText(getContext(),msg,Toast.LENGTH_SHORT);
     }
 
+    public void ToastNetWorkError(){
+        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+    }
 
     /**
      * Log输出

@@ -214,6 +214,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                     public void onResponse(String response, int id) {
                         if (!response.contains("code")){
                             ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
+                            return;
                         }
                         JSONObject jsonObject = JSON.parseObject(response);
                         if (jsonObject.getInteger("code") == 50011){

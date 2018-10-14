@@ -20,9 +20,6 @@ import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
-import com.r0adkll.slidr.Slidr;
-import com.r0adkll.slidr.model.SlidrConfig;
-import com.r0adkll.slidr.model.SlidrPosition;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -157,7 +154,7 @@ public class LoginActivity extends BaseActivity {
                     doLogin(Uid, pwd);
                 break;
             case R.id.tv_register:
-                gotoActivity(RegisterActivity.class);
+                gotoActivity(SignActivity.class);
                 break;
             case R.id.tv_forgetPwd:
                 gotoActivity(FindpwdActivity.class);

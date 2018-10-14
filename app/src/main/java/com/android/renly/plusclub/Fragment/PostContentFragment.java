@@ -1,5 +1,7 @@
 package com.android.renly.plusclub.Fragment;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,11 +9,14 @@ import android.os.Message;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -68,12 +73,14 @@ public class PostContentFragment extends BaseFragment {
     private Post postObj;
     private long postID;
     private String PostJsonString;
+    // 输入框
+    private View mInputBarView;
 
     private static final int GET_COMMENTDATA = 2;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case GET_COMMENTDATA:
                     initCommentListData(msg.getData().getString("CommentJsonObj"));
                     initCommentList();
@@ -97,6 +104,32 @@ public class PostContentFragment extends BaseFragment {
     private void initView() {
         initHead();
         initCommentList();
+    }
+
+    /**
+     * 初始化底部输入框
+     */
+    public void initMyInputBar() {
+        if (!isInputBarShow){
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            lp.gravity = Gravity.BOTTOM;
+            mInputBarView = LayoutInflater.from(getContext()).inflate(R.layout.my_input_bar, null);
+            getActivity().addContentView(mInputBarView,lp);
+            doUpAnimation();
+            isInputBarShow = true;
+        }
+    }
+
+    /**
+     * 移除输入框
+     */
+    private boolean isInputBarShow = false;
+    public void removeMyInputBar(){
+        if (mInputBarView != null && isInputBarShow){
+            doDownAnimation();
+            isInputBarShow = false;
+        }
     }
 
     /**
@@ -124,13 +157,13 @@ public class PostContentFragment extends BaseFragment {
                     @Override
                     public void onResponse(String response, int id) {
                         JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000){
+                        if (obj.getInteger("code") != 20000) {
                             ToastShort("获取评论失败惹，再试试( • ̀ω•́ )✧");
-                        }else{
+                        } else {
                             Message msg = new Message();
                             msg.what = GET_COMMENTDATA;
                             Bundle bundle = new Bundle();
-                            bundle.putString("CommentJsonObj",obj.getString("data"));
+                            bundle.putString("CommentJsonObj", obj.getString("data"));
                             msg.setData(bundle);
                             handler.sendMessage(msg);
                         }
@@ -141,10 +174,10 @@ public class PostContentFragment extends BaseFragment {
     private void initCommentListData(String CommentJsonObj) {
         commentList = new ArrayList<>();
         JSONObject postObj = JSON.parseObject(CommentJsonObj);
-        commentList = JSON.parseArray(postObj.getString("comments"),Comment.class);
+        commentList = JSON.parseArray(postObj.getString("comments"), Comment.class);
         if (commentList.size() == 0) {
             tvCommentSuggest.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             rvComment.setVisibility(View.VISIBLE);
             tvCommentSuggest.setVisibility(View.GONE);
         }
@@ -188,9 +221,64 @@ public class PostContentFragment extends BaseFragment {
         rvComment.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
     }
 
+    Animator upAnimator, downAnimator;
+
+    private void doUpAnimation() {
+        upAnimator = new ObjectAnimator().ofFloat(mInputBarView, "translationY", mInputBarView.getTranslationY(), -mInputBarView.getHeight());
+        upAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        upAnimator.start();
+        printLog("input_bar向上滑动");
+    }
+
+    private void doDownAnimation() {
+        downAnimator = new ObjectAnimator().ofFloat(mInputBarView, "translationY", mInputBarView.getTranslationY(), 0);
+        downAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                mInputBarView.setVisibility(View.GONE);
+                ((ViewGroup)mInputBarView.getParent()).removeView(mInputBarView);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        downAnimator.start();
+        printLog("input_bar向下滑动");
+    }
+
     @Override
     public void ScrollToTop() {
-
+        rvComment.scrollToPosition(0);
     }
 
     @Override
@@ -203,6 +291,7 @@ public class PostContentFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        removeMyInputBar();
         unbinder.unbind();
     }
 
@@ -210,7 +299,7 @@ public class PostContentFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.share_panel:
-                String data = "这篇文章不错，分享给你们 【" + articleTitle.getText() + " \n链接地址：http://118.24.0.78/#/forum/"+ postID +"】\n来自PlusClub客户端";
+                String data = "这篇文章不错，分享给你们 【" + articleTitle.getText() + " \n链接地址：http://118.24.0.78/#/forum/" + postID + "】\n来自PlusClub客户端";
                 IntentUtils.sharePost(getActivity(), data);
                 break;
             case R.id.close_panel:

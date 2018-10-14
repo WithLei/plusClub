@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/bg_primary"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <include layout="@layout/my_toolbar" />
@@ -63,26 +63,31 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="记住帐号密码" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/tv_register"
+            style="@style/text_14_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/text_14_sec"
             android:layout_marginStart="16dp"
             android:layout_marginTop="@dimen/dimen_4"
-            android:text="注册账号"/>
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:text="注册账号" />
+
         <TextView
             android:id="@+id/tv_forgetPwd"
+            style="@style/text_14_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/text_14_sec"
-            android:layout_marginEnd="16dp"
             android:layout_alignParentRight="true"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="@dimen/dimen_4"
-            android:text="忘记密码"/>
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:text="忘记密码" />
     </RelativeLayout>
 
     <Button
@@ -106,7 +111,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:padding="8dp"
-        android:text="第一次登陆成功建议退出App重进一次，如回帖失败，签到失败等问题都可通过此解决，以后无需"
+        android:text="第一次登陆成功建议退出App重进一次"
         android:textColor="?android:textColorSecondary"
         android:textSize="12sp" />
 

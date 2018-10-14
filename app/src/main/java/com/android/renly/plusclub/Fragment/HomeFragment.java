@@ -186,13 +186,14 @@ public class HomeFragment extends BaseFragment {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         printLog("getUserAvator onError" + e.getMessage());
-                        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+                        ToastNetWorkError();
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         if (!response.contains("code")){
-                            ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
+                            ToastNetWorkError();
+                            return;
                         }
                         JSONObject jsonObject = JSON.parseObject(response);
                         if (jsonObject.getInteger("code") == 50011){

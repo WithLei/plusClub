@@ -7,7 +7,6 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:elevation="4dp"
-    android:gravity="bottom"
     android:orientation="horizontal"
     android:padding="2dp">
 
@@ -57,5 +56,6 @@
         android:padding="8dp"
         android:src="@drawable/btn_post"
         android:text="回复"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        android:textColor="@color/white"/>
 </LinearLayout>

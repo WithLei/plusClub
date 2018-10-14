@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -78,7 +79,7 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
      * Panel Fragment池
      */
     private List<PostContentFragment> fragmentPool;
-    private Fragment nowFragment = null;
+    private PostContentFragment nowFragment = null;
 
     private PostAdapter adapter;
 
@@ -138,6 +139,7 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
         rvPost.setItemViewCacheSize(20);
         rvPost.setDrawingCacheEnabled(true);
         rvPost.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
     }
 
     /**
@@ -232,8 +234,8 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
         rvPost.addOnScrollListener(new LoadMoreListener((LinearLayoutManager)mLayoutManager,this, 5));
         adapter.setOnItemClickListener(pos -> {
             PostContentFragment fragment = new PostContentFragment();
-            fragmentPool.add(fragment);
             nowFragment = fragment;
+            fragmentPool.add(fragment);
             Bundle bundle = new Bundle();
             bundle.putString("PostJsonObject",JSON.toJSONString(postList.get(pos)));
             fragment.setArguments(bundle);
@@ -282,12 +284,19 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
                     ppState = previousState;
                     return;
                 }
+                if (newState == PanelState.COLLAPSED && ppState == PanelState.HIDDEN)
+                    return;
                 if (newState == PanelState.HIDDEN
                         || newState == PanelState.COLLAPSED
                         || (previousState == PanelState.DRAGGING && newState == PanelState.ANCHORED && ppState == PanelState.EXPANDED))
+                {
+                    nowFragment.removeMyInputBar();
                     animToolBar(false);
-                else
+                }
+                else{
+                    nowFragment.initMyInputBar();
                     animToolBar(true);
+                }
             }
         });
     }

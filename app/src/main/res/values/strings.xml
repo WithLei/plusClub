@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">plusClub</string>
+    <string name="about_programmer">开发组介绍：\nAndroid开发：@Renly @小时的风\nWeb开发：@Robinson\n</string>
+    <string name="about_intro">功能不断完善中，bug较多还请多多反馈......\nbug反馈：\n1. 加入QQ交流群：113500631</string>
 </resources>

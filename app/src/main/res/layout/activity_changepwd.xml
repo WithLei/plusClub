@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary">
+
+    <include layout="@layout/my_toolbar" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/old_pass_c"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myToolBar"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/old_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="旧密码"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textSize="16sp" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/new_pass_c"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/old_pass_c"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/new_pass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="新密码"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textSize="16sp" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/new_pass_c2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        app:errorEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_pass_c"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/new_pass2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="确认新密码"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:textSize="16sp" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Spinner
+        android:id="@+id/anwser_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_pass_c2"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <EditText
+        android:id="@+id/anwser_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:hint="答案"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/anwser_select"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginStart="12dp"
+        android:padding="8dp"
+        android:text="密码中必须包含数字、字母"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

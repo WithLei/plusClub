@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         tools:replace="android:icon">
         <activity
-            android:name=".Activity.HomeActivity"
+            android:name=".Activity.LaunchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.normal"
             android:windowSoftInputMode="stateHidden">
@@ -29,6 +29,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".Activity.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.normal"
+            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name=".Activity.ThemeActivity"
@@ -106,12 +112,17 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 
-        <activity android:name=".Activity.RegisterActivity"
+        <activity android:name=".Activity.SignActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 
         <activity android:name=".Activity.FindpwdActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity android:name=".Activity.ChangePwdActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />

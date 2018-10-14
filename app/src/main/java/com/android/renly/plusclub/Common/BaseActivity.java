@@ -75,6 +75,10 @@ public abstract class BaseActivity extends FragmentActivity {
         MyToast.showText(this,msg,Toast.LENGTH_SHORT);
     }
 
+    public void ToastNetWorkError(){
+        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+    }
+
     /**
      * 是否设置标题栏
      *
@@ -265,4 +269,6 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onDestroy();
         unbinder.unbind();
     }
+
+
 }
