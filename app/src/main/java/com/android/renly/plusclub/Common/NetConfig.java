@@ -70,4 +70,9 @@ public class NetConfig {
      */
     public static final String BASE_RESETPWD_PLUS = BASE_PLUSCLUB + "reset";
 
+    /**
+     * 发表评论
+     */
+    public static final String BASE_POSTCOMMENT_PLUS = BASE_PLUSCLUB + "comments";
+
 }

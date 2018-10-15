@@ -11,9 +11,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +25,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.PostActivity;
 import com.android.renly.plusclub.Adapter.CommentAdapter;
+import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Comment;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Common.BaseFragment;
@@ -68,6 +70,8 @@ public class PostContentFragment extends BaseFragment {
     Unbinder unbinder;
     @BindView(R.id.tv_comment_suggest)
     TextView tvCommentSuggest;
+    @BindView(R.id.load_bottom)
+    LinearLayout loadBottom;
 
     private List<Comment> commentList;
     private Post postObj;
@@ -75,15 +79,23 @@ public class PostContentFragment extends BaseFragment {
     private String PostJsonString;
     // 输入框
     private View mInputBarView;
+    private CommentAdapter adapter = null;
 
     private static final int GET_COMMENTDATA = 2;
+    private static final int REFRESH_COMMENTLIST = 4;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_COMMENTDATA:
                     initCommentListData(msg.getData().getString("CommentJsonObj"));
-                    initCommentList();
+                    if (adapter == null)
+                        initCommentList();
+                    else
+                        adapter.notifyDataSetChanged();
+                    break;
+                case REFRESH_COMMENTLIST:
+                    getCommentListData();
                     break;
             }
         }
@@ -103,31 +115,103 @@ public class PostContentFragment extends BaseFragment {
 
     private void initView() {
         initHead();
-        initCommentList();
+//        initCommentList();
     }
 
     /**
      * 初始化底部输入框
      */
     public void initMyInputBar() {
-        if (!isInputBarShow){
+        if (!isInputBarShow) {
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             lp.gravity = Gravity.BOTTOM;
             mInputBarView = LayoutInflater.from(getContext()).inflate(R.layout.my_input_bar, null);
-            getActivity().addContentView(mInputBarView,lp);
-            doUpAnimation();
+            EditText et = mInputBarView.findViewById(R.id.ed_comment);
+            mInputBarView.findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!App.ISLOGIN(getActivity())) {
+                        ToastShort("是不是忘了登录？(ฅ′ω`ฅ)");
+                        return;
+                    }
+                    postComments(et.getText().toString());
+                    et.setText("");
+                }
+            });
+            getActivity().addContentView(mInputBarView, lp);
+            doShowAnimation();
             isInputBarShow = true;
         }
+    }
+
+    private void postComments(String comment) {
+        OkHttpUtils.post()
+                .url(NetConfig.BASE_POSTCOMMENT_PLUS)
+                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
+                .addParams("body", comment)
+                .addParams("discussion_id", postID + "")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastNetWorkError();
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        if (!response.contains("code")) {
+                            ToastNetWorkError();
+                            return;
+                        }
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        if (jsonObject.getInteger("code") == 50011) {
+                            getNewToken(comment);
+                        } else {
+                            printLog(response);
+                            ToastShort("发布成功");
+                            hideKeyboard();
+                            handler.sendEmptyMessage(REFRESH_COMMENTLIST);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 获取新的Token
+     */
+    private void getNewToken(String comment) {
+        OkHttpUtils.post()
+                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
+                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        printLog("PostContentFragment getNewToken onError");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject obj = JSON.parseObject(response);
+                        if (obj.getInteger("code") != 20000) {
+                            printLog("PostContentFragment getNewToken() onResponse获取Token失败,重新登陆");
+                        } else {
+                            App.setToken(getContext(), obj.getString("result"));
+                            postComments(comment);
+                        }
+                    }
+                });
     }
 
     /**
      * 移除输入框
      */
     private boolean isInputBarShow = false;
-    public void removeMyInputBar(){
-        if (mInputBarView != null && isInputBarShow){
-            doDownAnimation();
+
+    public void removeMyInputBar() {
+        if (mInputBarView != null && isInputBarShow) {
+            doHideAnimation();
             isInputBarShow = false;
         }
     }
@@ -172,14 +256,21 @@ public class PostContentFragment extends BaseFragment {
     }
 
     private void initCommentListData(String CommentJsonObj) {
-        commentList = new ArrayList<>();
+        if (commentList == null)
+            commentList = new ArrayList<>();
         JSONObject postObj = JSON.parseObject(CommentJsonObj);
-        commentList = JSON.parseArray(postObj.getString("comments"), Comment.class);
+        List<Comment> tempList = JSON.parseArray(postObj.getString("comments"), Comment.class);
+        if (commentList.size() != tempList.size()) {
+            for (int i = commentList.size(); i < tempList.size(); i++)
+                commentList.add(tempList.get(i));
+        }
         if (commentList.size() == 0) {
             tvCommentSuggest.setVisibility(View.VISIBLE);
+            loadBottom.setVisibility(View.GONE);
         } else {
             rvComment.setVisibility(View.VISIBLE);
             tvCommentSuggest.setVisibility(View.GONE);
+            loadBottom.setVisibility(View.VISIBLE);
         }
 //        JSONObject obj = JSON.parseObject(PostJsonString);
 //        commentList = JSON.parseArray(obj.getString("comments"),Comment.class);
@@ -200,7 +291,7 @@ public class PostContentFragment extends BaseFragment {
     }
 
     private void initCommentList() {
-        CommentAdapter adapter = new CommentAdapter(getContext(), commentList, postObj.getUser_id());
+        adapter = new CommentAdapter(getContext(), commentList, postObj.getUser_id());
         rvComment.setAdapter(adapter);
         rvComment.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
@@ -221,37 +312,16 @@ public class PostContentFragment extends BaseFragment {
         rvComment.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
     }
 
-    Animator upAnimator, downAnimator;
+    Animator showAnimator, hideAnimator;
 
-    private void doUpAnimation() {
-        upAnimator = new ObjectAnimator().ofFloat(mInputBarView, "translationY", mInputBarView.getTranslationY(), -mInputBarView.getHeight());
-        upAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-        upAnimator.start();
-        printLog("input_bar向上滑动");
+    private void doShowAnimation() {
+        showAnimator = new ObjectAnimator().ofFloat(mInputBarView, "alpha", 0f, 1f);
+        showAnimator.start();
     }
 
-    private void doDownAnimation() {
-        downAnimator = new ObjectAnimator().ofFloat(mInputBarView, "translationY", mInputBarView.getTranslationY(), 0);
-        downAnimator.addListener(new Animator.AnimatorListener() {
+    private void doHideAnimation() {
+        hideAnimator = new ObjectAnimator().ofFloat(mInputBarView, "alpha", 1f, 0f);
+        hideAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
             }
@@ -259,7 +329,7 @@ public class PostContentFragment extends BaseFragment {
             @Override
             public void onAnimationEnd(Animator animator) {
                 mInputBarView.setVisibility(View.GONE);
-                ((ViewGroup)mInputBarView.getParent()).removeView(mInputBarView);
+                ((ViewGroup) mInputBarView.getParent()).removeView(mInputBarView);
             }
 
             @Override
@@ -272,13 +342,18 @@ public class PostContentFragment extends BaseFragment {
 
             }
         });
-        downAnimator.start();
-        printLog("input_bar向下滑动");
+        hideAnimator.start();
     }
 
     @Override
     public void ScrollToTop() {
         rvComment.scrollToPosition(0);
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        // 隐藏软键盘
+        imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
     }
 
     @Override

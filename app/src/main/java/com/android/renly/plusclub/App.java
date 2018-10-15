@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.view.inputmethod.InputMethodManager;
 
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Checknet.NetworkReceiver;

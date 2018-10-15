@@ -319,13 +319,16 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
     @Override
     public void onBackPressed() {
         if (slidingLayout != null &&
-                (slidingLayout.getPanelState() == PanelState.EXPANDED || slidingLayout.getPanelState() == PanelState.ANCHORED)) {
+                (slidingLayout.getPanelState() == PanelState.EXPANDED
+                        || slidingLayout.getPanelState() == PanelState.ANCHORED )) {
             slidingLayout.setPanelState(PanelState.COLLAPSED);
             if (nowFragment != null) {
                 svPostcontent.stopNestedScroll();
                 svPostcontent.scrollTo(0, 0);
             }
-        } else {
+        } else if(slidingLayout != null && slidingLayout.getPanelState() == PanelState.COLLAPSED) {
+            slidingLayout.setPanelState(PanelState.HIDDEN);
+        }else{
             super.onBackPressed();
         }
     }
