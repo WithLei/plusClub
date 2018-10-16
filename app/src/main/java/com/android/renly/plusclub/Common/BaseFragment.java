@@ -66,6 +66,10 @@ public abstract class BaseFragment extends Fragment {
         ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
     }
 
+    public void ToastProgramError(){
+        ToastShort("程序猿还在努力开发中 ♪(´∇`*)");
+    }
+
     /**
      * Log输出
      * error

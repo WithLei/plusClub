@@ -107,7 +107,7 @@
         tools:text="1小时前" />
 
     <TextView
-        android:id="@+id/html_text"
+        android:id="@+id/markdown_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"

@@ -4,6 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <include layout="@layout/my_toolbar" />
+    <EditText
+        android:id="@+id/et_post_title"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/bg_secondary"
+        android:focusable="true"
+        android:padding="10dp"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:hint="请输入帖子标题"
+        style="@style/text_16_sec"
+        android:gravity="start"/>
     <include layout="@layout/my_editor_bar" />
     <EditText
         android:id="@+id/editor"
@@ -14,7 +26,8 @@
         android:padding="10dp"
         android:imeOptions="actionDone"
         android:gravity="start"
-        android:hint="请输入发布内容"
+        style="@style/text_16_sec"
+        android:hint="请输入发布内容 #支持MarkDown"
         android:inputType="text"/>
 
 </LinearLayout>

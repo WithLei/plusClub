@@ -81,6 +81,18 @@ public class App extends Application {
         editor.apply();
     }
 
+    public static String getEmail(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getString(USER_EMAIL_KEY, "");
+    }
+
+    public static void setEmail(Context context, String email) {
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(USER_EMAIL_KEY, email);
+        editor.apply();
+    }
+
     public static String getUid(Context context) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_UID_KEY, "");
@@ -251,7 +263,20 @@ public class App extends Application {
         editor.apply();
     }
 
+    public static String getTextTail(Context context){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getString(TEXT_TAIL,"");
+    }
+
+    public static void setTextTail(Context context,String value){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(TEXT_TAIL,value);
+        editor.apply();
+    }
+
     public static final String MY_SP_NAME = "PlusClub";
+    public static final String USER_EMAIL_KEY = "user_email";
     public static final String USER_UID_KEY = "user_uid";
     public static final String USER_PWD_KEY = "user_pwd";
     public static final String USER_TOKEN_KEY = "user_token";
@@ -267,6 +292,7 @@ public class App extends Application {
     public static final String IS_LOGIN ="is_login";
     public static final String SCHEDULE_START_WEEK = "schedule_start_week";
     public static final String _VIEWSTATE_VALUE = "viewstate";
+    public static final String TEXT_TAIL = "text_tail";
 
     public static final String GitHubURL = "https://github.com/WithLei/plusClub";
 

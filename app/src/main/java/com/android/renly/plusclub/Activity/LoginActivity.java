@@ -55,10 +55,10 @@ public class LoginActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case LOGIN_SUCCESS:
-                    String uid = msg.getData().getString("uid");
+                    String email = msg.getData().getString("email");
                     String pwd = msg.getData().getString("pwd");
                     String token = msg.getData().getString("token");
-                    afterLoginSuccess(uid, pwd, token);
+                    afterLoginSuccess(email, pwd, token);
                     break;
                 case LOGIN_FAIL:
                     afterLoginFail();
@@ -82,11 +82,11 @@ public class LoginActivity extends BaseActivity {
 
     private void initText() {
         if (App.isRemeberPwdUser(this)) {
-            etLoginName.setText(App.getUid(this));
+            etLoginName.setText(App.getEmail(this));
             etLoginPas.setText(App.getPwd(this));
             cbRemUser.setChecked(true);
         } else{
-            etLoginName.setText(App.getUid(this));
+            etLoginName.setText(App.getEmail(this));
             cbRemUser.setChecked(false);
         }
         etLoginName.setSelection(etLoginName.getText().length());
@@ -148,10 +148,10 @@ public class LoginActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                String Uid = etLoginName.getText().toString().trim();
+                String email = etLoginName.getText().toString().trim();
                 String pwd = etLoginPas.getText().toString().trim();
-                if (!TextUtils.isEmpty(Uid) && !TextUtils.isEmpty(pwd))
-                    doLogin(Uid, pwd);
+                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd))
+                    doLogin(email, pwd);
                 break;
             case R.id.tv_register:
                 gotoActivity(SignActivity.class);
@@ -162,10 +162,10 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-    private void doLogin(String uid, String pwd) {
+    private void doLogin(String email, String pwd) {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_LOGIN_PLUS)
-                .addParams("email",uid)
+                .addParams("email",email)
                 .addParams("password",pwd)
                 .build()
                 .execute(new StringCallback() {
@@ -185,7 +185,7 @@ public class LoginActivity extends BaseActivity {
                         if (statusCode == 20000){
                             Message msg = new Message();
                             Bundle bundle = new Bundle();
-                            bundle.putString("uid",uid);
+                            bundle.putString("email",email);
                             bundle.putString("pwd",pwd);
                             bundle.putString("token",token);
                             msg.setData(bundle);
@@ -203,8 +203,8 @@ public class LoginActivity extends BaseActivity {
         MyToast.showText(this,"账号或密码错误", Toast.LENGTH_SHORT,false);
     }
 
-    private void afterLoginSuccess(String uid, String pwd, String token) {
-        App.setUid(this, uid);
+    private void afterLoginSuccess(String email, String pwd, String token) {
+        App.setEmail(this, email);
         App.setPwd(this, pwd);
         App.setToken(this,token);
         if (cbRemUser.isChecked())

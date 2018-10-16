@@ -29,6 +29,7 @@ public class LaunchActivity extends Activity{
 
     private void enterHome() {
         startActivity(new Intent(LaunchActivity.this,HomeActivity.class));
+        finish();
     }
 
     //自动续命copyright

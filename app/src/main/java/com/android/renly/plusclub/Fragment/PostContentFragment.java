@@ -2,6 +2,8 @@ package com.android.renly.plusclub.Fragment;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +13,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -18,8 +22,10 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -36,6 +42,7 @@ import com.android.renly.plusclub.Utils.IntentUtils;
 import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+import com.zzhoujay.richtext.RichText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,13 +128,14 @@ public class PostContentFragment extends BaseFragment {
     /**
      * 初始化底部输入框
      */
+    private EditText et;
     public void initMyInputBar() {
         if (!isInputBarShow) {
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             lp.gravity = Gravity.BOTTOM;
             mInputBarView = LayoutInflater.from(getContext()).inflate(R.layout.my_input_bar, null);
-            EditText et = mInputBarView.findViewById(R.id.ed_comment);
+            et = mInputBarView.findViewById(R.id.ed_comment);
             mInputBarView.findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -283,7 +291,8 @@ public class PostContentFragment extends BaseFragment {
         articleTitle.setText(postObj.getTitle());
         articleUsername.setText(postObj.getUser().getName());
         articlePostTime.setText(postObj.getCreated_at());
-        content.setText(postObj.getBody());
+//        content.setText(postObj.getBody());
+        RichText.fromMarkdown(postObj.getBody()).into(content);
         Picasso.get()
                 .load(postObj.getUser().getAvatar())
                 .placeholder(R.drawable.image_placeholder)
@@ -292,6 +301,7 @@ public class PostContentFragment extends BaseFragment {
 
     private void initCommentList() {
         adapter = new CommentAdapter(getContext(), commentList, postObj.getUser_id());
+        adapter.setOnItemClickListener(listener);
         rvComment.setAdapter(adapter);
         rvComment.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
@@ -344,6 +354,46 @@ public class PostContentFragment extends BaseFragment {
         });
         hideAnimator.start();
     }
+
+    private CommentAdapter.OnItemClickListener listener = (view, pos) -> {
+        switch (view.getId()){
+            case R.id.btn_reply_cz:
+                if (et != null)
+                    et.setText("***回复@" + commentList.get(pos).getUser().getName() + "：***\n");
+                break;
+            case R.id.btn_more:
+                PopupMenu popup = new PopupMenu(getActivity(), view);
+                popup.setOnMenuItemClickListener(menuItem -> {
+                    switch (menuItem.getItemId()){
+                        case R.id.tv_edit:
+                            break;
+                        case R.id.tv_copy:
+                            String user = commentList.get(pos).getUser().getName();
+                            String content = commentList.get(pos).getBody();
+                            ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                            if (cm != null) {
+                                cm.setPrimaryClip(ClipData.newPlainText(null, content));
+                                ToastShort("已复制" + user + "的评论");
+                            }
+                            break;
+                        case R.id.tv_remove:
+                            break;
+                    }
+                    return true;
+                });
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.menu_post_more, popup.getMenu());
+
+                // 判断是不是本人
+                popup.getMenu().removeItem(R.id.tv_edit);
+
+                // 如果有管理权限,则显示删除
+                popup.getMenu().removeGroup(R.id.menu_manege);
+
+                popup.show();
+                break;
+        }
+    };
 
     @Override
     public void ScrollToTop() {

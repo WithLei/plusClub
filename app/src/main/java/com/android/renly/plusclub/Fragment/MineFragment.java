@@ -258,7 +258,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
         tvMineUserName.setText(userName);
         tvMineUserEmail.setVisibility(View.VISIBLE);
-        tvMineUserEmail.setText(App.getUid(getActivity()));
+        tvMineUserEmail.setText(App.getEmail(getActivity()));
     }
 
     /**

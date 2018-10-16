@@ -20,7 +20,7 @@
             android:id="@+id/et_login_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="用户名"
+            android:hint="学号"
             android:inputType="text"
             android:maxLines="1"
             android:textSize="16sp" />
@@ -103,14 +103,14 @@
         android:textColor="@color/text_login_btn" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_edulogin_tip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:padding="8dp"
-        android:text="如遇到系统错误，请尝试重新登陆。多次登陆失败，请联系我们：个人 - 关于本程序 - bug反馈"
+        android:text="此模块为爬虫模拟登陆教务系统，如想了解更多可查看此篇博客。如遇到系统错误，请尝试重新登陆。如多次登陆失败，请联系我们：个人 - 关于本程序 - bug反馈"
         android:textColor="?android:textColorSecondary"
         android:textSize="12sp" />
 

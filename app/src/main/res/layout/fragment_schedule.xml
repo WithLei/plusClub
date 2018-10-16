@@ -30,7 +30,7 @@
             android:background="?android:selectableItemBackgroundBorderless"
             android:layout_gravity="end"
             android:padding="13dp"
-            android:src="@drawable/ic_menu_24dp" />
+            android:src="@drawable/ic_school_24dp" />
     </FrameLayout>
 
     <include layout="@layout/layout_schedule" />

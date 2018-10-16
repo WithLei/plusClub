@@ -1,6 +1,7 @@
 package com.android.renly.plusclub.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.android.renly.plusclub.Activity.EduLoginActivity;
 import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Course;
@@ -144,17 +146,9 @@ public class ScheduleFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    private boolean isChecked = false;
-
     @OnClick(R.id.iv_toolbar_menu)
     public void onViewClicked() {
-        if (isChecked) {
-            // 下拉状态
-            ivToolbarMenu.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_24dp));
-            isChecked = false;
-        } else {
-            ivToolbarMenu.setImageDrawable(getResources().getDrawable(R.drawable.ic_clear_24dp));
-            isChecked = true;
-        }
+        Intent intent = new Intent(getActivity(), EduLoginActivity.class);
+        startActivity(intent);
     }
 }

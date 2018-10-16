@@ -24,7 +24,7 @@
         android:layout_below="@id/logo"
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
-        android:text="一切伟大的行动和思想" />
+        android:text="' 一切伟大的行动和思想" />
 
     <TextView
         style="@style/text_16_sec"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_launch_up"
         android:layout_centerHorizontal="true"
-        android:text="都有一个 微不足道 的开始" />
+        android:text="都有一个微不足道的开始 '" />
 
     <TextView
         android:id="@+id/app_name"

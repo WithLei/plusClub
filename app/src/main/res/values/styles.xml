@@ -114,7 +114,7 @@
 
     <style name="text_18_sec">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/text_color_pri</item>
+        <item name="android:textColor">@color/text_color_sec</item>
     </style>
 
     <style name="text_16_sec">

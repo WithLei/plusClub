@@ -36,11 +36,10 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:visibility="gone"
                 android:background="@drawable/switch_center_bg"
                 android:button="@null"
                 android:gravity="center"
-                android:text="消息"
+                android:text="回复"
                 android:textColor="@color/text_primary_white"
                 android:textSize="13sp" />
 
@@ -52,7 +51,7 @@
                 android:background="@drawable/switch_right_bg"
                 android:button="@null"
                 android:gravity="center"
-                android:text="热帖"
+                android:text="我的"
                 android:textColor="@color/text_primary_white"
                 android:textSize="13sp" />
 

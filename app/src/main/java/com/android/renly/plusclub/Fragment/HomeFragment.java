@@ -154,6 +154,7 @@ public class HomeFragment extends BaseFragment {
                 getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
                 break;
             case R.id.iv_home_search:
+                ToastProgramError();
                 break;
         }
     }

@@ -1,6 +1,9 @@
 package com.android.renly.plusclub.Adapter;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -9,13 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Bean.Comment;
-import com.android.renly.plusclub.Bean.Post;
+import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.DateUtils;
 import com.squareup.picasso.Picasso;
+import com.zzhoujay.richtext.RichText;
 
 import java.util.List;
 
@@ -29,7 +35,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     // 楼主ID
     private long lzid;
 
-    public CommentAdapter(Context context, List<Comment> commentList,long lzid) {
+    public CommentAdapter(Context context, List<Comment> commentList, long lzid) {
         this.context = context;
         this.commentList = commentList;
         this.lzid = lzid;
@@ -52,17 +58,34 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         else
             holder.btLableLz.setVisibility(View.GONE);
         holder.replayAuthor.setText(object.getUser().getName());
-        holder.replayIndex.setText(position+1 + "#");
+        holder.replayIndex.setText(position + 1 + "#");
         if (object.getCreated_at().contains("-"))
             holder.replayTime.setText(DateUtils.getFromNowOnTime(DateUtils.stringToMiles(object.getCreated_at())));
         else
             holder.replayTime.setText(object.getCreated_at());
-        holder.htmlText.setText(object.getBody());
+        RichText.fromMarkdown(object.getBody()).into(holder.markdownText);
         Picasso.get()
                 .load(object.getUser().getAvatar())
                 .placeholder(R.drawable.image_placeholder)
                 .into(holder.articleUserImage);
 
+        holder.markdownText.setOnLongClickListener(view -> {
+            String user = object.getUser().getName();
+            String content = object.getBody();
+            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            if (cm != null) {
+                cm.setPrimaryClip(ClipData.newPlainText(null, content));
+                MyToast.showText(context,"已复制" + user + "的评论");
+            }
+            return true;
+        });
+        holder.articleUserImage.setOnClickListener(view -> {
+            Intent intent = new Intent(context, UserDetailActivity.class);
+            intent.putExtra("userid", object.getUser().getId());
+            context.startActivity(intent);
+        });
+        holder.btnReplyCz.setOnClickListener(holder);
+        holder.btnMore.setOnClickListener(holder);
     }
 
     @Override
@@ -76,14 +99,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int pos);
+        void onItemClick(View view, int pos);
     }
 
     public void setOnItemClickListener(OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
         @BindView(R.id.article_user_image)
         CircleImageView articleUserImage;
         @BindView(R.id.replay_author)
@@ -98,8 +122,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         TextView replayIndex;
         @BindView(R.id.replay_time)
         TextView replayTime;
-        @BindView(R.id.html_text)
-        TextView htmlText;
+        @BindView(R.id.markdown_text)
+        TextView markdownText;
         @BindView(R.id.main_window)
         ConstraintLayout mainWindow;
 
@@ -115,7 +139,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         @Override
         public void onClick(View view) {
             if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(getPosition());
+                mItemClickListener.onItemClick(view, getAdapterPosition());
             }
         }
     }

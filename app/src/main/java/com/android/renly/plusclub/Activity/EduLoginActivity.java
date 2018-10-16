@@ -24,6 +24,8 @@ import com.android.renly.plusclub.R;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.Callback;
+import com.zzhoujay.markdown.MarkDown;
+import com.zzhoujay.richtext.RichText;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -54,6 +56,8 @@ public class EduLoginActivity extends BaseActivity {
     ImageView ivCheck;
     @BindView(R.id.btn_login)
     Button btnLogin;
+    @BindView(R.id.tv_edulogin_tip)
+    TextView tvEduloginTip;
     private Unbinder unbinder;
 
     private String user_eduid = "";
@@ -137,7 +141,9 @@ public class EduLoginActivity extends BaseActivity {
     @Override
     protected void initView() {
         initSlidr();
-        title.setText("教务系统登陆");
+        initToolBar(true,"教务系统登陆");
+        String text = "此模块为爬虫模拟登陆教务系统，如想了解更多可查看[此篇博客](https://blog.csdn.net/qq_42895379/article/details/83098443)。  **更新课表需要重新登陆**  如遇到系统错误，请尝试重新登陆。如多次登陆失败，请联系我们：个人 - 关于本程序 - bug反馈";
+        RichText.fromMarkdown(text).into(tvEduloginTip);
         GetVerifation();
         btnLoginSetEnabled();
         etMobile.addTextChangedListener(new TextWatcher() {
@@ -181,7 +187,7 @@ public class EduLoginActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    @OnClick({R.id.btn_login, R.id.iv_check, R.id.iv_toolbar_back})
+    @OnClick({R.id.btn_login, R.id.iv_check})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
@@ -194,9 +200,6 @@ public class EduLoginActivity extends BaseActivity {
             case R.id.iv_check:
                 GetVerifation();
                 break;
-            case R.id.iv_toolbar_back:
-                finishActivity();
-                break;
         }
     }
 
@@ -208,7 +211,7 @@ public class EduLoginActivity extends BaseActivity {
                 && !TextUtils.isEmpty(etPassword.getText().toString().trim()))
             btnLogin.setEnabled(true);
         else
-        btnLogin.setEnabled(false);
+            btnLogin.setEnabled(false);
     }
 
     /**
@@ -223,7 +226,7 @@ public class EduLoginActivity extends BaseActivity {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         Headers headers = response.headers();
-                        for (int i = 0; i < headers.size(); i++){
+                        for (int i = 0; i < headers.size(); i++) {
                             if (headers.name(i).equals("Set-Cookie"))
                                 if (headers.value(i).endsWith(" Path=/"))
                                     cookie += headers.value(i).substring(0, headers.value(i).length() - 7);
@@ -259,7 +262,7 @@ public class EduLoginActivity extends BaseActivity {
         x = x.split("\" />")[0];
         printLog(x);
         __VIEWSTATE = x;
-        App.set__VIEWSTATE(this,x);
+        App.set__VIEWSTATE(this, x);
     }
 
     /**

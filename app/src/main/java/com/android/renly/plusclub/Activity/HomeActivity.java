@@ -3,6 +3,7 @@ package com.android.renly.plusclub.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.android.renly.plusclub.Adapter.MainPageAdapter;
@@ -56,7 +57,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        printLog("onActivityResult");
+        printLog("HomeActivity onActivityResult");
         if (resultCode == RESULT_OK){
             printLog("resultCode == RESULT_OK");
             switch (requestCode){
@@ -115,6 +116,16 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideSoftInput();
+    }
+
+    private void hideSoftInput() {
+        getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override

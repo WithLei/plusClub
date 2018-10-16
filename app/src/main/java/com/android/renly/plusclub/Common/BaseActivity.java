@@ -79,6 +79,10 @@ public abstract class BaseActivity extends FragmentActivity {
         ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
     }
 
+    public void ToastProgramError(){
+        ToastShort("程序猿还在努力开发中 ♪(´∇`*)");
+    }
+
     /**
      * 是否设置标题栏
      *

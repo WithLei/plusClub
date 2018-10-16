@@ -45,7 +45,7 @@
         android:layout_marginTop="200dp">
 
         <TextView
-            android:id="@+id/tv_about_title"
+            android:id="@+id/tv_about"
             style="@style/text_16_pri"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,40 +54,7 @@
             android:lineSpacingMultiplier="1.4"
             android:padding="16dp" />
 
-        <TextView
-            android:id="@+id/tv_about_programmer"
-            style="@style/text_16_pri"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_about_title"
-            android:textIsSelectable="true"
-            android:text="@string/about_programmer"
-            android:lineSpacingMultiplier="1.4"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"/>
 
-        <TextView
-            android:id="@+id/tv_about_content"
-            style="@style/text_16_pri"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_about_programmer"
-            android:textIsSelectable="true"
-            android:text="@string/about_intro"
-            android:lineSpacingMultiplier="1.4"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"/>
-        <TextView
-            android:id="@+id/tv_about_url"
-            style="@style/text_16_pri"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_about_content"
-            android:text="2. github提交 点击这儿"
-            android:textColor="@color/blue_light"
-            android:lineSpacingMultiplier="1.4"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"/>
 
         <TextView
             android:id="@+id/version"

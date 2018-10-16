@@ -2,6 +2,8 @@ package com.android.renly.plusclub.Activity;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +15,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -123,7 +127,10 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
     @Override
     protected void initView() {
         initToolBar(true, title);
-        addToolbarMenu(R.drawable.ic_create_black_24dp).setOnClickListener(view -> gotoActivity(EditAcitivity.class));
+        addToolbarMenu(R.drawable.ic_create_black_24dp).setOnClickListener(view -> {
+            Intent intent = new Intent(PostActivity.this,EditAcitivity.class);
+            startActivityForResult(intent, EditAcitivity.requestCode);
+        });
         initSlidr();
         initRefreshLayout();
         initSlidingLayout();
@@ -154,11 +161,18 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
         refreshLayout.setOnRefreshListener(() -> new Thread(){
             @Override
             public void run() {
-                isRefresh = true;
-                getPostListData(1);
-                max_page = 1;
+                doRefresh();
             }
         }.start());
+    }
+
+    /**
+     * 执行刷新操作
+     */
+    private void doRefresh() {
+        isRefresh = true;
+        getPostListData(1);
+        max_page = 1;
     }
 
     /**
@@ -314,6 +328,7 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
+        handler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -407,6 +422,29 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
 
     public void hidePanel(){
         slidingLayout.setPanelState(PanelState.HIDDEN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK){
+            switch(requestCode){
+                case EditAcitivity.requestCode:
+                    doRefresh();
+                    hideSoftInput();
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideSoftInput();
+    }
+
+    private void hideSoftInput() {
+        getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
