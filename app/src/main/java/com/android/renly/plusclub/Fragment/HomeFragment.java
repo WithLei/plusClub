@@ -146,7 +146,8 @@ public class HomeFragment extends BaseFragment {
             case R.id.ci_home_img:
                 if (App.ISLOGIN(getActivity())) {
                     Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-                    getActivity().startActivityForResult(intent, UserDetailActivity.requestCode);
+                    intent.putExtra("userid",App.getUid(getActivity()));
+                    getActivity().startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     getActivity().startActivityForResult(intent, LoginActivity.requestCode);

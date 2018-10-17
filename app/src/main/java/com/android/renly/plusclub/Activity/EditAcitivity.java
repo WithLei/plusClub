@@ -207,11 +207,6 @@ public class EditAcitivity extends BaseActivity {
         handler.removeCallbacksAndMessages(null);
     }
 
-    private void showSoftInput() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-    }
-
     @Override
     public void onBackPressed() {
         if (etPostTitle.getText().toString().isEmpty() && editor.getText().toString().isEmpty())

@@ -18,9 +18,6 @@ public class LoadMoreListener extends RecyclerView.OnScrollListener {
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        Log.e("print","limit=" + limit + "linearLayoutManager.findLastVisibleItemPosition()=" + linearLayoutManager.findLastVisibleItemPosition()
-            + " linearLayoutManager.getItemCount()=" + linearLayoutManager.getItemCount());
-
         if (linearLayoutManager.findLastVisibleItemPosition() > limit &&
                 linearLayoutManager.findLastVisibleItemPosition() == linearLayoutManager.getItemCount() - 1){
             onLoadMoreListener.onLoadMore();

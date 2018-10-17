@@ -245,6 +245,11 @@ public abstract class BaseActivity extends FragmentActivity {
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
     }
 
+    public void showSoftInput() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     public void finishActivity(){
         finish();
         overridePendingTransition(R.anim.translate_in,R.anim.translate_out);

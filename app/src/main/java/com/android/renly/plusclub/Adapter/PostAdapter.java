@@ -1,6 +1,7 @@
 package com.android.renly.plusclub.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Bean.User;
 import com.android.renly.plusclub.R;
@@ -194,6 +196,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.BaseViewHolder
                     .load(object.getUser().getAvatar())
                     .placeholder(R.drawable.image_placeholder)
                     .into(authorImg);
+            authorImg.setOnClickListener(view -> {
+                Intent intent = new Intent(context, UserDetailActivity.class);
+                intent.putExtra("userid",object.getUser().getId());
+                context.startActivity(intent);
+            });
         }
     }
 

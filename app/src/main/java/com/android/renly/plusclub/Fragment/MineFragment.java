@@ -75,8 +75,8 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 //            R.drawable.ic_autorenew_black_24dp,
             R.drawable.ic_palette_black_24dp,
             R.drawable.ic_settings_24dp,
-            R.drawable.ic_info_24dp,
             R.drawable.ic_menu_share_24dp,
+            R.drawable.ic_info_24dp,
             R.drawable.ic_favorite_white_12dp,
             R.drawable.ic_lab_24dp,
     };
@@ -85,9 +85,9 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 //            "签到中心",
             "主题设置",
             "设置",
-            "关于本程序",
             "分享Plus客户端",
-            "到商店评分",
+            "关于本程序",
+            "热爱开源，感谢分享",
             "实验室功能",
     };
 
@@ -118,6 +118,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     private void initInfo() {
         if (App.ISLOGIN(getActivity())) {
             getUserAvator();
+
         } else {
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
             tvMineUserName.setText("点击头像登陆");
@@ -152,7 +153,8 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                     getActivity().startActivityForResult(intent, LoginActivity.requestCode);
                 } else {
                     Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-                    getActivity().startActivityForResult(intent, UserDetailActivity.requestCode);
+                    intent.putExtra("userid", App.getUid(getActivity()));
+                    getActivity().startActivity(intent);
                 }
                 getActivity().overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
                 break;
@@ -180,16 +182,16 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 // 设置
                 break;
             case 2:
-                // 关于本程序
-                gotoActivity(AboutActivity.class);
-                break;
-            case 3:
                 // 分享Plus客户端
                 String data = "这个手机Plus客户端非常不错，分享给你们。";
                 IntentUtils.shareApp(getActivity(), data);
                 break;
+            case 3:
+                // 关于本程序
+                gotoActivity(AboutActivity.class);
+                break;
             case 4:
-                // 到商店评分
+                // 热爱开源，感谢分享
                 break;
             case 5:
                 // 实验室功能
@@ -212,23 +214,23 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
                     @Override
                     public void onResponse(String response, int id) {
-                        if (!response.contains("code")){
+                        if (!response.contains("code")) {
                             ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
                             return;
                         }
                         JSONObject jsonObject = JSON.parseObject(response);
-                        if (jsonObject.getInteger("code") == 50011){
+                        if (jsonObject.getInteger("code") == 50011) {
                             getNewToken();
-                        }else if (jsonObject.getInteger("code") != 20000) {
+                        } else if (jsonObject.getInteger("code") != 20000) {
                             ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
-                        }else{
+                        } else {
                             JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
                             String avatarSrc = obj.getString("avatar");
                             String name = obj.getString("name");
                             Message msg = new Message();
                             Bundle bundle = new Bundle();
                             bundle.putString("avatar", avatarSrc);
-                            bundle.putString("name",name);
+                            bundle.putString("name", name);
                             msg.setData(bundle);
                             msg.what = GET_INFO;
                             handler.sendMessage(msg);
@@ -244,7 +246,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_INFO:
-                    setInfo(msg.getData().getString("avatar"),msg.getData().getString("name"));
+                    setInfo(msg.getData().getString("avatar"), msg.getData().getString("name"));
                     break;
             }
         }
@@ -267,7 +269,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     private void getNewToken() {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization","Bearer " + App.getToken(getActivity()))
+                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -278,10 +280,10 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                     @Override
                     public void onResponse(String response, int id) {
                         JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000){
+                        if (obj.getInteger("code") != 20000) {
                             printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
-                        }else{
-                            App.setToken(getContext(),obj.getString("result"));
+                        } else {
+                            App.setToken(getContext(), obj.getString("result"));
                             getUserAvator();
                         }
                     }

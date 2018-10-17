@@ -61,23 +61,19 @@ public class App extends Application {
 
     public static boolean ISLOGIN(Context context) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        if (sp.getBoolean(IS_LOGIN, false) && !TextUtils.isEmpty(sp.getString(USER_UID_KEY, "")))
+        if (sp.getBoolean(IS_LOGIN, false) && !TextUtils.isEmpty(String.valueOf(sp.getLong(USER_UID_KEY, 0))))
             return true;
         else
             return false;
-    }
-
-    public static void setIsLogin(Context context){
-        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(IS_LOGIN, true);
-        editor.apply();
     }
 
     public static void setIsLogout(Context context){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(IS_LOGIN, false);
+        editor.remove(USER_TOKEN_KEY);
+        editor.remove(USER_NAME_KEY);
+        editor.remove(USER_ROLE_KEY);
         editor.apply();
     }
 
@@ -93,15 +89,39 @@ public class App extends Application {
         editor.apply();
     }
 
-    public static String getUid(Context context) {
+    public static long getUid(Context context) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        return sp.getString(USER_UID_KEY, "");
+        return sp.getLong(USER_UID_KEY, 0);
     }
 
-    public static void setUid(Context context, String uid) {
+    public static void setUid(Context context, long uid) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(USER_UID_KEY, uid);
+        editor.putLong(USER_UID_KEY, uid);
+        editor.apply();
+    }
+
+    public static String getName(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getString(USER_NAME_KEY, "");
+    }
+
+    public static void setName(Context context, String name) {
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(USER_NAME_KEY, name);
+        editor.apply();
+    }
+
+    public static String getRole(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
+        return sp.getString(USER_ROLE_KEY, "");
+    }
+
+    public static void setRole(Context context, String role) {
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(USER_ROLE_KEY, role);
         editor.apply();
     }
 
@@ -141,15 +161,15 @@ public class App extends Application {
         editor.apply();
     }
 
-    public static String getName(Context context){
+    public static String getEduName(Context context){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        return sp.getString(USER_NAME_KEY,"");
+        return sp.getString(USER_EDUNAME_KEY,"");
     }
 
-    public static void setName(Context context, String name){
+    public static void setEduName(Context context, String name){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(USER_NAME_KEY, name);
+        editor.putString(USER_EDUNAME_KEY, name);
         editor.apply();
     }
 
@@ -279,10 +299,13 @@ public class App extends Application {
     public static final String USER_EMAIL_KEY = "user_email";
     public static final String USER_UID_KEY = "user_uid";
     public static final String USER_PWD_KEY = "user_pwd";
-    public static final String USER_TOKEN_KEY = "user_token";
-    public static final String USER_EDUID_KEY = "xh";
-    public static final String USER_EDUPWD_KEY = "edu_pwd";
     public static final String USER_NAME_KEY = "user_name";
+    public static final String USER_ROLE_KEY = "user_role";
+    public static final String USER_TOKEN_KEY = "user_token";
+    public static final String TEXT_TAIL = "text_tail";
+    public static final String USER_EDUID_KEY = "edu_id";
+    public static final String USER_EDUNAME_KEY = "edu_name";
+    public static final String USER_EDUPWD_KEY = "edu_pwd";
     public static final String COOKIE = "cookie";
     public static final String THEME_KEY = "theme";
     public static final String AUTO_DARK_MODE_KEY = "auto_dark_mode";
@@ -292,7 +315,6 @@ public class App extends Application {
     public static final String IS_LOGIN ="is_login";
     public static final String SCHEDULE_START_WEEK = "schedule_start_week";
     public static final String _VIEWSTATE_VALUE = "viewstate";
-    public static final String TEXT_TAIL = "text_tail";
 
     public static final String GitHubURL = "https://github.com/WithLei/plusClub";
 

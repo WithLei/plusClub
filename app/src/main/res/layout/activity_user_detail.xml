@@ -81,8 +81,8 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <ListView
+            android:id="@+id/listView"
             android:background="@color/bg_primary"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -90,12 +90,12 @@
 
     <Button
         android:id="@+id/btn_logout"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_margin="20dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="?android:attr/colorPrimary"
+        android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:visibility="gone"
         android:text="退出登录"
         android:layout_gravity="center"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
@@ -106,6 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_16"
         android:src="@drawable/ic_chat_24dp"
+        android:visibility="gone"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end" />
 

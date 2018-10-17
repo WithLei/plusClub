@@ -79,7 +79,7 @@ public class EduActivity extends BaseActivity {
         sp = getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
         Cookie = sp.getString(App.COOKIE, "");
         id = sp.getString(App.USER_UID_KEY, "");
-        stuName = sp.getString(App.USER_NAME_KEY, "");
+        stuName = sp.getString(App.USER_EDUNAME_KEY, "");
     }
 
 

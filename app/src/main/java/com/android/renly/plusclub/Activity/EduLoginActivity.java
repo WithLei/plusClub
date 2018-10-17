@@ -142,7 +142,7 @@ public class EduLoginActivity extends BaseActivity {
     protected void initView() {
         initSlidr();
         initToolBar(true,"教务系统登陆");
-        String text = "此模块为爬虫模拟登陆教务系统，如想了解更多可查看[此篇博客](https://blog.csdn.net/qq_42895379/article/details/83098443)。  **更新课表需要重新登陆**  如遇到系统错误，请尝试重新登陆。如多次登陆失败，请联系我们：个人 - 关于本程序 - bug反馈";
+        String text = "**更新课表需要重新登陆**\n此模块为爬虫模拟登陆教务系统，如想了解更多可查看[此篇博客](https://blog.csdn.net/qq_42895379/article/details/83098443)。\n如遇到系统错误，请尝试重新登陆。如多次登陆失败，请联系我们：个人 - 关于本程序 - bug反馈";
         RichText.fromMarkdown(text).into(tvEduloginTip);
         GetVerifation();
         btnLoginSetEnabled();
@@ -433,7 +433,7 @@ public class EduLoginActivity extends BaseActivity {
         editor.putString(App.COOKIE, cookie);
         editor.putString(App.USER_EDUID_KEY, user_eduid);
         editor.putString(App.USER_EDUPWD_KEY, user_edupwd);
-        editor.putString(App.USER_NAME_KEY, stuName);
+        editor.putString(App.USER_EDUNAME_KEY, stuName);
         editor.apply();
         gotoActivity(EduActivity.class);
         finishActivity();

@@ -1,5 +1,6 @@
 package com.android.renly.plusclub.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,9 +8,12 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,11 @@ import com.android.renly.plusclub.UI.GradeProgressView;
 import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +54,6 @@ public class UserDetailActivity extends BaseActivity {
     CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.app_bar)
     AppBarLayout appBar;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.main_window)
@@ -54,11 +61,19 @@ public class UserDetailActivity extends BaseActivity {
     @BindView(R.id.btn_logout)
     Button btnLogout;
 
+    private final List<String>keys = new ArrayList<>();
+    private final List<String>values = new ArrayList<>();
+
     public static final int requestCode = 128;
+    @BindView(R.id.listView)
+    ListView listView;
 
     private Unbinder unbinder;
-    private String username = "";
-    private String imageUrl = "";
+    private long userid;
+    private String username = null;
+    private String imageUrl = null;
+    // 对象是否为登陆用户
+    private boolean isLoginUser = false;
 
     @Override
     protected int getLayoutID() {
@@ -67,17 +82,29 @@ public class UserDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        initList();
+        getUserInfo();
     }
 
     @Override
     protected void initView() {
-        initInfo();
         initSlidr();
         toolbarLayout.setTitle(username);
     }
 
-    private void initInfo() {
+    private void initList() {
+        keys.add("邮箱");
+        keys.add("班级");
+        keys.add("注册时间");
+        for (int i = 0;i < 3;i++)
+            values.add("null");
+    }
+
+    private void getUserInfo() {
+        Intent intent = getIntent();
+        userid = intent.getExtras().getLong("userid");
+        if (TextUtils.equals(String.valueOf(userid), String.valueOf(App.getUid(this))))
+            isLoginUser = true;
         getInfo();
     }
 
@@ -104,35 +131,74 @@ public class UserDetailActivity extends BaseActivity {
     private void onLogout() {
         App.setIsLogout(this);
         setResult(RESULT_OK);
-        MyToast.showText(this,"退出登录成功", Toast.LENGTH_SHORT,true);
+        MyToast.showText(this, "退出登录成功", Toast.LENGTH_SHORT, true);
         finishActivity();
     }
 
     public void getInfo() {
-        OkHttpUtils.get()
-                .url(NetConfig.BASE_USERDETAIL_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(this))
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("getUserAvator onError" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject jsonObject = JSON.parseObject(response);
-                        if (jsonObject.getInteger("code") == 20000) {
-                            Message msg = new Message();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("resultObject",jsonObject.getString("result"));
-                            msg.setData(bundle);
-                            msg.what = GET_INFO;
-                            handler.sendMessage(msg);
+        if (isLoginUser) {
+            // 获取用户个人信息
+            OkHttpUtils.get()
+                    .url(NetConfig.BASE_USERDETAIL_PLUS)
+                    .addHeader("Authorization", "Bearer " + App.getToken(this))
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            printLog("UserDetailActivity getInfo getUserDetail onError" + e.getMessage());
                         }
 
-                    }
-                });
+                        @Override
+                        public void onResponse(String response, int id) {
+                            if (!response.contains("code")) {
+                                ToastNetWorkError();
+                                return;
+                            }
+                            JSONObject jsonObject = JSON.parseObject(response);
+                            if (jsonObject.getInteger("code") != 20000) {
+                                ToastShort("查无此用户信息");
+                            } else {
+                                Message msg = new Message();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("resultObject", jsonObject.getString("result"));
+                                msg.setData(bundle);
+                                msg.what = GET_INFO;
+                                handler.sendMessage(msg);
+                            }
+                        }
+                    });
+        } else {
+            // 获取他人信息
+            OkHttpUtils.get()
+                    .url(NetConfig.BASE_USER_PLUS + userid)
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            printLog("UserDetailActivity getInfo getUserDetail2 onError " + e.getMessage());
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            if (!response.contains("code")) {
+                                ToastNetWorkError();
+                                return;
+                            }
+                            JSONObject jsonObject = JSON.parseObject(response);
+                            if (jsonObject.getInteger("code") != 20000) {
+                                ToastShort("查无此用户信息");
+                            } else {
+                                Message msg = new Message();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("resultObject", jsonObject.getString("data"));
+                                msg.setData(bundle);
+                                msg.what = GET_INFO;
+                                handler.sendMessage(msg);
+                            }
+
+                        }
+                    });
+        }
     }
 
     private static final int GET_INFO = 2;
@@ -154,6 +220,31 @@ public class UserDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.image_placeholder)
                 .into(userDetailImgAvatar);
         toolbarLayout.setTitle(obj.getString("name"));
+        values.set(0,obj.getString("email"));
+        values.set(1,obj.getString("grade"));
+        values.set(2,obj.getString("created_at"));
+
+        if (isLoginUser) {
+            keys.add("学号");
+            values.add(obj.getString("studentid").trim().isEmpty() ? "null" : obj.getString("studentid"));
+            keys.add("班级");
+            values.add(obj.getString("grades").trim().isEmpty() ? "null" : obj.getString("grades"));
+            keys.add("手机号");
+            values.add(obj.getString("phone").trim().isEmpty() ? "null" : obj.getString("phone"));
+            keys.add("最近发布");
+            values.add(obj.getString("updated_at").trim().isEmpty() ? "null" : obj.getString("updated_at"));
+            keys.add("身份");
+            values.add(obj.getString("role").equals("null") ? "普通用户" : obj.getString("role"));
+        }
+
+        List<Map<String, String>> list = new ArrayList<>();
+        for (int i = 0; i < keys.size(); i++) {
+            Map<String, String> ob = new HashMap<>();
+            ob.put("key", keys.get(i));
+            ob.put("value", values.get(i));
+            list.add(ob);
+        }
+        listView.setAdapter(new SimpleAdapter(this, list, R.layout.item_sim_list, new String[]{"key", "value"}, new int[]{R.id.key, R.id.value}));
     }
 
 }

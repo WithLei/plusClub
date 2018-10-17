@@ -1,5 +1,6 @@
 package com.android.renly.plusclub.Activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -50,6 +51,9 @@ public class LoginActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 2;
     private static final int LOGIN_FAIL = 4;
+    private static final int GET_INFO = 8;
+    private static final int SHOW_SOFTINPUT = 16;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -62,6 +66,12 @@ public class LoginActivity extends BaseActivity {
                     break;
                 case LOGIN_FAIL:
                     afterLoginFail();
+                    break;
+                case GET_INFO:
+                    afterGetUserInfo(msg.getData().getString("jsonObject"));
+                    break;
+                case SHOW_SOFTINPUT:
+                    showSoftInput();
                     break;
             }
         }
@@ -78,6 +88,7 @@ public class LoginActivity extends BaseActivity {
         initText();
 
         btnLoginSetEnabled();
+        handler.sendEmptyMessageDelayed(SHOW_SOFTINPUT, 1000);
     }
 
     private void initText() {
@@ -204,16 +215,67 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void afterLoginSuccess(String email, String pwd, String token) {
-        App.setEmail(this, email);
-        App.setPwd(this, pwd);
-        App.setToken(this,token);
-        if (cbRemUser.isChecked())
-            App.setRemeberPwdUser(this, true);
-        else
-            App.setRemeberPwdUser(this, false);
-        App.setIsLogin(this);
+        SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(App.USER_EMAIL_KEY, email);
+        editor.putString(App.USER_PWD_KEY, pwd);
+        editor.putString(App.USER_TOKEN_KEY, token);
+        editor.putBoolean(App.IS_REMEBER_PWD_USER,cbRemUser.isChecked());
+        editor.putBoolean(App.IS_LOGIN, true);
+        editor.apply();
         MyToast.showText(this,"登录成功", Toast.LENGTH_SHORT,true);
         printLog("登录成功");
+
+        getUserInfo();
+    }
+
+    /**
+     * 登陆成功后获取用户信息
+     */
+    private void getUserInfo() {
+        OkHttpUtils.get()
+                .url(NetConfig.BASE_USERDETAIL_PLUS)
+                .addHeader("Authorization","Bearer " + App.getToken(this))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        printLog("getUserAvator onError" + e.getMessage());
+                        ToastNetWorkError();
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        if (!response.contains("code")){
+                            ToastNetWorkError();
+                            return;
+                        }
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        if (jsonObject.getInteger("code") != 20000){
+                            ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
+                            printLog("getInfoError" + response);
+                        }else{
+                            Message msg = new Message();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("jsonObject",jsonObject.getString("result"));
+                            msg.setData(bundle);
+                            msg.what = GET_INFO;
+                            handler.sendMessage(msg);
+                        }
+
+                    }
+                });
+    }
+
+    private void afterGetUserInfo(String jsonObj){
+        JSONObject obj = JSON.parseObject(jsonObj);
+        SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong(App.USER_UID_KEY, obj.getLong("id"));
+        editor.putString(App.USER_NAME_KEY, obj.getString("name"));
+        editor.putString(App.USER_ROLE_KEY, obj.getString("role"));
+        editor.apply();
+
         setResult(RESULT_OK);
         finishActivity();
     }

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.R;
 
 import java.util.Calendar;
@@ -24,7 +25,15 @@ public class LaunchActivity extends Activity{
 //        App app = (App) getApplication();
 //        app.regReciever();
         setCopyRight();
+        doPreWrok();
         new Handler().postDelayed(() -> enterHome(), WAIT_TIME);
+    }
+
+    /**
+     * 做一些启动前的工作
+     */
+    private void doPreWrok() {
+        App.setCookie(this,"");
     }
 
     private void enterHome() {

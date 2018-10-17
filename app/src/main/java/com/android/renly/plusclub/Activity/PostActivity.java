@@ -2,7 +2,9 @@ package com.android.renly.plusclub.Activity;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Adapter.PostAdapter;
+import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.NetConfig;
@@ -128,8 +131,23 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
     protected void initView() {
         initToolBar(true, title);
         addToolbarMenu(R.drawable.ic_create_black_24dp).setOnClickListener(view -> {
-            Intent intent = new Intent(PostActivity.this,EditAcitivity.class);
-            startActivityForResult(intent, EditAcitivity.requestCode);
+            if (App.ISLOGIN(this)){
+                Intent intent = new Intent(PostActivity.this,EditAcitivity.class);
+                startActivityForResult(intent, EditAcitivity.requestCode);
+            }else{
+                new AlertDialog.Builder(this)
+                        .setTitle("需要登录")
+                        .setMessage("还没有登陆哦，赶快去登陆吧！")
+                        .setCancelable(true)
+                        .setPositiveButton("登陆", (dialogInterface, i) -> {
+                            gotoActivity(LoginActivity.class);
+                        })
+                        .setNegativeButton("取消", (dialogInterface, i) -> {
+
+                        })
+                        .create()
+                        .show();
+            }
         });
         initSlidr();
         initRefreshLayout();
@@ -390,7 +408,6 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
             }
         });
         upAnimator.start();
-        printLog("向上滑动");
     }
 
     private void doDownAnimation() {
@@ -417,7 +434,6 @@ public class PostActivity extends BaseActivity implements LoadMoreListener.OnLoa
             }
         });
         downAnimator.start();
-        printLog("向下滑动");
     }
 
     public void hidePanel(){

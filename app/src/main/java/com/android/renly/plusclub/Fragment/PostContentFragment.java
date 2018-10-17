@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.PostActivity;
+import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.CommentAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Comment;
@@ -358,8 +360,10 @@ public class PostContentFragment extends BaseFragment {
     private CommentAdapter.OnItemClickListener listener = (view, pos) -> {
         switch (view.getId()){
             case R.id.btn_reply_cz:
-                if (et != null)
+                if (et != null){
                     et.setText("***回复@" + commentList.get(pos).getUser().getName() + "：***\n");
+                    et.setSelection(et.getText().length()-1);
+                }
                 break;
             case R.id.btn_more:
                 PopupMenu popup = new PopupMenu(getActivity(), view);
@@ -420,7 +424,7 @@ public class PostContentFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.share_panel, R.id.close_panel})
+    @OnClick({R.id.share_panel, R.id.close_panel, R.id.btn_more, R.id.article_user_image, R.id.article_username})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.share_panel:
@@ -430,6 +434,43 @@ public class PostContentFragment extends BaseFragment {
             case R.id.close_panel:
                 PostActivity postActivity = (PostActivity) getActivity();
                 postActivity.hidePanel();
+                break;
+            case R.id.btn_more:
+                PopupMenu popup = new PopupMenu(getActivity(), view);
+                popup.setOnMenuItemClickListener(menuItem -> {
+                    switch (menuItem.getItemId()){
+                        case R.id.tv_edit:
+                            break;
+                        case R.id.tv_copy:
+                            String user = articleUsername.getText().toString();
+                            String s = content.getText().toString();
+                            ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                            if (cm != null) {
+                                cm.setPrimaryClip(ClipData.newPlainText(null, s));
+                                ToastShort("已复制" + user + "的评论");
+                            }
+                            break;
+                        case R.id.tv_remove:
+                            break;
+                    }
+                    return true;
+                });
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.menu_post_more, popup.getMenu());
+
+                // 判断是不是本人
+                popup.getMenu().removeItem(R.id.tv_edit);
+
+                // 如果有管理权限,则显示删除
+                popup.getMenu().removeGroup(R.id.menu_manege);
+
+                popup.show();
+                break;
+            case R.id.article_user_image:
+            case R.id.article_username:
+                Intent intent = new Intent(getActivity(), UserDetailActivity.class);
+                intent.putExtra("userid",postObj.getUser().getId());
+                startActivity(intent);
                 break;
         }
     }

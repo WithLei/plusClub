@@ -131,6 +131,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
+
+        <activity android:name=".Activity.SettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>
