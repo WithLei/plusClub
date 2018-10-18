@@ -1,9 +1,11 @@
 package com.android.renly.plusclub.Activity;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
 import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Fragment.SettingFragment;
 import com.android.renly.plusclub.R;
 
 import butterknife.BindView;
@@ -13,16 +15,9 @@ import butterknife.Unbinder;
 public class SettingActivity extends BaseActivity {
     @BindView(R.id.myToolBar)
     FrameLayout myToolBar;
+    @BindView(R.id.container)
+    FrameLayout container;
     private Unbinder unbinder;
-
-    private final String[] titles = new String[]{
-            "手动切换网络类型",
-            "论坛小尾巴",
-            "清理缓存",
-            "检查更新",
-            "热爱开源，感谢分享",
-            "实验室功能",
-    };
 
     @Override
     protected int getLayoutID() {
@@ -38,11 +33,19 @@ public class SettingActivity extends BaseActivity {
     protected void initView() {
         initSlidr();
         initToolBar(true, "设置");
+        Fragment to = new SettingFragment();
+        getFragmentManager().beginTransaction().replace(R.id.container, to).commit();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         unbinder = ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 }

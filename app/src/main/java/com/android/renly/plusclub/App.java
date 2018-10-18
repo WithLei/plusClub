@@ -283,15 +283,15 @@ public class App extends Application {
         editor.apply();
     }
 
-    public static String getTextTail(Context context){
+    public static boolean isTextShowTail(Context context){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        return sp.getString(TEXT_TAIL,"");
+        return sp.getBoolean(TEXT_SHOW_TAIL,false);
     }
 
-    public static void setTextTail(Context context,String value){
+    public static void setTextShowTail(Context context,boolean value){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(TEXT_TAIL,value);
+        editor.putBoolean(TEXT_SHOW_TAIL,value);
         editor.apply();
     }
 
@@ -302,7 +302,8 @@ public class App extends Application {
     public static final String USER_NAME_KEY = "user_name";
     public static final String USER_ROLE_KEY = "user_role";
     public static final String USER_TOKEN_KEY = "user_token";
-    public static final String TEXT_TAIL = "text_tail";
+    public static final String TEXT_SHOW_TAIL = "setting_show_tail";
+    public static final String TEXT_TAIL = "setting_user_tail";
     public static final String USER_EDUID_KEY = "edu_id";
     public static final String USER_EDUNAME_KEY = "edu_name";
     public static final String USER_EDUPWD_KEY = "edu_pwd";

@@ -24,7 +24,7 @@
         android:layout_below="@id/logo"
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
-        android:text="' 一切伟大的行动和思想" />
+        android:text="' 一切伟大的行动和思想#" />
 
     <TextView
         style="@style/text_16_sec"

@@ -1,0 +1,53 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="group_tail"
+        android:title="小尾巴设置">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="setting_show_tail"
+            android:summary="不建议添加过长过大的小尾巴"
+            android:title="启用小尾巴" />
+
+        <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="来自PlusClub客户端"
+            android:inputType="textCapWords"
+            android:key="setting_user_tail"
+            android:maxLines="3"
+            android:selectAllOnFocus="true"
+            android:summary="自定义你的小尾巴"
+            android:title="自定义小尾巴" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="group_user"
+        android:title="账号设置">
+        <Preference
+            android:key="user_logout"
+            android:summary="退出当前账号"
+            android:title="退出登陆" />
+        <Preference
+            android:key="user_changepwd"
+            android:summary="修改当前账号密码"
+            android:title="修改密码" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="group_other"
+        android:title="其他信息">
+        <Preference
+            android:key="about_this"
+            android:summary="当前版本1.0 beta 1"
+            android:title="检查更新" />
+        <Preference
+            android:key="open_sourse"
+            android:summary="在github上查看本项目"
+            android:title="项目地址" />
+
+        <Preference
+            android:key="clean_cache"
+            android:summary="当前缓存大小1MB"
+            android:title="清除缓存" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

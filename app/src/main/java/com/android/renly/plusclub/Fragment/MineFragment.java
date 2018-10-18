@@ -20,6 +20,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.AboutActivity;
 import com.android.renly.plusclub.Activity.LabActivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
+import com.android.renly.plusclub.Activity.OpenSourceActivity;
+import com.android.renly.plusclub.Activity.SettingActivity;
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.App;
@@ -42,8 +44,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.Call;
-
-import static android.app.Activity.RESULT_OK;
 
 public class MineFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     @BindView(R.id.ci_mine_user_img)
@@ -118,7 +118,6 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     private void initInfo() {
         if (App.ISLOGIN(getActivity())) {
             getUserAvator();
-
         } else {
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
             tvMineUserName.setText("点击头像登陆");
@@ -180,6 +179,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 break;
             case 1:
                 // 设置
+                gotoActivity(SettingActivity.class);
                 break;
             case 2:
                 // 分享Plus客户端
@@ -192,6 +192,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 break;
             case 4:
                 // 热爱开源，感谢分享
+                gotoActivity(OpenSourceActivity.class);
                 break;
             case 5:
                 // 实验室功能

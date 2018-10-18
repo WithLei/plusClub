@@ -34,9 +34,9 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
             android:lines="1"
-            android:text="点击头像登陆"
             android:textColor="@color/white"
             android:textSize="15sp"
+            tools:text="点击头像登陆"
             android:textStyle="bold" />
 
         <TextView

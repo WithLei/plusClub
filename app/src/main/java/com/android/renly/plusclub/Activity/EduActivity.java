@@ -42,7 +42,7 @@ public class EduActivity extends BaseActivity {
     private Unbinder unbinder;
 
     private String Cookie;
-    private String id;
+    private long id;
     private String stuName;
     private SharedPreferences sp;
 
@@ -78,7 +78,7 @@ public class EduActivity extends BaseActivity {
     protected void initData() {
         sp = getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
         Cookie = sp.getString(App.COOKIE, "");
-        id = sp.getString(App.USER_UID_KEY, "");
+        id = sp.getLong(App.USER_UID_KEY, 0);
         stuName = sp.getString(App.USER_EDUNAME_KEY, "");
     }
 

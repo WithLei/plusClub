@@ -1,5 +1,11 @@
 package com.android.renly.plusclub.Utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.android.renly.plusclub.App;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,5 +33,17 @@ public class StringUtils {
         }
 
         return !(p.length() == pwd.length() || p2.length() == pwd.length() || p3.length() == pwd.length());
+    }
+
+    public static String getTextTail(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sp.getBoolean(App.TEXT_SHOW_TAIL,false)){
+            String tail = sp.getString(App.TEXT_TAIL,"无尾巴");
+            if (!tail.equals("无尾巴"))
+                return "  \n*-" + sp.getString(App.TEXT_TAIL,"无尾巴") + "*";
+            else
+                return "";
+        }else
+            return "";
     }
 }

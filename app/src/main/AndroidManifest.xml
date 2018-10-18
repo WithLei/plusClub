@@ -29,113 +29,107 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activity.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.normal"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.ThemeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.normal"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.UserDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.AboutActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.LabActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.ScheduleActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.EduActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.EduLoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.PostActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
-        <activity android:name=".Activity.EditAcitivity"
+        <activity
+            android:name=".Activity.EditAcitivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme" />
-
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activity.ScheduleDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Activity.ScheduleDetailSetActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
-        <activity android:name=".Activity.ECardActivity"
+        <activity
+            android:name=".Activity.ECardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Activity.SignActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Activity.FindpwdActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Activity.ChangePwdActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Activity.WebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Activity.SettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Activity.OpenSourceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 
-        <activity android:name=".Activity.SignActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden" />
-
-        <activity android:name=".Activity.FindpwdActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden" />
-
-        <activity android:name=".Activity.ChangePwdActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden" />
-
-        <activity android:name=".Activity.WebViewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden" />
-
-        <activity android:name=".Activity.SettingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

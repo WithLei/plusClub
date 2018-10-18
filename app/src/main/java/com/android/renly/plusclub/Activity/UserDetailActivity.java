@@ -82,7 +82,6 @@ public class UserDetailActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        initList();
         getUserInfo();
     }
 
@@ -90,14 +89,6 @@ public class UserDetailActivity extends BaseActivity {
     protected void initView() {
         initSlidr();
         toolbarLayout.setTitle(username);
-    }
-
-    private void initList() {
-        keys.add("邮箱");
-        keys.add("班级");
-        keys.add("注册时间");
-        for (int i = 0;i < 3;i++)
-            values.add("null");
     }
 
     private void getUserInfo() {
@@ -185,7 +176,9 @@ public class UserDetailActivity extends BaseActivity {
                                 return;
                             }
                             JSONObject jsonObject = JSON.parseObject(response);
-                            if (jsonObject.getInteger("code") != 20000) {
+                            if (jsonObject.getInteger("code") == 50011){
+                                getNewToken();
+                            }else if (jsonObject.getInteger("code") != 20000) {
                                 ToastShort("查无此用户信息");
                             } else {
                                 Message msg = new Message();
@@ -199,6 +192,33 @@ public class UserDetailActivity extends BaseActivity {
                         }
                     });
         }
+    }
+
+    /**
+     * 获取新的Token
+     */
+    private void getNewToken() {
+        OkHttpUtils.post()
+                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
+                .addHeader("Authorization","Bearer " + App.getToken(this))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        printLog("HomeFragment getNewToken onError");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject obj = JSON.parseObject(response);
+                        if (obj.getInteger("code") != 20000){
+                            printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
+                        }else{
+                            App.setToken(UserDetailActivity.this,obj.getString("result"));
+                            getInfo();
+                        }
+                    }
+                });
     }
 
     private static final int GET_INFO = 2;
@@ -220,22 +240,26 @@ public class UserDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.image_placeholder)
                 .into(userDetailImgAvatar);
         toolbarLayout.setTitle(obj.getString("name"));
-        values.set(0,obj.getString("email"));
-        values.set(1,obj.getString("grade"));
-        values.set(2,obj.getString("created_at"));
+        keys.add("邮箱");
+        values.add(obj.getString("email"));
+        keys.add("班级");
 
         if (isLoginUser) {
+            values.add(obj.getString("grades").trim().isEmpty() ? "null" : obj.getString("grades"));
             keys.add("学号");
             values.add(obj.getString("studentid").trim().isEmpty() ? "null" : obj.getString("studentid"));
-            keys.add("班级");
-            values.add(obj.getString("grades").trim().isEmpty() ? "null" : obj.getString("grades"));
             keys.add("手机号");
             values.add(obj.getString("phone").trim().isEmpty() ? "null" : obj.getString("phone"));
-            keys.add("最近发布");
+            keys.add("最近发帖/回帖");
             values.add(obj.getString("updated_at").trim().isEmpty() ? "null" : obj.getString("updated_at"));
             keys.add("身份");
             values.add(obj.getString("role").equals("null") ? "普通用户" : obj.getString("role"));
+        }else{
+            values.add(obj.getString("grade") == null ? "null" : obj.getString("grade"));
         }
+        keys.add("注册时间");
+        values.add(obj.getString("created_at"));
+
 
         List<Map<String, String>> list = new ArrayList<>();
         for (int i = 0; i < keys.size(); i++) {

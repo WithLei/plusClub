@@ -33,6 +33,7 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.zhy:okhttputils:2.6.2'
     implementation 'com.jakewharton:butterknife:8.4.0'
+    implementation 'com.android.support:support-v4:27.1.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.alibaba:fastjson:1.2.49'

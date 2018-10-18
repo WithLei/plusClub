@@ -19,6 +19,7 @@ import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
+import com.android.renly.plusclub.Utils.StringUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -128,7 +129,7 @@ public class EditAcitivity extends BaseActivity {
                 .url(NetConfig.BASE_POST_PLUS)
                 .addHeader("Authorization", "Bearer " + App.getToken(this))
                 .addParams("title", title)
-                .addParams("body", content)
+                .addParams("body", content + StringUtils.getTextTail(this))
                 .addParams("categories", "code")
                 .build()
                 .execute(new StringCallback() {

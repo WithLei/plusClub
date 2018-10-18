@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -41,6 +42,7 @@ import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.IntentUtils;
+import com.android.renly.plusclub.Utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -145,8 +147,11 @@ public class PostContentFragment extends BaseFragment {
                         ToastShort("是不是忘了登录？(ฅ′ω`ฅ)");
                         return;
                     }
-                    postComments(et.getText().toString());
-                    et.setText("");
+                    if (!TextUtils.isEmpty(et.getText().toString())){
+                        postComments(et.getText().toString());
+                        et.setText("");
+                    }else
+                        ToastShort("回复内容不能为空喔(ฅ′ω`ฅ)");
                 }
             });
             getActivity().addContentView(mInputBarView, lp);
@@ -159,7 +164,7 @@ public class PostContentFragment extends BaseFragment {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_POSTCOMMENT_PLUS)
                 .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
-                .addParams("body", comment)
+                .addParams("body", comment + StringUtils.getTextTail(getActivity()))
                 .addParams("discussion_id", postID + "")
                 .build()
                 .execute(new StringCallback() {
