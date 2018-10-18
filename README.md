@@ -2,7 +2,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/WithLei/plusClub.svg)](https://github.com/WithLei/plusClub/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/WithLei/plusClub.svg)](https://github.com/WithLei/plusClub/network)
 [![Build Status](https://travis-ci.org/WithLei/plusClub.svg?branch=master)](https://travis-ci.org/WithLei/plusClub)  
-'一切伟大的行动和思想，都有一个微不足道的开始'
+**'一切伟大的行动和思想，都有一个微不足道的开始'**
 
 ## 项目介绍
 [PlusClub](http://118.24.0.78/#/home)校园论坛
@@ -62,15 +62,15 @@ It extends the observer pattern to support sequences of data/events and adds ope
 [arcadefire](https://github.com/arcadefire/nice-spinner)
 
 ## License
->Copyright 2016-2018 PlusClub  
->
->Licensed under the Apache License, Version 2.0 (the "License");
+Copyright 2016-2018 PlusClub  
+
+Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
->
->   http://www.apache.org/licenses/LICENSE-2.0
->
->Unless required by applicable law or agreed to in writing, software
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
