@@ -8,16 +8,13 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Activity.LabActivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
-import com.android.renly.plusclub.Activity.PostActivity;
+import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.ForumAdapter;
 import com.android.renly.plusclub.App;
@@ -92,7 +89,7 @@ public class HomeFragment extends BaseFragment {
         StickyListHeadersAdapter adapter = new ForumAdapter(getContext(), forumList, headers);
         list.setAdapter(adapter);
         list.setOnItemClickListener((adapterView, view, pos, l) -> {
-            Intent intent = new Intent(getActivity(), PostActivity.class);
+            Intent intent = new Intent(getActivity(), PostsActivity.class);
             intent.putExtra("Title",forumList.get(pos).getTitle());
             startActivity(intent);
         });

@@ -1,47 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_primary">
-
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        android:id="@+id/sliding_layout"
+    android:background="@color/bg_secondary">
+    <ScrollView
+        android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom"
-        app:umanoDragView="@+id/mainView"
-        app:umanoOverlay="true"
-        app:umanoPanelHeight="68dp"
-        app:umanoScrollableView="@id/sv_postcontent"
-        app:umanoShadowHeight="4dp">
+        android:fillViewport="true" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include layout="@layout/my_toolbar" />
-            <!-- MAIN CONTENT -->
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swiperefresh_post"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_post"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="true" />
-            </android.support.v4.widget.SwipeRefreshLayout>
-        </LinearLayout>
-        <!-- Panel CONTENT -->
-        <ScrollView
-            android:id="@+id/sv_postcontent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:orientation="vertical" />
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

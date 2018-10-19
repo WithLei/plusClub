@@ -43,8 +43,8 @@ public class AboutActivity extends BaseActivity {
     protected void initView() {
         initSlidr();
         String text = "###开发组介绍：  \n" +
-                "**Android开发**：[@Renly](https://github.com/WithLei) [@小时的风](https://github.com/xiaoshidefeng)  \n" +
-                "**Web开发&后台开发**：[@Robinson](https://github.com/Robinson28years)  \n" +
+                "Android开发：[@Renly](https://github.com/WithLei) [@小时的风](https://github.com/xiaoshidefeng)  \n" +
+                "Web开发&后台开发：[@Robinson](https://github.com/Robinson28years)  \n" +
                 "###Bug反馈  \n" +
                 "功能不断完善中，bug较多还请多多反馈......  \n" +
                 "1.加入QQ交流群：113500631  \n" +

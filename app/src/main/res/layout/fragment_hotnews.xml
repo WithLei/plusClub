@@ -12,6 +12,7 @@
         android:elevation="4dp">
 
         <RadioGroup
+            android:id="@+id/btn_change"
             android:layout_width="140dp"
             android:layout_height="28dp"
             android:layout_gravity="center"
@@ -59,26 +60,27 @@
 
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/tv_hotnews_showlogin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        style="@style/text_14_sec"
+        android:gravity="center"
+        android:visibility="visible"
+        android:text="登陆后就可以看了喔 ٩(๑❛ᴗ❛๑)۶" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh_hotnews"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_hotnews_showlogin"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            style="@style/text_14_sec"
-            android:gravity="center"
-            android:visibility="visible"
-            android:text="登陆后就可以看了喔 ٩(๑❛ᴗ❛๑)۶" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_hotnews"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
-            android:background="@color/bg_primary" />
+            android:background="@color/bg_secondary" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

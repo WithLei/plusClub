@@ -23,7 +23,7 @@ public class OpenSourceActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        String content = "**一切伟大的行动和思想，都有一个微不足道的开始**\n" +
+        String content = "**# 一切伟大的行动和思想**  \n**都有一个微不足道的开始**\n" +
                 "\n" +
                 "## 项目介绍\n" +
                 "[PlusClub](http://118.24.0.78/#/home)校园论坛\n" +

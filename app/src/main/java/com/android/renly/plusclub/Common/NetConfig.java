@@ -56,6 +56,7 @@ public class NetConfig {
 
     // PlusClub 获取用户信息（所有人可见）
     public static final String BASE_USER_PLUS = BASE_PLUSCLUB + "user/";
+
     /**
      * PlusClub 获取所有帖子 使用：url + "?page=" + page  eg:host/discussions?page=1
      * PlusClub 获取帖子回复详情 使用：url + "/"+ Post.getId()  eg:host/discussions/68

@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -27,11 +26,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Activity.PostActivity;
+import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.CommentAdapter;
 import com.android.renly.plusclub.App;
@@ -57,7 +55,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import okhttp3.Call;
 
-public class PostContentFragment extends BaseFragment {
+public class PostFragment extends BaseFragment {
     @BindView(R.id.article_title)
     TextView articleTitle;
     @BindView(R.id.main_window)
@@ -83,6 +81,8 @@ public class PostContentFragment extends BaseFragment {
     TextView tvCommentSuggest;
     @BindView(R.id.load_bottom)
     LinearLayout loadBottom;
+    @BindView(R.id.close_panel)
+    ImageView closePanel;
 
     private List<Comment> commentList;
     private Post postObj;
@@ -91,6 +91,8 @@ public class PostContentFragment extends BaseFragment {
     // 输入框
     private View mInputBarView;
     private CommentAdapter adapter = null;
+
+    private String from = "";
 
     private static final int GET_COMMENTDATA = 2;
     private static final int REFRESH_COMMENTLIST = 4;
@@ -114,7 +116,7 @@ public class PostContentFragment extends BaseFragment {
 
     @Override
     public int getLayoutid() {
-        return R.layout.fragment_postcontent;
+        return R.layout.fragment_post;
     }
 
     @Override
@@ -126,13 +128,13 @@ public class PostContentFragment extends BaseFragment {
 
     private void initView() {
         initHead();
-//        initCommentList();
     }
 
     /**
      * 初始化底部输入框
      */
     private EditText et;
+
     public void initMyInputBar() {
         if (!isInputBarShow) {
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
@@ -140,19 +142,16 @@ public class PostContentFragment extends BaseFragment {
             lp.gravity = Gravity.BOTTOM;
             mInputBarView = LayoutInflater.from(getContext()).inflate(R.layout.my_input_bar, null);
             et = mInputBarView.findViewById(R.id.ed_comment);
-            mInputBarView.findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!App.ISLOGIN(getActivity())) {
-                        ToastShort("是不是忘了登录？(ฅ′ω`ฅ)");
-                        return;
-                    }
-                    if (!TextUtils.isEmpty(et.getText().toString())){
-                        postComments(et.getText().toString());
-                        et.setText("");
-                    }else
-                        ToastShort("回复内容不能为空喔(ฅ′ω`ฅ)");
+            mInputBarView.findViewById(R.id.btn_send).setOnClickListener(view -> {
+                if (!App.ISLOGIN(getActivity())) {
+                    ToastShort("是不是忘了登录？(ฅ′ω`ฅ)");
+                    return;
                 }
+                if (!TextUtils.isEmpty(et.getText().toString())) {
+                    postComments(et.getText().toString());
+                    et.setText("");
+                } else
+                    ToastShort("回复内容不能为空喔(ฅ′ω`ฅ)");
             });
             getActivity().addContentView(mInputBarView, lp);
             doShowAnimation();
@@ -203,14 +202,14 @@ public class PostContentFragment extends BaseFragment {
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        printLog("PostContentFragment getNewToken onError");
+                        printLog("PostFragment getNewToken onError");
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         JSONObject obj = JSON.parseObject(response);
                         if (obj.getInteger("code") != 20000) {
-                            printLog("PostContentFragment getNewToken() onResponse获取Token失败,重新登陆");
+                            printLog("PostFragment getNewToken() onResponse获取Token失败,重新登陆");
                         } else {
                             App.setToken(getContext(), obj.getString("result"));
                             postComments(comment);
@@ -236,6 +235,7 @@ public class PostContentFragment extends BaseFragment {
      */
     private void getPostObj() {
         PostJsonString = getArguments().getString("PostJsonObject");
+        from = getArguments().getString("from");
         postObj = JSON.parseObject(PostJsonString, Post.class);
         postID = postObj.getId();
     }
@@ -295,6 +295,10 @@ public class PostContentFragment extends BaseFragment {
      * 初始化标题等等信息
      */
     private void initHead() {
+        if (from.equals("PostActivity")){
+            closePanel.setVisibility(View.GONE);
+            initMyInputBar();
+        }
         articleTitle.setText(postObj.getTitle());
         articleUsername.setText(postObj.getUser().getName());
         articlePostTime.setText(postObj.getCreated_at());
@@ -313,7 +317,7 @@ public class PostContentFragment extends BaseFragment {
         rvComment.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
-                return false;
+                    return false;
             }
         });
         // 解决数据加载不全的问题
@@ -363,17 +367,17 @@ public class PostContentFragment extends BaseFragment {
     }
 
     private CommentAdapter.OnItemClickListener listener = (view, pos) -> {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_reply_cz:
-                if (et != null){
+                if (et != null) {
                     et.setText("***回复@" + commentList.get(pos).getUser().getName() + "：***\n");
-                    et.setSelection(et.getText().length()-1);
+                    et.setSelection(et.getText().length() - 1);
                 }
                 break;
             case R.id.btn_more:
                 PopupMenu popup = new PopupMenu(getActivity(), view);
                 popup.setOnMenuItemClickListener(menuItem -> {
-                    switch (menuItem.getItemId()){
+                    switch (menuItem.getItemId()) {
                         case R.id.tv_edit:
                             break;
                         case R.id.tv_copy:
@@ -437,13 +441,13 @@ public class PostContentFragment extends BaseFragment {
                 IntentUtils.sharePost(getActivity(), data);
                 break;
             case R.id.close_panel:
-                PostActivity postActivity = (PostActivity) getActivity();
-                postActivity.hidePanel();
+                PostsActivity postsActivity = (PostsActivity) getActivity();
+                postsActivity.hidePanel();
                 break;
             case R.id.btn_more:
                 PopupMenu popup = new PopupMenu(getActivity(), view);
                 popup.setOnMenuItemClickListener(menuItem -> {
-                    switch (menuItem.getItemId()){
+                    switch (menuItem.getItemId()) {
                         case R.id.tv_edit:
                             break;
                         case R.id.tv_copy:
@@ -474,7 +478,7 @@ public class PostContentFragment extends BaseFragment {
             case R.id.article_user_image:
             case R.id.article_username:
                 Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-                intent.putExtra("userid",postObj.getUser().getId());
+                intent.putExtra("userid", postObj.getUser().getId());
                 startActivity(intent);
                 break;
         }

@@ -1,16 +1,19 @@
 package com.android.renly.plusclub.Fragment;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.content.SharedPreferences;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.android.renly.plusclub.Activity.ChangePwdActivity;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.R;
@@ -26,6 +29,7 @@ public class SettingFragment extends PreferenceFragment
     private Preference clearCache;
 
     // 账号设置
+    private PreferenceCategory group_user;
     private Preference user_logout;
     private Preference user_changepwd;
 
@@ -50,13 +54,23 @@ public class SettingFragment extends PreferenceFragment
         setting_user_tail.setSummary(sharedPreferences.getString(App.TEXT_TAIL, "无小尾巴"));
 
         clearCache = findPreference("clean_cache");
-        user_logout = findPreference("user_logout");
-        user_logout.setOnPreferenceClickListener(preference -> {
-            App.setIsLogout(getActivity());
-            MyToast.showText(getActivity(), "退出登录成功", Toast.LENGTH_SHORT, true);
-            return true;
-        });
-        user_changepwd = findPreference("user_changepwd");
+
+        group_user = (PreferenceCategory)findPreference("group_user");
+        if (!App.ISLOGIN(getActivity())){
+            getPreferenceScreen().removePreference(group_user);
+        }else{
+            user_logout = findPreference("user_logout");
+            user_logout.setOnPreferenceClickListener(preference -> {
+                App.setIsLogout(getActivity());
+                MyToast.showText(getActivity(), "退出登录成功", Toast.LENGTH_SHORT, true);
+                return true;
+            });
+            user_changepwd = findPreference("user_changepwd");
+            user_changepwd.setOnPreferenceClickListener(preference -> {
+                startActivity(new Intent(getActivity(),ChangePwdActivity.class));
+                return true;
+            });
+        }
 
 
         PackageManager manager = getActivity().getPackageManager();
