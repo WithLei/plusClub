@@ -1,8 +1,10 @@
 # plusClub
 [![GitHub stars](https://img.shields.io/github/stars/WithLei/plusClub.svg)](https://github.com/WithLei/plusClub/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/WithLei/plusClub.svg)](https://github.com/WithLei/plusClub/network)
+[![GitHub Release](https://img.shields.io/github/release/WithLei/plusClub/all.svg)](https://github.com/WithLei/plusClub/releases)
 [![Build Status](https://travis-ci.org/WithLei/plusClub.svg?branch=master)](https://travis-ci.org/WithLei/plusClub)  
-**'一切伟大的行动和思想，都有一个微不足道的开始'**
+**'一切伟大的行动和思想，都有一个微不足道的开始'**  
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/pluslogo.jpg" width="80" hegiht="80" align=center />
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/pluslogo_round.jpg" width="80" hegiht="80" align=center />  
 
 ## 项目介绍
 [PlusClub](http://118.24.0.78/#/home)校园论坛
