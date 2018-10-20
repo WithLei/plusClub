@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_primary">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/main_item_btn_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/article_title"
+            style="@style/text_16_pri"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="话题的标题" />
+
+        <TextView
+            android:id="@+id/author_name"
+            style="@style/text_12_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
+            android:drawableStart="@drawable/ic_person_outline_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/article_title"
+            tools:text="some" />
+
+        <TextView
+            android:id="@+id/post_time"
+            style="@style/text_12_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:drawableStart="@drawable/ic_access_time_black_24dp"
+            android:gravity="center"
+            android:maxLines="1"
+            app:layout_constraintBaseline_toBaselineOf="@+id/author_name"
+            app:layout_constraintStart_toEndOf="@+id/author_name"
+            tools:text=" 2015-1-1 19:20:15" />
+
+    </android.support.constraint.ConstraintLayout>
+</FrameLayout>

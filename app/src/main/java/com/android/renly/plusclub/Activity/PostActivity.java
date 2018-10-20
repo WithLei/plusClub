@@ -34,8 +34,6 @@ public class PostActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         PostFragment postFragment = new PostFragment();
-//        fragment.stopNestedScroll();
-//        fragment.scrollTo(0, 0);
         Bundle bundle = new Bundle();
         bundle.putString("PostJsonObject", getIntent().getExtras().getString("PostJsonObject"));
         bundle.putString("from", "PostActivity");
