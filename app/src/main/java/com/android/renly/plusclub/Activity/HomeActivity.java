@@ -73,6 +73,10 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                     recreate();
                     printLog("onActivityResult LoginActivity");
                     break;
+                case SettingActivity.requestCode:
+                    recreate();
+                    printLog("onActivityResult SettingActivity");
+                    break;
             }
         }else
             printLog("resultCode != RESULT_OK");
@@ -121,11 +125,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     protected void onResume() {
         super.onResume();
-        hideSoftInput();
-    }
-
-    private void hideSoftInput() {
-        getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        hideKeyBoard();
     }
 
     @Override

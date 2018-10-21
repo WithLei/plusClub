@@ -66,22 +66,17 @@ public class HomeFragment extends BaseFragment {
         else
             ciHomeImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
         forumList = new ArrayList<>();
-        forumList.add(new Forum("灌水专区", R.drawable.icon_mine_collect, 0));
-        forumList.add(new Forum("摄影天地", R.drawable.icon_mine_friend, 0));
-        forumList.add(new Forum("校园生活", R.drawable.icon_mine_info, 1));
-        forumList.add(new Forum("失物招领", R.drawable.icon_mine_friend, 1));
-        forumList.add(new Forum("技术博客", R.drawable.icon_mine_history, 2));
-        forumList.add(new Forum("学习交流", R.drawable.icon_mine_friend, 2));
-        forumList.add(new Forum("学习交流", R.drawable.icon_mine_friend, 2));
-        forumList.add(new Forum("学习交流", R.drawable.icon_mine_friend, 2));
-        forumList.add(new Forum("学习交流", R.drawable.icon_mine_friend, 2));
-        forumList.add(new Forum("学习交流", R.drawable.icon_mine_friend, 2));
-        forumList.add(new Forum("学习交流", R.drawable.icon_mine_friend, 2));
-        forumList.add(new Forum("学习交流", R.drawable.icon_mine_friend, 2));
+        forumList.add(new Forum("灌水专区", R.drawable.icon_mine_collect, 0,"daily"));
+        forumList.add(new Forum("技术交流", R.drawable.icon_mine_friend, 0,"code"));
+        forumList.add(new Forum("问答专区", R.drawable.icon_mine_info, 1,"qa"));
+        forumList.add(new Forum("发展建议", R.drawable.icon_mine_friend, 1,"suggests"));
+        forumList.add(new Forum("论坛反馈", R.drawable.icon_mine_history, 2,"feedback"));
+        forumList.add(new Forum("校园交易", R.drawable.icon_mine_friend, 2,"transaction"));
+        forumList.add(new Forum("公告活动", R.drawable.icon_mine_friend, 2,"activity"));
 
         headers = new String[]{
                 "休闲娱乐",
-                "梨园生活",
+                "校园生活",
                 "学术交流"
         };
         list = getActivity().findViewById(R.id.list);
@@ -91,6 +86,7 @@ public class HomeFragment extends BaseFragment {
         list.setOnItemClickListener((adapterView, view, pos, l) -> {
             Intent intent = new Intent(getActivity(), PostsActivity.class);
             intent.putExtra("Title",forumList.get(pos).getTitle());
+            intent.putExtra("category",forumList.get(pos).getCategory());
             startActivity(intent);
         });
         list.setOnHeaderClickListener((l, header, itemPosition, headerId, currentlySticky) -> {

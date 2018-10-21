@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -47,7 +48,8 @@ import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOADING;
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_FAIL;
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_NOTHING;
 
-public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLoadMoreListener{
+public class PostsActivity extends BaseActivity
+        implements LoadMoreListener.OnLoadMoreListener {
     @BindView(R.id.myToolBar)
     FrameLayout myToolBar;
     @BindView(R.id.sliding_layout)
@@ -58,9 +60,15 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
     ScrollView svPostcontent;
     @BindView(R.id.swiperefresh_post)
     SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.tv_hotnews_showlogin)
+    TextView tvHotnewsShowlogin;
 
     private Unbinder unbinder;
 
+    /**
+     * 当前专区分类
+     */
+    private String currentCategory;
     /**
      * 帖子区的标题
      */
@@ -80,17 +88,18 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
     /**
      * Panel Fragment池
      */
-    private List<PostFragment> fragmentPool;
-    private PostFragment nowFragment = null;
+//    private List<PostFragment> fragmentPool;
+    private PostFragment lastFragment = null;
+    private PostFragment currentFragment = null;
 
     private PostAdapter adapter;
 
     private static final int GET_POST_SUCCESS = 2;
     private static final int GET_POST_FAIL = 4;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case GET_POST_SUCCESS:
                     initPostListData(msg.getData().getString("data"));
                     // 处理第一次刷新和后续刷新
@@ -98,9 +107,16 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
                         initpostList();
                     else
                         adapter.notifyDataSetChanged();
-                    //
-                    if (refreshLayout.isRefreshing())
-                        refreshLayout.setRefreshing(false);
+
+                    isPullDownRefresh = false;
+                    isPullUpRefresh = false;
+                    if (tvHotnewsShowlogin != null){
+                        //防止内存泄露 暂时这样写
+                        tvHotnewsShowlogin.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.VISIBLE);
+                        if (refreshLayout.isRefreshing())
+                            refreshLayout.setRefreshing(false);
+                    }
                     break;
                 case GET_POST_FAIL:
                     ToastShort("获取列表数据失败");
@@ -118,6 +134,7 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
     @Override
     protected void initData() {
         title = getIntent().getStringExtra("Title");
+        currentCategory = getIntent().getStringExtra("category");
         fragmentManager = getSupportFragmentManager();
         getPostListData(1);
     }
@@ -126,10 +143,11 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
     protected void initView() {
         initToolBar(true, title);
         addToolbarMenu(R.drawable.ic_create_black_24dp).setOnClickListener(view -> {
-            if (App.ISLOGIN(this)){
-                Intent intent = new Intent(PostsActivity.this,EditAcitivity.class);
+            if (App.ISLOGIN(this)) {
+                Intent intent = new Intent(PostsActivity.this, EditAcitivity.class);
+                intent.putExtra("category",currentCategory);
                 startActivityForResult(intent, EditAcitivity.requestCode);
-            }else{
+            } else {
                 new AlertDialog.Builder(this)
                         .setTitle("需要登录")
                         .setMessage("还没有登陆哦，赶快去登陆吧！")
@@ -164,14 +182,15 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
 
     /**
      * 下拉刷新样式
-     * isRefresh
+     * isRefresh 用于锁住方法，防止多次请求导致bug
      * true 有刷新请求
      * false 无刷新请求
      */
-    private boolean isRefresh = false;
+    private boolean isPullDownRefresh = false;
+
     private void initRefreshLayout() {
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
-        refreshLayout.setOnRefreshListener(() -> new Thread(){
+        refreshLayout.setOnRefreshListener(() -> new Thread() {
             @Override
             public void run() {
                 doRefresh();
@@ -183,7 +202,17 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
      * 执行刷新操作
      */
     private void doRefresh() {
-        isRefresh = true;
+        new Thread(){
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    tvHotnewsShowlogin.setVisibility(View.VISIBLE);
+                    refreshLayout.setVisibility(View.GONE);
+                    hidePanel();
+                });
+            }
+        }.start();
+        isPullDownRefresh = true;
         getPostListData(1);
         max_page = 1;
     }
@@ -194,7 +223,8 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
     private void getPostListData(int page) {
         OkHttpUtils.get()
                 .url(NetConfig.BASE_POST_PLUS)
-                .addParams("page",page+"")
+                .addParams("categories",currentCategory)
+                .addParams("page", page + "")
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -205,20 +235,21 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
                     @Override
                     public void onResponse(String response, int id) {
 //                        printLog(response);
-                        if (!response.contains("code")){
+                        if (!response.contains("code")) {
                             ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
                             return;
                         }
 
                         JSONObject dataObj = JSON.parseObject(response);
-                        if (dataObj.getInteger("code") != 20000){
+                        if (dataObj.getInteger("code") != 20000) {
                             ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
-                        }else{
+                        } else {
+                            printLog("dataobj == " + dataObj.getString("data"));
                             max_page = max_page >= page ? max_page : page;
                             Message msg = new Message();
                             msg.what = GET_POST_SUCCESS;
                             Bundle bundle = new Bundle();
-                            bundle.putString("data",dataObj.getString("data"));
+                            bundle.putString("data", dataObj.getString("data"));
                             msg.setData(bundle);
                             handler.sendMessage(msg);
                         }
@@ -230,44 +261,54 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
      * 初始化帖子列表数据
      */
     private void initPostListData(String JsonDataArray) {
-        if (isRefresh){
+        if (isPullDownRefresh) {
             // 下拉刷新的请求
             postList.clear();
-            isRefresh = false;
             adapter.changeLoadMoreState(STATE_LOADING);
         }
         JSONObject jsonObject = JSON.parseObject(JsonDataArray);
         // 尾页处理
-        if (jsonObject.getInteger("current_page").equals(jsonObject.getInteger("last_page"))){
+        if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")
+                && jsonObject.getInteger("current_page") != 1) {
             if (adapter != null)
                 adapter.changeLoadMoreState(STATE_LOAD_NOTHING);
-            return ;
+            return;
         }
         JSONArray array = JSON.parseArray(jsonObject.getString("data"));
-        for (int i = 0;i < array.size();i++){
+        for (int i = 0; i < array.size(); i++) {
             postList.add(JSON.parseObject(array.getString(i), Post.class));
-            printLog(postList.get(postList.size()-1).toString());
+            printLog(postList.get(postList.size() - 1).toString());
         }
+        if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")
+                && adapter != null)
+            adapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+
     }
 
     private void initpostList() {
         // 初始化fragmentPool池
-        fragmentPool = new ArrayList<>();
+//        fragmentPool = new ArrayList<>();
         adapter = new PostAdapter(this, postList);
         // 设置监听事件
         rvPost.setAdapter(adapter);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvPost.setLayoutManager(mLayoutManager);
-        rvPost.addOnScrollListener(new LoadMoreListener((LinearLayoutManager)mLayoutManager,this, 5));
+        rvPost.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 5));
         adapter.setOnItemClickListener(pos -> {
-            PostFragment fragment = new PostFragment();
-            nowFragment = fragment;
-            fragmentPool.add(fragment);
+            if (pos >= postList.size())
+                return;
+            lastFragment = currentFragment;
+            currentFragment = new PostFragment();
+//            PostFragment fragment = new PostFragment();
+//            nowFragment = fragment;
+//            fragmentPool.add(fragment);
             Bundle bundle = new Bundle();
-            bundle.putString("PostJsonObject",JSON.toJSONString(postList.get(pos)));
-            bundle.putString("from","PostsActivity");
-            fragment.setArguments(bundle);
-            loadPanel(fragment, fragmentPool.size() == 1 ? null : fragmentPool.get(fragmentPool.size() - 2));
+            bundle.putString("PostJsonObject", JSON.toJSONString(postList.get(pos)));
+            bundle.putString("from", "PostsActivity");
+            currentFragment.setArguments(bundle);
+            loadPanel(currentFragment,lastFragment);
+//            fragment.setArguments(bundle);
+//            loadPanel(fragment, fragmentPool.size() == 1 ? null : fragmentPool.get(fragmentPool.size() - 2));
         });
     }
 
@@ -294,7 +335,7 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
      */
     private void initSlidingLayout() {
         slidingLayout.setAnchorPoint(0.7f);
-        slidingLayout.setPanelHeight(DimmenUtils.dip2px(this,120));
+        slidingLayout.setPanelHeight(DimmenUtils.dip2px(this, 120));
         slidingLayout.setPanelState(PanelState.HIDDEN);
         slidingLayout.setFadeOnClickListener(view -> {
             doDownAnimation();
@@ -316,13 +357,11 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
                     return;
                 if (newState == PanelState.HIDDEN
                         || newState == PanelState.COLLAPSED
-                        || (previousState == PanelState.DRAGGING && newState == PanelState.ANCHORED && ppState == PanelState.EXPANDED))
-                {
-                    nowFragment.removeMyInputBar();
+                        || (previousState == PanelState.DRAGGING && newState == PanelState.ANCHORED && ppState == PanelState.EXPANDED)) {
+                    currentFragment.removeMyInputBar();
                     animToolBar(false);
-                }
-                else{
-                    nowFragment.initMyInputBar();
+                } else {
+                    currentFragment.initMyInputBar();
                     animToolBar(true);
                 }
             }
@@ -349,15 +388,15 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
     public void onBackPressed() {
         if (slidingLayout != null &&
                 (slidingLayout.getPanelState() == PanelState.EXPANDED
-                        || slidingLayout.getPanelState() == PanelState.ANCHORED )) {
+                        || slidingLayout.getPanelState() == PanelState.ANCHORED)) {
             slidingLayout.setPanelState(PanelState.COLLAPSED);
-            if (nowFragment != null) {
+            if (currentFragment != null) {
                 svPostcontent.stopNestedScroll();
                 svPostcontent.scrollTo(0, 0);
             }
-        } else if(slidingLayout != null && slidingLayout.getPanelState() == PanelState.COLLAPSED) {
+        } else if (slidingLayout != null && slidingLayout.getPanelState() == PanelState.COLLAPSED) {
             slidingLayout.setPanelState(PanelState.HIDDEN);
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -432,15 +471,15 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
         downAnimator.start();
     }
 
-    public void hidePanel(){
+    public void hidePanel() {
         slidingLayout.setPanelState(PanelState.HIDDEN);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK){
-            switch(requestCode){
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
                 case EditAcitivity.requestCode:
                     doRefresh();
                     hideKeyBoard();
@@ -455,8 +494,13 @@ public class PostsActivity extends BaseActivity implements LoadMoreListener.OnLo
         hideKeyBoard();
     }
 
+    private boolean isPullUpRefresh = false;
+
     @Override
     public void onLoadMore() {
-        getPostListData(max_page+1);
+        if (isPullDownRefresh || isPullUpRefresh)
+            return;
+        isPullUpRefresh = true;
+        getPostListData(max_page + 1);
     }
 }

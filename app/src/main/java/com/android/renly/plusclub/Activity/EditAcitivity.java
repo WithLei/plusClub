@@ -1,7 +1,7 @@
 package com.android.renly.plusclub.Activity;
 
 import android.app.AlertDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,7 +9,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -23,6 +23,12 @@ import com.android.renly.plusclub.Utils.StringUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.angmarch.views.NiceSpinner;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -33,12 +39,19 @@ public class EditAcitivity extends BaseActivity {
     EditText editor;
     @BindView(R.id.et_post_title)
     EditText etPostTitle;
+    @BindView(R.id.iv_toolbar_back)
+    ImageView ivToolbarBack;
+    @BindView(R.id.spinner)
+    NiceSpinner spinner;
+
+    private String[] categories = new String[]{
+            "daily","code","qa","suggests","feedback","transaction","activity",
+    };
+    String currentCategory = categories[0];
 
     public static final int requestCode = 110;
 
     private static final int SHOW_SOFTINPUT = 2;
-    @BindView(R.id.iv_toolbar_back)
-    ImageView ivToolbarBack;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -57,7 +70,34 @@ public class EditAcitivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        initSpinner();
+    }
 
+    private void initSpinner() {
+        List<String> dataset = new LinkedList<>(Arrays.asList(getResources().getStringArray(R.array.post_categories)));
+        spinner.attachDataSource(dataset);
+        spinner.setBackgroundColor(getResources().getColor(R.color.bg_secondary));
+        spinner.setTextColor(getResources().getColor(R.color.text_color_sec));
+        spinner.setArrowDrawable(getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                currentCategory = categories[pos];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        Intent intent = getIntent();
+        String temp = intent.getExtras().getString("category");
+        for (int pos = 0;pos < categories.length;pos++)
+            if (temp.equals(categories[pos])){
+                currentCategory = temp;
+                spinner.setSelectedIndex(pos);
+                break;
+            }
     }
 
     @Override
@@ -68,12 +108,18 @@ public class EditAcitivity extends BaseActivity {
                 new AlertDialog.Builder(EditAcitivity.this)
                         .setMessage("程序猿还没开发出保存的功能喔，确定返回吗|ω・）")
                         .setCancelable(true)
-                        .setPositiveButton("确定", (dialogInterface, i) -> finishActivity())
-                        .setNegativeButton("取消", (dialogInterface, i) -> {})
+                        .setPositiveButton("确定", (dialogInterface, i) -> {
+                            setResult(RESULT_OK);
+                            finishActivity();
+                        })
+                        .setNegativeButton("取消", (dialogInterface, i) -> {
+                        })
                         .create()
                         .show();
-            else
+            else{
+                setResult(RESULT_OK);
                 finishActivity();
+            }
         });
         addToolbarMenu(R.drawable.ic_check_black_24dp).setOnClickListener(view -> {
             if (checkInput())
@@ -125,12 +171,14 @@ public class EditAcitivity extends BaseActivity {
      * 发送帖子
      */
     private void doPost(String title, String content) {
+        if (currentCategory == categories[6] && !App.getRole(this).equals("admin"))
+            return;
         OkHttpUtils.post()
                 .url(NetConfig.BASE_POST_PLUS)
                 .addHeader("Authorization", "Bearer " + App.getToken(this))
                 .addParams("title", title)
                 .addParams("body", content + StringUtils.getTextTail(this))
-                .addParams("categories", "code")
+                .addParams("categories", currentCategory)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -195,6 +243,7 @@ public class EditAcitivity extends BaseActivity {
     }
 
     private Unbinder unbinder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -210,13 +259,18 @@ public class EditAcitivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (etPostTitle.getText().toString().isEmpty() && editor.getText().toString().isEmpty())
+        if (etPostTitle.getText().toString().isEmpty() && editor.getText().toString().isEmpty()){
+            setResult(RESULT_OK);
             super.onBackPressed();
+        }
         else {
             new AlertDialog.Builder(this)
-                    .setMessage("程序猿还没开发出保存的功能喔，确定返回吗|ω・）")
+                    .setMessage("程序猿还没开发保存的功能喔，确定返回吗|ω・）")
                     .setCancelable(true)
-                    .setPositiveButton("确定", (dialogInterface, i) -> finishActivity())
+                    .setPositiveButton("确定", (dialogInterface, i) -> {
+                        setResult(RESULT_OK);
+                        finishActivity();
+                    })
                     .setNegativeButton("取消", (dialogInterface, i) -> {
                     })
                     .create()

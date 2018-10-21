@@ -114,6 +114,8 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                                 myPostAdapter.notifyDataSetChanged();
                             break;
                     }
+                    isPullDownRefresh = false;
+                    isPullUpRefresh = false;
                     tvHotnewsShowlogin.setVisibility(View.GONE);
                     rv.setVisibility(View.VISIBLE);
                     if (refreshLayout.isRefreshing())
@@ -203,7 +205,17 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
      * 执行刷新操作
      */
     private void doRefresh() {
-        isRefresh = true;
+        isPullDownRefresh = true;
+        new Thread(){
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(() -> {
+                    tvHotnewsShowlogin.setText("刷新中...");
+                    tvHotnewsShowlogin.setVisibility(View.VISIBLE);
+                });
+            }
+        }.start();
+
         getData(1);
         switch (currentType) {
             case TYPE_NEW:
@@ -221,15 +233,19 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     private void getData(int page) {
         switch (currentType) {
             case TYPE_NEW:
-                postAdapter = null;
+                printLog("page" + page);
+                if (page == 1)
+                    postAdapter = null;
                 getPostListData(page);
                 break;
             case TYPE_REPLY:
-                replyAdapter = null;
+                if (page == 1)
+                    replyAdapter = null;
                 getReplyListData(page);
                 break;
             case TYPE_MY:
-                myPostAdapter = null;
+                if (page == 1)
+                    myPostAdapter = null;
                 getMyListData(page);
                 break;
         }
@@ -366,7 +382,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
      * true 有刷新请求
      * false 无刷新请求
      */
-    private boolean isRefresh = false;
+    private boolean isPullDownRefresh = false;
 
     private void initRefreshLayout() {
         refreshLayout.setColorSchemeResources(R.color.red_light, R.color.green_light, R.color.blue_light, R.color.orange_light);
@@ -382,8 +398,8 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
      * 初始化帖子列表数据
      */
     private void initListData(String JsonDataArray, int type) {
-        if (isRefresh) {
-            // 下拉刷新的请求
+        if (isPullDownRefresh) {
+            // 处理下拉刷新的请求
             switch (type) {
                 case TYPE_NEW:
                     postList.clear();
@@ -401,7 +417,6 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                         myPostAdapter.changeLoadMoreState(STATE_LOADING);
                     break;
             }
-            isRefresh = false;
         }
         JSONObject jsonObject = JSON.parseObject(JsonDataArray);
         // 尾页处理
@@ -527,18 +542,21 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
         handler.removeCallbacksAndMessages(null);
     }
 
+    private boolean isPullUpRefresh = false;
     @Override
     public void onLoadMore() {
-        printLog("currentType == " + currentType);
+        if (isPullDownRefresh || isPullUpRefresh)
+            return;
+        isPullUpRefresh = true;
         switch (currentType) {
             case TYPE_NEW:
-                getPostListData(max_page_post + 1);
+                getData(max_page_post + 1);
                 break;
             case TYPE_REPLY:
-                getReplyListData(max_page_reply + 1);
+                getData(max_page_reply + 1);
                 break;
             case TYPE_MY:
-                getMyListData(max_page_my + 1);
+                getData(max_page_my + 1);
                 break;
         }
     }

@@ -33,4 +33,23 @@
         <item>6号</item>
         <item>7号</item>
     </string-array>
+    <string-array name="post_categories">
+        <item>灌水专区</item>
+        <item>技术交流</item>
+        <item>问答专区</item>
+        <item>发展建议</item>
+        <item>论坛反馈</item>
+        <item>校园交易</item>
+        <item>公告活动</item>
+    </string-array>
+
+    <string-array name="post_categories_value">
+        <item>daily</item>
+        <item>code</item>
+        <item>qa</item>
+        <item>suggests</item>
+        <item>feedback</item>
+        <item>transaction</item>
+        <item>activity</item>
+    </string-array>
 </resources>

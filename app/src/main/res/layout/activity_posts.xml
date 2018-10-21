@@ -22,11 +22,19 @@
             android:orientation="vertical">
 
             <include layout="@layout/my_toolbar" />
+            <TextView
+                android:id="@+id/tv_hotnews_showlogin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/text_14_sec"
+                android:gravity="center"
+                android:text="刷新中..."/>
             <!-- MAIN CONTENT -->
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swiperefresh_post"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_post"

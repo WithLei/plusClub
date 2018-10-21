@@ -19,6 +19,8 @@ public class SettingActivity extends BaseActivity {
     FrameLayout container;
     private Unbinder unbinder;
 
+    public static final int requestCode = 256;
+
     @Override
     protected int getLayoutID() {
         return R.layout.activity_setting;
