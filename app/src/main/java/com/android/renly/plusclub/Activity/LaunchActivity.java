@@ -14,7 +14,7 @@ import com.android.renly.plusclub.R;
 import java.util.Calendar;
 
 public class LaunchActivity extends Activity{
-    private static final int WAIT_TIME = 3000;
+    private static final int WAIT_TIME = 1500;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

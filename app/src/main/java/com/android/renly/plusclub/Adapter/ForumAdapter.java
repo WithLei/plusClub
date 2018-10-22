@@ -1,10 +1,11 @@
 package com.android.renly.plusclub.Adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,91 +14,74 @@ import com.android.renly.plusclub.R;
 
 import java.util.List;
 
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 首页论坛模块adapter
  */
-public class ForumAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ViewHolder> {
     private Context context;
-    private LayoutInflater inflater;
     private List<Forum> forumList;
-    private String[] headerList;
+    private OnItemClickListener mItemClickListener = null;
 
-    public ForumAdapter(Context context, List<Forum> forumList, String[] headerList) {
+
+    public ForumAdapter(Context context, List<Forum> forumList) {
         this.context = context;
         this.forumList = forumList;
-        this.headerList = headerList;
-        inflater = LayoutInflater.from(context);
+    }
 
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_forum_name, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view, mItemClickListener);
+        return viewHolder;
     }
 
     @Override
-    public View getHeaderView(int position, View convertView, ViewGroup parent) {
-        HeaderViewHolder holder;
-        if (convertView == null) {
-            holder = new HeaderViewHolder();
-            convertView = inflater.inflate(R.layout.item_forum_header, parent, false);
-            holder.header_title = convertView.findViewById(R.id.header_title);
-            convertView.setTag(holder);
-        } else {
-            holder = (HeaderViewHolder) convertView.getTag();
-        }
-        //set header text as first char in name
-        holder.header_title.setText(headerList[forumList.get(position).getHeader()]);
-        return convertView;
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.setData(position);
     }
 
     @Override
-    public long getHeaderId(int position) {
-        return forumList.get(position).getHeader();
-    }
-
-    @Override
-    public int getCount() {
+    public int getItemCount() {
         return forumList.size();
     }
 
-    @Override
-    public Object getItem(int pos) {
-        return forumList.get(pos);
+    public interface OnItemClickListener {
+        void onItemClick(int pos);
     }
 
-    @Override
-    public long getItemId(int pos) {
-        return pos;
+    public void setOnItemClickListener(OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
     }
 
-    @Override
-    public View getView(int pos, View convertView, ViewGroup viewGroup) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_forum_name, viewGroup, false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        Forum obj = forumList.get(pos);
-        holder.img.setImageDrawable(context.getResources().getDrawable(obj.getImg()));
-        holder.title.setText(obj.getTitle());
-
-        return convertView;
-    }
-
-    static class ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+        @BindView(R.id.img)
         ImageView img;
+        @BindView(R.id.title)
         TextView title;
 
-        public ViewHolder(View view){
-            img = view.findViewById(R.id.img);
-            title = view.findViewById(R.id.title);
+        ViewHolder(View itemView, OnItemClickListener listener) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
+            mItemClickListener = listener;
+            if (listener != null)
+                itemView.setOnClickListener(this);
         }
-    }
 
-    static class HeaderViewHolder {
-        TextView header_title;
+        void setData(int pos) {
+            img.setImageResource(forumList.get(pos).getImg());
+            title.setText(forumList.get(pos).getTitle());
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mItemClickListener != null) {
+                mItemClickListener.onItemClick(this.getAdapterPosition());
+            }
+        }
     }
 }
