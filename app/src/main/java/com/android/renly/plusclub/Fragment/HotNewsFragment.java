@@ -233,7 +233,6 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     private void getData(int page) {
         switch (currentType) {
             case TYPE_NEW:
-                printLog("page" + page);
                 if (page == 1)
                     postAdapter = null;
                 getPostListData(page);

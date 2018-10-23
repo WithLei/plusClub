@@ -2,9 +2,19 @@ package com.android.renly.plusclub.Utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtils {
+    /**
+     * 获取当前的小时时间
+     * @return
+     */
+    public static int getHourTimeOfDay(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
     public static String dateToString(Date date){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(date);

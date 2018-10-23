@@ -41,6 +41,8 @@ public class NetConfig {
     // 信息门户登陆请求 - 外/内网
     public static final String ECARD_LOGIN_PLUS = "https://ca.webvpn.lsu.edu.cn/zfca/login";
 
+    // 获取天气api
+    public static final String GET_WEATHER_URL = "http://www.weather.com.cn/data/cityinfo/101210801.html";
 
     // PlusClub api基地址
     public static final String BASE_PLUSCLUB = "http://118.24.0.78/api/";

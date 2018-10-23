@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -26,6 +28,7 @@ import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
+import com.android.renly.plusclub.Utils.DateUtils;
 import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -50,11 +53,46 @@ public class HomeFragment extends BaseFragment {
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.list)
     RecyclerView list;
+    @BindView(R.id.tv_weather)
+    TextView tvWeather;
+    @BindView(R.id.iv_weather)
+    ImageView ivWeather;
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
+    @BindView(R.id.ll_logintip)
+    RelativeLayout llLogintip;
     private Unbinder unbinder;
 
 
     private List<Forum> forumList;
     private String[] headers;
+
+    private void initWeatherView(boolean isSuccess, String weatherObj) {
+        int currentHour = DateUtils.getHourTimeOfDay();
+        if (currentHour <= 5 || currentHour >= 19) {
+            tvWeather.setText("晚上好！");
+            ivWeather.setImageResource(R.drawable.ic_moon);
+        } else if (currentHour <= 10)
+            tvWeather.setText("早上好！");
+        else if (currentHour <= 13)
+            tvWeather.setText("中午好！");
+        else
+            tvWeather.setText("下午好！");
+        ivWeather.setImageResource(R.drawable.ic_sun);
+
+        if (isSuccess) {
+            JSONObject jsonObject = JSON.parseObject(weatherObj);
+            String weather = jsonObject.getString("weather");
+            if (weather.contains("晴"))
+                return;
+            else if (weather.contains("雨"))
+                ivWeather.setImageResource(R.drawable.ic_rain);
+            else if (weather.contains("风"))
+                ivWeather.setImageResource(R.drawable.ic_cloudy);
+            else if (weather.contains("雪"))
+                ivWeather.setImageResource(R.drawable.ic_snow);
+        }
+    }
 
     @Override
     public int getLayoutid() {
@@ -63,39 +101,80 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initData(Context content) {
-        if (App.ISLOGIN(getActivity()))
+        if (App.ISLOGIN(getActivity())){
             getUserAvator();
-        else
+            llLogintip.setVisibility(View.GONE);
+        }
+        else {
             ciHomeImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
-        forumList = new ArrayList<>();
-        forumList.add(new Forum("灌水专区", R.drawable.icon_mine_collect, 0, "daily"));
-        forumList.add(new Forum("技术交流", R.drawable.icon_mine_friend, 0, "code"));
-        forumList.add(new Forum("问答专区", R.drawable.icon_mine_info, 1, "qa"));
-        forumList.add(new Forum("发展建议", R.drawable.icon_mine_friend, 1, "suggests"));
-        forumList.add(new Forum("论坛反馈", R.drawable.icon_mine_history, 2, "feedback"));
-        forumList.add(new Forum("校园交易", R.drawable.icon_mine_friend, 2, "transaction"));
-        forumList.add(new Forum("公告活动", R.drawable.icon_mine_friend, 2, "activity"));
-
-        headers = new String[]{
-                "休闲娱乐",
-                "校园生活",
-                "学术交流"
-        };
+            llLogintip.setVisibility(View.VISIBLE);
+        }
+        getWeatherData();
+        initForumListData();
         initView();
     }
 
     private void initView() {
+        initForumList();
+    }
+
+    private void initForumList() {
         ForumAdapter adapter = new ForumAdapter(getActivity(), forumList);
         adapter.setOnItemClickListener(pos -> {
             Intent intent = new Intent(getActivity(), PostsActivity.class);
-            intent.putExtra("Title",forumList.get(pos).getTitle());
-            intent.putExtra("category",forumList.get(pos).getCategory());
+            intent.putExtra("Title", forumList.get(pos).getTitle());
+            intent.putExtra("category", forumList.get(pos).getCategory());
             startActivity(intent);
         });
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
         list.setClipToPadding(false);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
+    }
+
+    private void getWeatherData() {
+        OkHttpUtils.get()
+                .url(NetConfig.GET_WEATHER_URL)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        printLog("getWeatherData onError");
+                        handler.sendEmptyMessage(GET_WEATHER_FAIL);
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        if (!response.contains("weatherinfo")) {
+                            handler.sendEmptyMessage(GET_WEATHER_FAIL);
+                        } else {
+                            JSONObject jsonObject = JSON.parseObject(response);
+                            Message msg = new Message();
+                            msg.what = GET_WEATHER_SUCCESS;
+                            Bundle bundle = new Bundle();
+                            bundle.putString("weatherObj", jsonObject.getString("weatherinfo"));
+                            msg.setData(bundle);
+                            handler.sendMessage(msg);
+                        }
+                    }
+                });
+    }
+
+    private void initForumListData() {
+        forumList = new ArrayList<>();
+        forumList.add(new Forum("灌水专区", R.drawable.ic_01, 0, "daily"));
+        forumList.add(new Forum("技术交流", R.drawable.ic_02, 0, "code"));
+        forumList.add(new Forum("问答专区", R.drawable.ic_03, 1, "qa"));
+        forumList.add(new Forum("发展建议", R.drawable.ic_08, 1, "suggests"));
+        forumList.add(new Forum("论坛反馈", R.drawable.ic_05, 2, "feedback"));
+        forumList.add(new Forum("校园交易", R.drawable.ic_06, 2, "transaction"));
+        forumList.add(new Forum("公告活动", R.drawable.ic_07, 2, "activity"));
+
+        headers = new String[]{
+                "休闲娱乐",
+                "校园生活",
+                "学术交流"
+        };
     }
 
     @Override
@@ -116,7 +195,7 @@ public class HomeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.ci_home_img, R.id.iv_home_search})
+    @OnClick({R.id.ci_home_img, R.id.iv_home_search, R.id.tip_login})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ci_home_img:
@@ -133,11 +212,17 @@ public class HomeFragment extends BaseFragment {
             case R.id.iv_home_search:
                 ToastProgramError();
                 break;
+            case R.id.tip_login:
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                getActivity().startActivityForResult(intent, LoginActivity.requestCode);
+                break;
         }
     }
 
     private static final int REFRESH_END = 2;
     private static final int GET_AVATAR = 4;
+    private static final int GET_WEATHER_SUCCESS = 8;
+    private static final int GET_WEATHER_FAIL = 16;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -150,6 +235,12 @@ public class HomeFragment extends BaseFragment {
                             .load(msg.getData().getString("avatar"))
                             .placeholder(R.drawable.image_placeholder)
                             .into(ciHomeImg);
+                    break;
+                case GET_WEATHER_SUCCESS:
+                    initWeatherView(true, msg.getData().getString("weatherObj"));
+                    break;
+                case GET_WEATHER_FAIL:
+                    initWeatherView(false, null);
                     break;
             }
         }
