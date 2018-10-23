@@ -11,6 +11,8 @@ public class SimplePost {
      */
     private String discussion_title;
 
+    private long discussion_id;
+
     private String title;
     /**
      * 帖子内容
@@ -108,5 +110,13 @@ public class SimplePost {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public long getDiscussion_id() {
+        return discussion_id;
+    }
+
+    public void setDiscussion_id(long discussion_id) {
+        this.discussion_id = discussion_id;
     }
 }

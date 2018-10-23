@@ -68,6 +68,9 @@ public class OpenSourceActivity extends BaseActivity {
                 "### nice-spinner\n" +
                 "> NiceSpinner is a re-implementation of the default Android's spinner, with a nice arrow animation and a different way to display its content.  \n" +
                 "> [arcadefire](https://github.com/arcadefire/nice-spinner)\n" +
+                "### SmartRefreshLayout\n" +
+                "> SmartRefreshLayout is a \"smart\" or \"intelligent\" pull-down refresh layout，because of its \"smart\", it does not just support all the Views , but also support multi-layered nested view structures.  \n" +
+                "> [scwang90](https://github.com/scwang90/SmartRefreshLayout)\n" +
                 "## License\n" +
                 "Copyright 2016-2018 PlusClub  \n" +
                 "\n" +

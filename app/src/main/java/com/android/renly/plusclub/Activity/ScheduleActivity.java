@@ -7,12 +7,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Course;
 import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.DataBase.MyDB;
 import com.android.renly.plusclub.R;
@@ -40,6 +42,8 @@ public class ScheduleActivity extends BaseActivity {
     GridView courceDetail;
     @BindView(R.id.switchWeek)
     NiceSpinner spinner;
+    @BindView(R.id.iv_toolbar_menu)
+    ImageView ivToolbarMenu;
 
     private Unbinder unbinder;
 
@@ -52,6 +56,7 @@ public class ScheduleActivity extends BaseActivity {
     private ScheduleGridAdapter adapter;
     List<Course> scheduleList = new ArrayList<>();
 
+    // 第一次不会从DB中取数据，只会从web获取
     private static final int SHOW_SCHEDULE_FROM_EDU = 1;
     private static final int SHOW_SCHEDULE_FROM_DB = 2;
     private Handler handler = new Handler() {
@@ -60,6 +65,7 @@ public class ScheduleActivity extends BaseActivity {
             switch (msg.what) {
                 case SHOW_SCHEDULE_FROM_EDU:
                     initScheduleDataFromEdu(msg);
+                    ToastShort("更新课表完成");
                     break;
                 case SHOW_SCHEDULE_FROM_DB:
                     initScheduleDataFromDB();
@@ -84,6 +90,10 @@ public class ScheduleActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        ivToolbarMenu.setImageResource(R.drawable.ic_check_black_24dp);
+        ivToolbarMenu.setOnClickListener(view -> {
+            finishActivity();
+        });
         initSlidr();
         initSpinner();
         clearOldSchedule();
@@ -99,20 +109,20 @@ public class ScheduleActivity extends BaseActivity {
      * 初始化spinner
      */
     private void initSpinner() {
-        List<String>dataset = new LinkedList<>(Arrays.asList(getResources().getStringArray(R.array.scheduleWeek)));
+        List<String> dataset = new LinkedList<>(Arrays.asList(getResources().getStringArray(R.array.scheduleWeek)));
         spinner.attachDataSource(dataset);
         spinner.setBackgroundResource(R.drawable.tv_round_border);
         spinner.setTextColor(getResources().getColor(R.color.white));
 //        StateListDrawable drawable = new StateListDrawable();
 //        drawable.addState(new int[]{android.R.attr.state_window_focused},getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
 //        drawable.addState(new int[]{android.R.attr.state_focused},getResources().getDrawable(R.drawable.ic_expand_less_black_24dp));
-        spinner.setSelectedIndex(nowWeek-1);
+        spinner.setSelectedIndex(nowWeek - 1);
         spinner.setArrowDrawable(getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
         spinner.setArrowTintColor(R.color.white);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
-                nowWeek = pos+1;
+                nowWeek = pos + 1;
                 initScheduleDataFromDB();
             }
 

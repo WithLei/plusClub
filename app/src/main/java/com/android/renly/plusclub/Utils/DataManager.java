@@ -3,8 +3,10 @@ package com.android.renly.plusclub.Utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
+import android.util.Log;
 
 import com.android.renly.plusclub.App;
+import com.android.renly.plusclub.DataBase.SQLiteHelper;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -22,6 +24,8 @@ public class DataManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // 这里就已经很大了
+        Log.e("print","cachesize 1. == " + cacheSize);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             try {
                 cacheSize += getFolderSize(context.getExternalCacheDir());
@@ -36,33 +40,31 @@ public class DataManager {
      * 清除本应用所有的数据
      */
     public static void cleanApplicationData(Context context, String... filepath) {
-//        SharedPreferences perUserInfo = context.getSharedPreferences(App.MY_SHP_NAME,
-//                Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = perUserInfo.edit();
-//        boolean isRemember = perUserInfo.getBoolean(App.IS_REMBER_PASS_USER, false);
-//        String userName = perUserInfo.getString(App.LOGIN_NAME, "");
-//        String userPass = perUserInfo.getString(App.LOGIN_PASS, "");
+        SharedPreferences perUserInfo = context.getSharedPreferences(App.MY_SP_NAME,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = perUserInfo.edit();
+        boolean isRemember = perUserInfo.getBoolean(App.IS_REMEBER_PWD_USER, false);
+        String userEmail = perUserInfo.getString(App.USER_EMAIL_KEY, "");
+        String userPass = perUserInfo.getString(App.USER_PWD_KEY, "");
 
         cleanInternalCache(context);
         cleanExternalCache(context);
         cleanSharedPreference(context);
         cleanFiles(context);
 
-//        cleanDatabaseByName(context, SQLiteHelper.DATABASE_NAME);
+        cleanDatabaseByName(context, SQLiteHelper.DATABASE_NAME);
 
         for (String filePath : filepath) {
             cleanCustomCache(filePath);
         }
-        //删除cookie
-//        HttpUtil.exit();
-//
-//        // 先清理shp数据，然后把之前保存的用户名和密码保存
-//        editor.clear();
-//        editor.apply();
-////        editor.putBoolean(App.IS_REMBER_PASS_USER, isRemember);
-////        editor.putString(App.LOGIN_NAME, userName);
-////        editor.putString(App.LOGIN_PASS, userPass);
-//        editor.apply();
+
+        // 先清理shp数据，然后把之前保存的用户名和密码保存
+        editor.clear();
+        editor.apply();
+        editor.putBoolean(App.IS_REMEBER_PWD_USER, isRemember);
+        editor.putString(App.USER_EMAIL_KEY, userEmail);
+        editor.putString(App.USER_PWD_KEY, userPass);
+        editor.apply();
     }
 
     private static long getFolderSize(File file) throws Exception {

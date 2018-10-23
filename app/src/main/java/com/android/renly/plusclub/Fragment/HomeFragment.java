@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,6 +29,11 @@ import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.DateUtils;
+import com.scwang.smartrefresh.header.FunGameHitBlockHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -49,8 +54,6 @@ public class HomeFragment extends BaseFragment {
     TextView tvHomeTitle;
     @BindView(R.id.iv_home_search)
     ImageView ivHomeSearch;
-    @BindView(R.id.refresh_layout)
-    SwipeRefreshLayout refreshLayout;
     @BindView(R.id.list)
     RecyclerView list;
     @BindView(R.id.tv_weather)
@@ -61,11 +64,71 @@ public class HomeFragment extends BaseFragment {
     ScrollView scrollView;
     @BindView(R.id.ll_logintip)
     RelativeLayout llLogintip;
+    @BindView(R.id.refresh_layout)
+    SmartRefreshLayout refreshLayout;
     private Unbinder unbinder;
 
 
     private List<Forum> forumList;
     private String[] headers;
+
+    @Override
+    public int getLayoutid() {
+        return R.layout.fragment_home;
+    }
+
+    @Override
+    protected void initData(Context content) {
+        if (App.ISLOGIN(getActivity())) {
+            getUserAvator();
+            llLogintip.setVisibility(View.GONE);
+        } else {
+            ciHomeImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
+            llLogintip.setVisibility(View.VISIBLE);
+        }
+        getWeatherData();
+        initForumListData();
+        initView();
+    }
+
+    private void initView() {
+        initForumList();
+        initRefreshLayout();
+    }
+
+    private void initRefreshLayout() {
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
+            doRefresh();
+            refreshLayout.finishRefresh(2000);
+        });
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.finishLoadMore(2000));
+
+    }
+
+    public void doRefresh() {
+        if (App.ISLOGIN(getActivity())) {
+            getUserAvator();
+            llLogintip.setVisibility(View.GONE);
+        } else {
+            ciHomeImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
+            llLogintip.setVisibility(View.VISIBLE);
+        }
+        getWeatherData();
+    }
+
+    private void initForumList() {
+        ForumAdapter adapter = new ForumAdapter(getActivity(), forumList);
+        adapter.setOnItemClickListener(pos -> {
+            Intent intent = new Intent(getActivity(), PostsActivity.class);
+            intent.putExtra("Title", forumList.get(pos).getTitle());
+            intent.putExtra("category", forumList.get(pos).getCategory());
+            startActivity(intent);
+        });
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
+        list.setClipToPadding(false);
+        list.setLayoutManager(layoutManager);
+        list.setAdapter(adapter);
+    }
 
     private void initWeatherView(boolean isSuccess, String weatherObj) {
         int currentHour = DateUtils.getHourTimeOfDay();
@@ -92,44 +155,6 @@ public class HomeFragment extends BaseFragment {
             else if (weather.contains("雪"))
                 ivWeather.setImageResource(R.drawable.ic_snow);
         }
-    }
-
-    @Override
-    public int getLayoutid() {
-        return R.layout.fragment_home;
-    }
-
-    @Override
-    protected void initData(Context content) {
-        if (App.ISLOGIN(getActivity())){
-            getUserAvator();
-            llLogintip.setVisibility(View.GONE);
-        }
-        else {
-            ciHomeImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
-            llLogintip.setVisibility(View.VISIBLE);
-        }
-        getWeatherData();
-        initForumListData();
-        initView();
-    }
-
-    private void initView() {
-        initForumList();
-    }
-
-    private void initForumList() {
-        ForumAdapter adapter = new ForumAdapter(getActivity(), forumList);
-        adapter.setOnItemClickListener(pos -> {
-            Intent intent = new Intent(getActivity(), PostsActivity.class);
-            intent.putExtra("Title", forumList.get(pos).getTitle());
-            intent.putExtra("category", forumList.get(pos).getCategory());
-            startActivity(intent);
-        });
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
-        list.setClipToPadding(false);
-        list.setLayoutManager(layoutManager);
-        list.setAdapter(adapter);
     }
 
     private void getWeatherData() {

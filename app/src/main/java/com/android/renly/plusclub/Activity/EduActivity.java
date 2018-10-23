@@ -86,6 +86,7 @@ public class EduActivity extends BaseActivity {
     @Override
     protected void initView() {
         initSlidr();
+        initToolBar(true,"教务系统选项");
         if (!stuName.isEmpty() && stuName != null)
             tvMainName.setText("你好，" + stuName + "同学");
     }

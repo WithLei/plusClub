@@ -50,11 +50,20 @@ public class ECardActivity extends BaseActivity {
     }
 
     /**
-     * 获取 lt param
+     * 获取 lt param 和 Cookie
      */
     private void getlt() {
         OkHttpUtils.get()
                 .url(NetConfig.BASE_ECARD_PLUS)
+                .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                .addHeader("Accept-Encoding","gzip, deflate, br")
+                .addHeader("Accept-Language","zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3")
+                .addHeader("Cache-Control","")
+                .addHeader("Connection","keep-alive")
+                .addHeader("Cookie","")
+                .addHeader("Host","ca.webvpn.lsu.edu.cn")
+                .addHeader("Referer","https://ca.webvpn.lsu.edu.cn/zfca/logout")
+                .addHeader("Upgrade-Insecure-Requests","1")
                 .addHeader("User-Agent",NetConfig.User_Agent_KEY)
                 .build()
                 .execute(new Callback() {
@@ -68,9 +77,11 @@ public class ECardActivity extends BaseActivity {
                         Headers headers = response.headers();
                         for (int i = 0; i < headers.size(); i++){
                             if (headers.name(i).equals("Set-Cookie"))
-//                                if (headers.value(i).endsWith(" Path=/"))
-//                                    cookie += headers.value(i).substring(0, headers.value(i).length() - 7);
-//                                else
+                                if (headers.value(i).contains("; Path=/")){
+                                    printLog("full cookie = " + headers.value(i));
+                                    cookie += headers.value(i).substring(0, headers.value(i).indexOf("; Path=/"));
+                                }
+                                else
                                     cookie += headers.value(i);
                         }
                         printLog("cookie = " + cookie);
@@ -98,9 +109,18 @@ public class ECardActivity extends BaseActivity {
             getlt();
             return;
         }
+        printLog(cookie + " " + App.getEduid(this) + " " + App.getEduPwd(this));
         OkHttpUtils.post()
                 .url(NetConfig.ECARD_LOGIN_PLUS)
+                .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                .addHeader("Accept-Encoding","gzip, deflate, br")
+                .addHeader("Accept-Language","zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3")
+                .addHeader("Connection","keep-alive")
+                .addHeader("Content-Type","application/x-www-form-urlencoded")
                 .addHeader("Cookie",cookie)
+                .addHeader("Host","ca.webvpn.lsu.edu.cn")
+                .addHeader("Referer","https://ca.webvpn.lsu.edu.cn/zfca/login")
+                .addHeader("Upgrade-Insecure-Requests","1")
                 .addHeader("User-Agent",NetConfig.User_Agent_KEY)
                 .addParams("_eventId","submit")
                 .addParams("ip","")
@@ -108,7 +128,7 @@ public class ECardActivity extends BaseActivity {
                 .addParams("losetime","240")
                 .addParams("lt",lt)
                 .addParams("password",App.getEduPwd(this))
-                .addParams("submit1","")
+                .addParams("submit1","+")
                 .addParams("username",App.getEduid(this))
                 .addParams("useValidateCode","0")
                 .build()
@@ -116,7 +136,9 @@ public class ECardActivity extends BaseActivity {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
-                        writeData(getFilesDir().getAbsolutePath() + "/output/ECard.txt", responseHTML);
+                        writeData("/sdcard/Test/EcardFirst.txt", responseHTML);
+                        updateCookie();
+//                        writeData(getFilesDir().getAbsolutePath() + "/output/ECard.txt", responseHTML);
                         new Thread() {
                             @Override
                             public void run() {
@@ -130,7 +152,7 @@ public class ECardActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        printLog("onError");
+                        printLog("onError" + e.getMessage());
 
                     }
 
@@ -141,9 +163,16 @@ public class ECardActivity extends BaseActivity {
                 });
     }
 
+    /**
+     * 登陆成功后需要更新下Cookie
+     */
+    private void updateCookie() {
+    }
+
     @Override
     protected void initView() {
-
+        initToolBar(true,"校园卡收支");
+        initSlidr();
     }
 
     @Override

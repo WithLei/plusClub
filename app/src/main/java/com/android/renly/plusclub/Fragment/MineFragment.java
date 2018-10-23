@@ -118,6 +118,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     private void initInfo() {
         if (App.ISLOGIN(getActivity())) {
             getUserAvator();
+            tvMineUserName.setText(App.getName(getActivity()));
         } else {
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
             tvMineUserName.setText("点击头像登陆");

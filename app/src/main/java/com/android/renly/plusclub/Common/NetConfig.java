@@ -1,7 +1,7 @@
 package com.android.renly.plusclub.Common;
 
 public class NetConfig {
-    public static final String User_Agent_KEY = "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko";
+    public static final String User_Agent_KEY = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0";
     // VPN 登陆官网
     public static final String vpnSigninURL = "https://webvpn.lsu.edu.cn/users/sign_in";
 
@@ -77,7 +77,7 @@ public class NetConfig {
     /**
      * 修改密码
      */
-    public static final String BASE_RESETPWD_PLUS = BASE_PLUSCLUB + "reset";
+    public static final String BASE_RESETPWD_PLUS = BASE_USER_PLUS + "reset";
 
     /**
      * 发表评论

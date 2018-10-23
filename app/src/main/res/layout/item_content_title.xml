@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_window"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,7 +20,7 @@
         android:layout_marginEnd="68dp"
         android:maxLines="2"
         android:padding="12dp"
-        android:text="尴尬，Xbox One 2与PS4.5太快推出压力重重,尴尬，Xbox One 2"
+        tools:text="尴尬，Xbox One 2与PS4.5太快推出压力重重,尴尬，Xbox One 2"
         android:textStyle="bold" />
 
     <LinearLayout

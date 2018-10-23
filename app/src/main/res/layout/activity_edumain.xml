@@ -1,36 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_primary"
+    android:background="@color/bg_secondary"
     android:orientation="vertical">
-    <Button
-        android:id="@+id/btn_main_exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="退出登陆"
-        />
-    <Button
-        android:id="@+id/btn_main_jump"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="跳转课程表"
-        />
-    <Button
-        android:id="@+id/btn_main_ecard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="一卡通查询"
-        />
+    <FrameLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <include layout="@layout/my_toolbar" />
+    </FrameLayout>
     <TextView
         android:id="@+id/tv_main_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        style="@style/text_16_sec"
         android:text="你好，"
+        android:layout_below="@id/toolbar"/>
+    <Button
+        android:id="@+id/btn_main_jump"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_primary"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:layout_below="@id/tv_main_name"
+        android:text="更新课程表"
         />
+    <Button
+        android:id="@+id/btn_main_ecard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_primary"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:layout_below="@id/btn_main_jump"
+        android:text="一卡通查询" />
+    <Button
+        android:layout_alignParentBottom="true"
+        android:id="@+id/btn_main_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_primary"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:text="退出教务系统登陆" />
 
-</LinearLayout>
+</RelativeLayout>

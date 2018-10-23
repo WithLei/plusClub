@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.android.renly.plusclub.Activity.ThemeActivity;
@@ -284,6 +285,8 @@ public class App extends Application {
     }
 
     public static boolean isTextShowTail(Context context){
+        if (context == null)
+            Log.e("print","context == null");
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getBoolean(TEXT_SHOW_TAIL,false);
     }

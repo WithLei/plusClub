@@ -204,7 +204,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     /**
      * 执行刷新操作
      */
-    private void doRefresh() {
+    public void doRefresh() {
         isPullDownRefresh = true;
         new Thread(){
             @Override
@@ -453,7 +453,6 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                     replyAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
                 break;
             case TYPE_MY:
-                printLog("add data " + array.size());
                 for (int i = 0; i < array.size(); i++)
                     myList.add(JSON.parseObject(array.getString(i), SimplePost.class));
                 if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")
@@ -472,20 +471,29 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                 postAdapter.setOnItemClickListener(pos -> {
                     Intent intent = new Intent(getActivity(), PostActivity.class);
                     intent.putExtra("PostJsonObject", JSON.toJSONString(postList.get(pos)));
+                    intent.putExtra("isNormalPost",true);
                     startActivity(intent);
-
                 });
                 break;
             case TYPE_REPLY:
                 replyAdapter = new ReplyAdapter(getActivity(), replyList);
                 rv.setAdapter(replyAdapter);
                 replyAdapter.setOnItemClickListener(pos -> {
-
+                    Intent intent = new Intent(getActivity(), PostActivity.class);
+                    intent.putExtra("id", replyList.get(pos).getDiscussion_id());
+                    intent.putExtra("isNormalPost",false);
+                    startActivity(intent);
                 });
                 break;
             case TYPE_MY:
                 myPostAdapter = new MyPostAdapter(getActivity(), myList);
                 rv.setAdapter(myPostAdapter);
+                myPostAdapter.setOnItemClickListener(pos -> {
+                    Intent intent = new Intent(getActivity(), PostActivity.class);
+                    intent.putExtra("id", myList.get(pos).getId());
+                    intent.putExtra("isNormalPost",false);
+                    startActivity(intent);
+                });
                 break;
         }
         if (type == TYPE_NEW)
