@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.android.renly.plusclub.Bean.Course;
+import com.android.renly.plusclub.Bean.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,10 @@ public class MyDB {
      * 浏览 课程表 表
      */
     static final String TABLE_READ_SCHEDULE = "edu_schedule_list";
+    /**
+     * 用户本人
+     */
+    static final String TABLE_USER_INFO = "user_info";
 
     private SQLiteDatabase db = null;
 
@@ -51,7 +56,16 @@ public class MyDB {
         }
     }
 
+    public void handSingleReadSchedule(User user){
+        if (isUserExist(user.getId())){
+            updateUser(user);
+        }else{
+            insertUser(user);
+        }
+    }
+
     // 获取课程表的课程信息
+
     public List<Course>getSchedule() {
         getDb();
         List<Course>datas = new ArrayList<>();
@@ -76,6 +90,51 @@ public class MyDB {
         return datas;
     }
 
+    // 获取用户本地缓存头像
+    public String getUserAvatarPath(long uid) {
+        getDb();
+        User user = new User();
+        String avatarPath = "";
+        String sql = "SELECT * FROM " + TABLE_USER_INFO;
+        Cursor result = this.db.rawQuery(sql,null);
+        for (result.moveToFirst();!result.isAfterLast();result.moveToNext()) {
+            if (result.getLong(0) == uid){
+                avatarPath = result.getString(10);
+                break;
+            }
+        }
+        result.close();
+        this.db.close();
+        return avatarPath;
+    }
+
+    // 获取用户信息
+    public User getUser(long uid) {
+        getDb();
+        User user = new User();
+        String sql = "SELECT * FROM " + TABLE_USER_INFO;
+        Cursor result = this.db.rawQuery(sql,null);
+        for (result.moveToFirst();!result.isAfterLast();result.moveToNext()) {
+            if (result.getLong(0) == uid){
+                user.setName(result.getString(1));
+                user.setEmail(result.getString(2));
+                user.setStudentid(result.getString(3));
+                user.setGrades(result.getString(4));
+                user.setPhone(result.getString(5));
+                user.setCreated_at(result.getString(6));
+                user.setUpdated_at(result.getString(7));
+                user.setRole(result.getString(8));
+                user.setAvatar(result.getString(9));
+                user.setAvatarPath(result.getString(10));
+                break;
+            }
+        }
+        result.close();
+        this.db.close();
+        return user;
+    }
+
+
     // 插入操作
     private void insertSchedule(Course course) {
         getDb();
@@ -86,6 +145,17 @@ public class MyDB {
                 course.getCourseName(),course.getCourseTime(),course.getTeacher(),
                 course.getClassRoom(),course.getStartWeek(),course.getEndWeek(),course.getSd_week(),create_time};
         this.db.execSQL(sql, args);
+        this.db.close();
+    }
+
+    private void insertUser(User user) {
+        getDb();
+        String sql = "INSERT INTO " + TABLE_USER_INFO + " (uid,uname,uemail,ustudentid,ugrades,uphone,ucreated,uupdated,urole,uavatarsrc,uavatarpath)"
+                + " VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        Object args[] = new Object[]{user.getId(), user.getName(), user.getEmail(), user.getStudentid(),
+        user.getGrades(), user.getPhone(), user.getCreated_at(),user.getUpdated_at(),
+        user.getAvatar(),user.getAvatarPath()};
+        this.db.execSQL(sql,args);
         this.db.close();
     }
 
@@ -101,10 +171,31 @@ public class MyDB {
         this.db.close();
     }
 
+    private void updateUser(User user){
+        getDb();
+        String sql = "UPDATE " + TABLE_USER_INFO + " SET uid=?,uname=?,uemail=?,ustudentid=?,ugrades=?,uphone=?,ucreated=?,uupdated=?,urole=?,uavatarsrc=?,uavatarpath=? WHERE uid=?";
+        Object args[] = new Object[]{user.getId(),user.getName(),user.getEmail(),user.getStudentid(),
+                user.getGrades(),user.getPhone(),user.getCreated_at(),user.getUpdated_at(),
+                user.getRole(),user.getAvatar(),user.getAvatarPath(),user.getId()};
+        this.db.execSQL(sql,args);
+        this.db.close();
+    }
+
     private boolean isCourseExist(int cid) {
         getDb();
         String sql = "SELECT cid FROM " + TABLE_READ_SCHEDULE + " where cid = ?";
         String args[] = new String[]{String.valueOf(cid)};
+        Cursor result = db.rawQuery(sql, args);
+        int count = result.getCount();
+        result.close();
+        this.db.close();
+        return count != 0;
+    }
+
+    public boolean isUserExist(long uid){
+        getDb();
+        String sql = "SELECT uid FROM " + TABLE_USER_INFO + " where uid = ?";
+        String args[] = new String[]{String.valueOf(uid)};
         Cursor result = db.rawQuery(sql, args);
         int count = result.getCount();
         result.close();

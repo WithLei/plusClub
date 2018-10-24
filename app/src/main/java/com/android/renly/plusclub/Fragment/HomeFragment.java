@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,22 +17,21 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.android.renly.plusclub.Activity.EditAcitivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.ForumAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Forum;
+import com.android.renly.plusclub.Bean.User;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.DataBase.MyDB;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.DateUtils;
-import com.scwang.smartrefresh.header.FunGameHitBlockHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -66,6 +64,8 @@ public class HomeFragment extends BaseFragment {
     RelativeLayout llLogintip;
     @BindView(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.ll_edittip)
+    RelativeLayout llEdittip;
     private Unbinder unbinder;
 
 
@@ -80,11 +80,20 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void initData(Context content) {
         if (App.ISLOGIN(getActivity())) {
-            getUserAvator();
+            MyDB db = new MyDB(getActivity());
+            if (db.isUserExist(App.getUid(getActivity())))
+                Picasso.get()
+                        .load(db.getUserAvatarPath(App.getUid(getActivity())))
+                        .placeholder(R.drawable.image_placeholder)
+                        .into(ciHomeImg);
+            else
+                getUserAvator();
             llLogintip.setVisibility(View.GONE);
+            llEdittip.setVisibility(View.VISIBLE);
         } else {
             ciHomeImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
             llLogintip.setVisibility(View.VISIBLE);
+            llEdittip.setVisibility(View.GONE);
         }
         getWeatherData();
         initForumListData();
@@ -109,9 +118,11 @@ public class HomeFragment extends BaseFragment {
         if (App.ISLOGIN(getActivity())) {
             getUserAvator();
             llLogintip.setVisibility(View.GONE);
+            llEdittip.setVisibility(View.VISIBLE);
         } else {
             ciHomeImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
             llLogintip.setVisibility(View.VISIBLE);
+            llEdittip.setVisibility(View.GONE);
         }
         getWeatherData();
     }
@@ -131,17 +142,18 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initWeatherView(boolean isSuccess, String weatherObj) {
+        ivWeather.setImageResource(R.drawable.ic_sun);
         int currentHour = DateUtils.getHourTimeOfDay();
         if (currentHour <= 5 || currentHour >= 19) {
             tvWeather.setText("晚上好！");
             ivWeather.setImageResource(R.drawable.ic_moon);
-        } else if (currentHour <= 10)
+        } else if (currentHour <= 10) {
             tvWeather.setText("早上好！");
-        else if (currentHour <= 13)
+        } else if (currentHour <= 13) {
             tvWeather.setText("中午好！");
-        else
+        } else {
             tvWeather.setText("下午好！");
-        ivWeather.setImageResource(R.drawable.ic_sun);
+        }
 
         if (isSuccess) {
             JSONObject jsonObject = JSON.parseObject(weatherObj);
@@ -220,7 +232,7 @@ public class HomeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.ci_home_img, R.id.iv_home_search, R.id.tip_login})
+    @OnClick({R.id.ci_home_img, R.id.iv_home_search, R.id.tip_login, R.id.tip_edit})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ci_home_img:
@@ -241,6 +253,10 @@ public class HomeFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 getActivity().startActivityForResult(intent, LoginActivity.requestCode);
                 break;
+            case R.id.tip_edit:
+                Intent in = new Intent(getActivity(), EditAcitivity.class);
+                in.putExtra("category","E-M-P-T-Y");
+                getActivity().startActivity(in);
         }
     }
 
@@ -297,6 +313,8 @@ public class HomeFragment extends BaseFragment {
                             printLog("getInfoError" + response);
                         } else {
                             JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+                            User user = JSONObject.toJavaObject(obj, User.class);
+                            printLog(user.getAvatar() + " " + user.getUpdated_at());
                             String avatarSrc = obj.getString("avatar");
                             Message msg = new Message();
                             Bundle bundle = new Bundle();

@@ -73,8 +73,7 @@
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/icon_mine_history" />
+                android:layout_height="40dp" />
 
             <TextView
                 style="@style/text_14_sec"
@@ -99,8 +98,7 @@
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/icon_mine_collect" />
+                android:layout_height="40dp" />
 
             <TextView
                 style="@style/text_14_sec"
@@ -125,8 +123,7 @@
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/icon_mine_friend" />
+                android:layout_height="40dp" />
 
             <TextView
                 style="@style/text_14_sec"
@@ -151,8 +148,7 @@
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/icon_mine_info" />
+                android:layout_height="40dp" />
 
             <TextView
                 style="@style/text_14_sec"

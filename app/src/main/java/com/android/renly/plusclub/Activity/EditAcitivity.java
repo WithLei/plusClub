@@ -92,6 +92,8 @@ public class EditAcitivity extends BaseActivity {
         });
         Intent intent = getIntent();
         String temp = intent.getExtras().getString("category");
+        if (temp.equals("E-M-P-T-Y"))
+            return;
         for (int pos = 0;pos < categories.length;pos++)
             if (temp.equals(categories[pos])){
                 currentCategory = temp;

@@ -14,6 +14,7 @@ public class User {
     private String updated_at;
     private String role;
     private String avatar;
+    private String avatarPath;
 
     public User() {
         super();
@@ -97,5 +98,13 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
     }
 }

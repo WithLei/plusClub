@@ -1,6 +1,7 @@
 package com.android.renly.plusclub.Fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -45,6 +46,7 @@ public class SettingFragment extends PreferenceFragment
         addPreferencesFromResource(R.xml.setting);
         sharedPreferences = getPreferenceScreen().getSharedPreferences();
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        mActivity = getActivity();
         initTail();
         initUserGroup();
         initVersion();
@@ -52,15 +54,22 @@ public class SettingFragment extends PreferenceFragment
         initCache();
     }
 
+    private Activity mActivity;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mActivity = (Activity) context;
+    }
+
     private void initCache() {
         // 清除缓存
         clearCache = findPreference("clean_cache");
-        clearCache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
+        clearCache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(mActivity));
         clearCache.setOnPreferenceClickListener(preference -> {
-            DataManager.cleanApplicationData(getActivity());
+            DataManager.cleanApplicationData(mActivity);
 
-            Toast.makeText(getActivity(), "缓存清理成功!请重新登陆", Toast.LENGTH_SHORT).show();
-            clearCache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(getActivity()));
+            Toast.makeText(mActivity, "缓存清理成功!请重新登陆", Toast.LENGTH_SHORT).show();
+            clearCache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(mActivity));
             return false;
         });
     }
@@ -68,16 +77,16 @@ public class SettingFragment extends PreferenceFragment
     private void initOpenSource() {
         // 项目地址
         findPreference("open_sourse").setOnPreferenceClickListener(preference -> {
-            IntentUtils.openBroswer(getActivity(), "https://github.com/WithLei/plusClub");
+            IntentUtils.openBroswer(mActivity, "https://github.com/WithLei/plusClub");
             return false;
         });
     }
 
     private void initVersion() {
-        PackageManager manager = getActivity().getPackageManager();
+        PackageManager manager = mActivity.getPackageManager();
         PackageInfo info = null;
         try {
-            info = manager.getPackageInfo(getActivity().getPackageName(), 0);
+            info = manager.getPackageInfo(mActivity.getPackageName(), 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,21 +105,21 @@ public class SettingFragment extends PreferenceFragment
 
     private void initUserGroup() {
         group_user = (PreferenceCategory)findPreference("group_user");
-        if (!App.ISLOGIN(getActivity())){
+        if (!App.ISLOGIN(mActivity)){
             getPreferenceScreen().removePreference(group_user);
         }else{
             user_logout = findPreference("user_logout");
             user_logout.setOnPreferenceClickListener(preference -> {
-                App.setIsLogout(getActivity());
-                MyToast.showText(getActivity(), "退出登录成功", Toast.LENGTH_SHORT, true);
-                SettingActivity settingActivity = (SettingActivity)getActivity();
+                App.setIsLogout(mActivity);
+                MyToast.showText(mActivity, "退出登录成功", Toast.LENGTH_SHORT, true);
+                SettingActivity settingActivity = (SettingActivity)mActivity;
                 settingActivity.setResult(Activity.RESULT_OK);
                 settingActivity.finishActivity();
                 return true;
             });
             user_changepwd = findPreference("user_changepwd");
             user_changepwd.setOnPreferenceClickListener(preference -> {
-                startActivity(new Intent(getActivity(),ChangePwdActivity.class));
+                startActivity(new Intent(mActivity,ChangePwdActivity.class));
                 return true;
             });
         }
@@ -120,11 +129,11 @@ public class SettingFragment extends PreferenceFragment
         setting_show_tail = (SwitchPreference) findPreference(App.TEXT_SHOW_TAIL);
 
         setting_show_tail.setOnPreferenceChangeListener((preference, o) -> {
-            App.setTextShowTail(getActivity(), !App.isTextShowTail(getActivity()));
+            App.setTextShowTail(mActivity, !App.isTextShowTail(mActivity));
             return true;
         });
         setting_user_tail = (EditTextPreference) findPreference(App.TEXT_TAIL);
-        setting_user_tail.setEnabled(App.isTextShowTail(getActivity()));
+        setting_user_tail.setEnabled(App.isTextShowTail(mActivity));
         setting_user_tail.setSummary(sharedPreferences.getString(App.TEXT_TAIL, "无小尾巴"));
     }
 
@@ -133,7 +142,7 @@ public class SettingFragment extends PreferenceFragment
         switch (key) {
             case App.TEXT_SHOW_TAIL:
                 // 这里除了问题
-                setting_user_tail.setEnabled(App.isTextShowTail(getContext()));
+                setting_user_tail.setEnabled(App.isTextShowTail(mActivity));
                 setting_user_tail.setSummary(sharedPreferences.getString(App.TEXT_TAIL, "无小尾巴"));
                 break;
             case App.TEXT_TAIL:

@@ -178,6 +178,7 @@ public class DataManager {
     private static void deleteFilesByDirectory(File directory) {
         if (directory != null && directory.exists() && directory.isDirectory()) {
             for (File item : directory.listFiles()) {
+                Log.e("file",item.getName());
                 item.delete();
             }
         }

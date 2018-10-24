@@ -97,6 +97,7 @@
                         android:layout_height="200dp"
                         android:background="@drawable/bg03"
                         android:orientation="vertical"
+                        android:visibility="gone"
                         android:padding="15dp">
 
                         <TextView
@@ -126,6 +127,48 @@
                             android:layout_marginTop="15dp"
                             android:background="@drawable/tv_tip"
                             android:text="了解更多"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/ll_edittip"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="@drawable/bg04"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:padding="15dp">
+
+                        <TextView
+                            android:id="@+id/tip_tt_edit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="plusClub"
+                            android:textColor="@color/bg_secondary"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/tip_content_edit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tip_tt_edit"
+                            android:layout_marginTop="15dp"
+                            android:text="有什么新鲜事儿？ \n快来分享你的体验！"
+                            android:textColor="@color/white"
+                            android:textSize="22sp" />
+
+                        <Button
+                            android:id="@+id/tip_edit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tip_content_edit"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/tv_tip"
+                            android:text="开始编辑"
                             android:textColor="@color/white"
                             android:textSize="15sp" />
 
