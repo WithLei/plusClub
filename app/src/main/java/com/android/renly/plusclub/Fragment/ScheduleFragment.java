@@ -73,6 +73,12 @@ public class ScheduleFragment extends BaseFragment {
             initScheduleDataFromDB();
     }
 
+    public void doRefresh(){
+        MyDB db = new MyDB(getActivity());
+        if (db.isScheduleExist())
+            initScheduleDataFromDB();
+    }
+
     /**
      * 初始化spinner
      */

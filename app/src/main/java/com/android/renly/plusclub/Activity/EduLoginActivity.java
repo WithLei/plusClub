@@ -146,6 +146,7 @@ public class EduLoginActivity extends BaseActivity {
         RichText.fromMarkdown(text).into(tvEduloginTip);
         GetVerifation();
         btnLoginSetEnabled();
+        etMobile.setText(App.getEduid(this));
         etMobile.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -191,8 +192,8 @@ public class EduLoginActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                String id = etMobile.getText().toString().equals("1") ? "16103220237" : etMobile.getText().toString();
-                String pwd = etPassword.getText().toString().equals("1") ? "zl11471583210" : etPassword.getText().toString();
+                String id = etMobile.getText().toString().trim();
+                String pwd = etPassword.getText().toString().trim();
                 String checkid = etCheck.getText().toString();
 
                 doLogin(id, pwd, checkid);

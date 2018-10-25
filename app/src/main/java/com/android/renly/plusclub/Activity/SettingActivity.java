@@ -45,6 +45,11 @@ public class SettingActivity extends BaseActivity {
         unbinder = ButterKnife.bind(this);
     }
 
+    public void afterLogout(){
+        setResult(RESULT_OK);
+        finishActivity();
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

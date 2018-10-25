@@ -38,7 +38,7 @@
         <activity
             android:name=".Activity.ThemeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.normal"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.LoginActivity"

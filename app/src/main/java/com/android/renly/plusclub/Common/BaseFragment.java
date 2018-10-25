@@ -1,6 +1,7 @@
 package com.android.renly.plusclub.Common;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,6 +38,12 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initData(mContent);
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public Activity getmActivity(){
+        if (mContent == null)
+            mContent = getContext();
+        return (Activity)mContent;
     }
 
     public abstract int getLayoutid();

@@ -23,11 +23,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class HomeActivity extends BaseActivity implements ViewPager.OnPageChangeListener{
+public class HomeActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
     @BindView(R.id.bottom_bar)
     MyBottomTab bottomBar;
     private ViewPager viewPager;
-    private List<BaseFragment>fragments = new ArrayList<>();
+    private List<BaseFragment> fragments = new ArrayList<>();
 
     private long mExitTime;
     private Unbinder unbinder;
@@ -58,27 +58,31 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         printLog("HomeActivity onActivityResult");
-        if (resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             printLog("resultCode == RESULT_OK");
-            switch (requestCode){
-                case ThemeActivity.requestCode:
+            switch (requestCode) {
+                case ThemeActivity.requestCode://32
                     recreate();
                     printLog("onActivityResult ThemeActivity");
                     break;
-                case UserDetailActivity.requestCode:
-                    recreate();
-                    printLog("onActivityResult UserDetailActivity");
-                    break;
-                case LoginActivity.requestCode:
-                    recreate();
+                case LoginActivity.requestCode://64
+                    doRefresh();
                     printLog("onActivityResult LoginActivity");
                     break;
-                case SettingActivity.requestCode:
-                    recreate();
+                case UserDetailActivity.requestCode://128
+                    doRefresh();
+                    printLog("onActivityResult UserDetailActivity");
+                    break;
+                case SettingActivity.requestCode://256
+                    doRefresh();
+                    printLog("onActivityResult SettingActivity");
+                    break;
+                case ScheduleActivity.requestCode://512
+                    doRefresh();
                     printLog("onActivityResult SettingActivity");
                     break;
             }
-        }else
+        } else
             printLog("resultCode != RESULT_OK");
         hideKeyBoard();
     }
@@ -90,14 +94,34 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         unbinder = ButterKnife.bind(this);
     }
 
+    private void doRefresh() {
+        if (homeFragment != null)
+            homeFragment.doRefresh();
+        if (hotNewsFragment != null)
+            hotNewsFragment.doRefresh();
+        if (scheduleFragment != null)
+            scheduleFragment.doRefresh();
+        if (mineFragment != null)
+            mineFragment.doRefresh();
+    }
+
+    private HomeFragment homeFragment;
+    private HotNewsFragment hotNewsFragment;
+    private ScheduleFragment scheduleFragment;
+    private MineFragment mineFragment;
+
     private void initViewpager() {
         viewPager = findViewById(R.id.view_pager);
         viewPager.setOffscreenPageLimit(4);
         viewPager.addOnPageChangeListener(this);
-        fragments.add(new HomeFragment());
-        fragments.add(new HotNewsFragment());
-        fragments.add(new ScheduleFragment());
-        fragments.add(new MineFragment());
+        homeFragment = new HomeFragment();
+        hotNewsFragment = new HotNewsFragment();
+        scheduleFragment = new ScheduleFragment();
+        mineFragment = new MineFragment();
+        fragments.add(homeFragment);
+        fragments.add(hotNewsFragment);
+        fragments.add(scheduleFragment);
+        fragments.add(mineFragment);
         MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(adapter);
     }

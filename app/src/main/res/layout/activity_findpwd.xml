@@ -30,6 +30,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         style="@style/text_18_sec"
-        android:text="施工中...不要着急喔 (っ*´Д`)っ"/>
+        android:text="后台施工中...不要着急喔 (っ*´Д`)っ"/>
 
 </LinearLayout>

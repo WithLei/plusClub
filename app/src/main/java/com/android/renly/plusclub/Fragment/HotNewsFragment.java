@@ -65,15 +65,15 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     /**
      * 帖子列表[新帖]
      */
-    private List<Post> postList = new ArrayList<>();
+    private List<Post> postList;
     /**
      * 回复列表
      */
-    private List<SimplePost> replyList = new ArrayList<>();
+    private List<SimplePost> replyList;
     /**
      * 我的列表
      */
-    private List<SimplePost> myList = new ArrayList<>();
+    private List<SimplePost> myList;
     /**
      * 获取最大帖子页面
      */
@@ -133,12 +133,16 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
 
     @Override
     protected void initData(Context content) {
-        if (!App.ISLOGIN(getActivity())) {
+        if (!App.ISLOGIN(content)) {
+            tvHotnewsShowlogin.setText("登陆后就可以看了喔 ٩(๑❛ᴗ❛๑)۶");
             tvHotnewsShowlogin.setVisibility(View.VISIBLE);
             rv.setVisibility(View.GONE);
             return;
         }
         tvHotnewsShowlogin.setText("刷新中...");
+        postList = new ArrayList<>();
+        replyList = new ArrayList<>();
+        myList = new ArrayList<>();
         getData(1);
         initView();
     }
@@ -204,7 +208,15 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     /**
      * 执行刷新操作
      */
-    public void doRefresh() {
+    public void doRefresh(){
+        if (!App.ISLOGIN(getmActivity())) {
+            tvHotnewsShowlogin.setText("登陆后就可以看了喔 ٩(๑❛ᴗ❛๑)۶");
+            tvHotnewsShowlogin.setVisibility(View.VISIBLE);
+            rv.setVisibility(View.GONE);
+            return;
+        }
+        if (postList == null)
+            initData(getmActivity());
         isPullDownRefresh = true;
         new Thread(){
             @Override

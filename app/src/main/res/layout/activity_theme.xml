@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_color_picker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -121,8 +122,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="提示:夜间模式下[自动切换夜间模式无效]\n其余主题会受自动夜间模式影响"
+        android:text="提示:夜间模式程序员暂时还在开发中喔www"
         android:textColor="@color/blue_light"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:text="提示:夜间模式下[自动切换夜间模式无效]\n其余主题会受自动夜间模式影响\n"/>
 
 </LinearLayout>

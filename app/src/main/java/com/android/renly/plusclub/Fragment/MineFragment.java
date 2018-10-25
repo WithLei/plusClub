@@ -112,7 +112,10 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
     private void initView() {
         initInfo();
+    }
 
+    public void doRefresh(){
+        initInfo();
     }
 
     private void initInfo() {
@@ -176,11 +179,12 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 // 主题设置
                 Intent intent = new Intent(getActivity(), ThemeActivity.class);
                 getActivity().startActivityForResult(intent, ThemeActivity.requestCode);
-                getActivity().overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
+//                getActivity().overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
                 break;
             case 1:
                 // 设置
-                gotoActivity(SettingActivity.class);
+                Intent intent1 = new Intent(getActivity(),SettingActivity.class);
+                getActivity().startActivityForResult(intent1, SettingActivity.requestCode);
                 break;
             case 2:
                 // 分享Plus客户端

@@ -45,9 +45,10 @@
         android:layout_height="match_parent"
         android:background="@color/bg_secondary"
         android:focusable="true"
+        android:singleLine="false"
         android:gravity="start"
         android:hint="请输入发布内容 #支持MarkDown"
-        android:imeOptions="actionDone"
+        android:imeOptions="actionNext"
         android:inputType="text"
         android:padding="10dp" />
 

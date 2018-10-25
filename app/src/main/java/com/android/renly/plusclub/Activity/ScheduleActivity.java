@@ -51,6 +51,7 @@ public class ScheduleActivity extends BaseActivity {
     private String userName;
     private String cookie;
     private int nowWeek = 1;
+    public static final int requestCode = 512;
 
     private String[][] contents;
     private ScheduleGridAdapter adapter;
@@ -92,6 +93,8 @@ public class ScheduleActivity extends BaseActivity {
     protected void initView() {
         ivToolbarMenu.setImageResource(R.drawable.ic_check_black_24dp);
         ivToolbarMenu.setOnClickListener(view -> {
+            // 这里传不给homeActivity
+            setResult(RESULT_OK);
             finishActivity();
         });
         initSlidr();
@@ -285,6 +288,12 @@ public class ScheduleActivity extends BaseActivity {
             printLog("findScheduleHtml fail");
         }
         return scheduleHtml;
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        super.onBackPressed();
     }
 
     @Override

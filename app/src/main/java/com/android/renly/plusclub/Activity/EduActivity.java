@@ -198,7 +198,8 @@ public class EduActivity extends BaseActivity {
                 gotoActivity(ScheduleActivity.class);
                 break;
             case R.id.btn_main_ecard:
-                gotoActivity(ECardActivity.class);
+//                gotoActivity(ECardActivity.class);
+                printLog("据程序员说下个版本一定会开发出来的(flag");
                 break;
         }
     }

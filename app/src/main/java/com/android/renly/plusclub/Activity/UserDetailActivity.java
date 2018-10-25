@@ -252,8 +252,10 @@ public class UserDetailActivity extends BaseActivity {
             values.add(obj.getString("phone").trim().isEmpty() ? "null" : obj.getString("phone"));
             keys.add("最近发帖/回帖");
             values.add(obj.getString("updated_at").trim().isEmpty() ? "null" : obj.getString("updated_at"));
-            keys.add("身份");
-            values.add(obj.getString("role").equals("null") ? "普通用户" : obj.getString("role"));
+            if (obj.containsKey("role")){
+                keys.add("身份");
+                values.add(obj.getString("role").equals("null") ? "普通用户" : obj.getString("role"));
+            }
         }else{
             values.add(obj.getString("grade") == null ? "null" : obj.getString("grade"));
         }
