@@ -281,7 +281,7 @@ public class EduLoginActivity extends BaseActivity {
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
                         checkLoginSuccess(responseHTML);
-                        writeData("/sdcard/Test/isLoginHTML.txt", responseHTML);
+//                        writeData("/sdcard/Test/isLoginHTML.txt", responseHTML);
                         return null;
                     }
 
@@ -349,7 +349,7 @@ public class EduLoginActivity extends BaseActivity {
                         user_eduid = eduid;
                         user_edupwd = pwd;
                         checkLoginSuccess(responseHTML);
-                        writeData("/sdcard/Test/doLoginHTML.txt", responseHTML);
+//                        writeData("/sdcard/Test/doLoginHTML.txt", responseHTML);
 //                        openHostPage();
                         return null;
                     }

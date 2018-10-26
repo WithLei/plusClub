@@ -43,6 +43,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 
 public class HomeFragment extends BaseFragment {
@@ -170,31 +177,52 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void getWeatherData() {
-        OkHttpUtils.get()
-                .url(NetConfig.GET_WEATHER_URL)
-                .build()
-                .execute(new StringCallback() {
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            OkHttpUtils.get()
+                    .url(NetConfig.GET_WEATHER_URL)
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            printLog("getWeatherData onError");
+                            emitter.onError(new Throwable("onError"));
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            if (!response.contains("weatherinfo")) {
+                                emitter.onError(new Throwable("onError"));
+                            } else {
+                                JSONObject jsonObject = JSON.parseObject(response);
+                                emitter.onNext(jsonObject.getString("weatherinfo"));
+                            }
+                        }
+                    });
+        })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("getWeatherData onError");
-                        handler.sendEmptyMessage(GET_WEATHER_FAIL);
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onResponse(String response, int id) {
-                        if (!response.contains("weatherinfo")) {
-                            handler.sendEmptyMessage(GET_WEATHER_FAIL);
-                        } else {
-                            JSONObject jsonObject = JSON.parseObject(response);
-                            Message msg = new Message();
-                            msg.what = GET_WEATHER_SUCCESS;
-                            Bundle bundle = new Bundle();
-                            bundle.putString("weatherObj", jsonObject.getString("weatherinfo"));
-                            msg.setData(bundle);
-                            handler.sendMessage(msg);
-                        }
+                    public void onNext(String s) {
+                        initWeatherView(true, s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        initWeatherView(false, null);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
+
     }
 
     private void initForumListData() {
@@ -255,77 +283,85 @@ public class HomeFragment extends BaseFragment {
                 break;
             case R.id.tip_edit:
                 Intent in = new Intent(getmActivity(), EditAcitivity.class);
-                in.putExtra("category","E-M-P-T-Y");
+                in.putExtra("category", "E-M-P-T-Y");
                 getmActivity().startActivity(in);
         }
     }
 
     private static final int REFRESH_END = 2;
-    private static final int GET_AVATAR = 4;
-    private static final int GET_WEATHER_SUCCESS = 8;
-    private static final int GET_WEATHER_FAIL = 16;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case REFRESH_END:
-
-                    break;
-                case GET_AVATAR:
-                    Picasso.get()
-                            .load(msg.getData().getString("avatar"))
-                            .placeholder(R.drawable.image_placeholder)
-                            .into(ciHomeImg);
-                    break;
-                case GET_WEATHER_SUCCESS:
-                    initWeatherView(true, msg.getData().getString("weatherObj"));
-                    break;
-                case GET_WEATHER_FAIL:
-                    initWeatherView(false, null);
                     break;
             }
         }
     };
 
     public void getUserAvator() {
-        OkHttpUtils.get()
-                .url(NetConfig.BASE_USERDETAIL_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(getmActivity()))
-                .build()
-                .execute(new StringCallback() {
+        Observable.create((ObservableOnSubscribe<String>) emitter ->
+                OkHttpUtils.get()
+                        .url(NetConfig.BASE_USERDETAIL_PLUS)
+                        .addHeader("Authorization", "Bearer " + App.getToken(getmActivity()))
+                        .build()
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onError(Call call, Exception e, int id) {
+                                printLog("getUserAvator onError" + e.getMessage());
+                                ToastNetWorkError();
+                            }
+
+                            @Override
+                            public void onResponse(String response, int id) {
+                                if (!response.contains("code")) {
+                                    ToastNetWorkError();
+                                    return;
+                                }
+                                JSONObject jsonObject = JSON.parseObject(response);
+                                if (jsonObject.getInteger("code") == 50011) {
+                                    emitter.onError(new Throwable("getNewToken"));
+                                } else if (jsonObject.getInteger("code") != 20000) {
+                                    ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
+                                    printLog("getInfoError" + response);
+                                } else {
+                                    JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+                                    String avatarSrc = obj.getString("avatar");
+                                    emitter.onNext(avatarSrc);
+                                }
+
+                            }
+                        }))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("getUserAvator onError" + e.getMessage());
-                        ToastNetWorkError();
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onResponse(String response, int id) {
-                        if (!response.contains("code")) {
-                            ToastNetWorkError();
-                            return;
-                        }
-                        JSONObject jsonObject = JSON.parseObject(response);
-                        if (jsonObject.getInteger("code") == 50011) {
+                    public void onNext(String path) {
+                        printLog("onNext()");
+                        Picasso.get()
+                                .load(path)
+                                .placeholder(R.drawable.image_placeholder)
+                                .into(ciHomeImg);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        printLog("onError()" + e.getMessage());
+                        if (e.getMessage().equals("getNewToken"))
                             getNewToken();
-                        } else if (jsonObject.getInteger("code") != 20000) {
-                            ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
-                            printLog("getInfoError" + response);
-                        } else {
-                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
-                            User user = JSONObject.toJavaObject(obj, User.class);
-                            printLog(user.getAvatar() + " " + user.getUpdated_at());
-                            String avatarSrc = obj.getString("avatar");
-                            Message msg = new Message();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("avatar", avatarSrc);
-                            msg.setData(bundle);
-                            msg.what = GET_AVATAR;
-                            handler.sendMessage(msg);
-                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });
+
     }
 
     /**

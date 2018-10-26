@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -51,6 +53,21 @@ public class LaunchActivity extends Activity{
         }
         ((TextView) findViewById(R.id.copyright))
                 .setText("©2016-" + year + " lsuplus.top");
+    }
+
+    /**
+     * startActivity屏蔽物理返回按钮
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

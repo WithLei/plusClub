@@ -122,13 +122,13 @@
                         <Button
                             android:id="@+id/tip_login"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="40dp"
                             android:layout_below="@id/tip_content"
                             android:layout_marginTop="15dp"
                             android:background="@drawable/tv_tip"
                             android:text="了解更多"
                             android:textColor="@color/white"
-                            android:textSize="15sp" />
+                            android:textSize="14sp" />
 
                     </RelativeLayout>
 
@@ -164,13 +164,13 @@
                         <Button
                             android:id="@+id/tip_edit"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="40dp"
                             android:layout_below="@id/tip_content_edit"
                             android:layout_marginTop="15dp"
                             android:background="@drawable/tv_tip"
                             android:text="开始编辑"
                             android:textColor="@color/white"
-                            android:textSize="15sp" />
+                            android:textSize="14sp" />
 
                     </RelativeLayout>
 

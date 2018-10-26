@@ -111,7 +111,7 @@ public class EduActivity extends BaseActivity {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
-                        writeData("/sdcard/Test/LogoutHTML.txt", responseHTML);
+//                        writeData("/sdcard/Test/LogoutHTML.txt", responseHTML);
                         getLogout();
                         return null;
                     }
@@ -145,7 +145,7 @@ public class EduActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response, int id) {
 //                        printLog(response);
-                        writeData("/sdcard/Test/LogoutGetHTML.txt", response);
+//                        writeData("/sdcard/Test/LogoutGetHTML.txt", response);
                         checkLogoutSuccess(response);
                     }
                 });
@@ -199,7 +199,7 @@ public class EduActivity extends BaseActivity {
                 break;
             case R.id.btn_main_ecard:
 //                gotoActivity(ECardActivity.class);
-                printLog("据程序员说下个版本一定会开发出来的(flag");
+                ToastShort("据程序员说下个版本一定会开发出来的(flag");
                 break;
         }
     }

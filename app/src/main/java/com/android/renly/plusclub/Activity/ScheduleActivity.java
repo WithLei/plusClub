@@ -160,7 +160,7 @@ public class ScheduleActivity extends BaseActivity {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
-                        writeData("/sdcard/Test/getScheduleHTML.txt", responseHTML);
+//                        writeData("/sdcard/Test/getScheduleHTML.txt", responseHTML);
                         List<Course> scheduleList = getScheduleList(responseHTML);
                         String JsonObjs = JSON.toJSONString(scheduleList);
                         Bundle bundle = new Bundle();

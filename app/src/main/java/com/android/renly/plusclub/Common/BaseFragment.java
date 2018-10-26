@@ -14,10 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.R;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.Call;
 
 
 public abstract class BaseFragment extends Fragment {
@@ -88,6 +94,32 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public abstract void ScrollToTop();
+
+    /**
+     * 获取新的Token
+     */
+//    private void getNewToken() {
+//        OkHttpUtils.post()
+//                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
+//                .addHeader("Authorization", "Bearer " + App.getToken(mContent))
+//                .build()
+//                .execute(new StringCallback() {
+//                    @Override
+//                    public void onError(Call call, Exception e, int id) {
+//                        printLog("HomeFragment getNewToken onError");
+//                    }
+//
+//                    @Override
+//                    public void onResponse(String response, int id) {
+//                        JSONObject obj = JSON.parseObject(response);
+//                        if (obj.getInteger("code") != 20000) {
+//                            printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
+//                        } else {
+//                            App.setToken(getContext(), obj.getString("result"));
+//                        }
+//                    }
+//                });
+//    }
 
     @Override
     public void onDestroyView() {

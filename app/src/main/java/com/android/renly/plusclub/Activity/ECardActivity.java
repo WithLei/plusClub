@@ -136,7 +136,7 @@ public class ECardActivity extends BaseActivity {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
-                        writeData("/sdcard/Test/EcardFirst.txt", responseHTML);
+//                        writeData("/sdcard/Test/EcardFirst.txt", responseHTML);
                         updateCookie();
 //                        writeData(getFilesDir().getAbsolutePath() + "/output/ECard.txt", responseHTML);
                         new Thread() {

@@ -34,7 +34,7 @@
             android:name=".Activity.HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.normal"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".Activity.ThemeActivity"
             android:screenOrientation="portrait"

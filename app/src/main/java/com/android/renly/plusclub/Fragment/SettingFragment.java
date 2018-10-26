@@ -18,6 +18,7 @@ import android.preference.PreferenceFragment;
 import android.content.SharedPreferences;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -142,6 +143,7 @@ public class SettingFragment extends PreferenceFragment
 
                                 @Override
                                 public void onResponse(String response, int id) {
+                                    Log.e("print",response);
                                     if (!response.contains("url"))
                                         return;
                                     else{
@@ -149,6 +151,7 @@ public class SettingFragment extends PreferenceFragment
                                         msg.what = GET_VERSION;
                                         Bundle bundle = new Bundle();
                                         bundle.putString("obj",response);
+                                        msg.setData(bundle);
                                         handler.sendMessage(msg);
                                     }
                                 }
@@ -175,9 +178,9 @@ public class SettingFragment extends PreferenceFragment
                     .setTitle("检测到新版本")
                     .setMessage("版本名：" + name + "\n" +
                                 "版本号：" + tag_name + "\n" +
-                                "更新内容：" + body + "\n" +
+                                "更新内容：" + body + "\n\n" +
                                 "更新时间：" + updated_at)
-                    .setCancelable(body.contains("重大更新"))
+                    .setCancelable(!body.contains("重要更新"))
                     .setPositiveButton("下载", (dialogInterface, i) -> {
                         Intent intent = new Intent();
                         Uri uri = Uri.parse(browser_download_url);
@@ -185,7 +188,6 @@ public class SettingFragment extends PreferenceFragment
                         intent.setData(uri);
                         startActivity(intent);
                     })
-                    .setNegativeButton("取消", (dialogInterface, i) -> { })
                     .create()
                     .show();
         }
