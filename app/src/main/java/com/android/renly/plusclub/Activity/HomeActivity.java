@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Adapter.MainPageAdapter;
+import com.android.renly.plusclub.Bean.MessageEvent;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.Common.MyToast;
@@ -29,6 +30,10 @@ import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.MyBottomTab;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -238,6 +243,24 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                 finish();
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleMessageEvent(MessageEvent messageEvent){
+        if (scheduleFragment != null)
+            scheduleFragment.doRefresh();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

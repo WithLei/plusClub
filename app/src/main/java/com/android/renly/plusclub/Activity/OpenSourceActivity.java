@@ -41,12 +41,15 @@ public class OpenSourceActivity extends BaseActivity {
                 "### RxJava\n" +
                 "> RxJava is a Java VM implementation of Reactive Extensions: a library for composing asynchronous and event-based programs by using observable sequences.  \n" +
                 "> [ReactiveX](https://github.com/ReactiveX/RxJava)\n" +
-                "### FastJson  \n" +
+                "### FastJson\n" +
                 "> Fastjson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Fastjson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.  \n" +
                 "> [Alibaba](https://github.com/alibaba/fastjson)\n" +
                 "### OkHttpUtils\n" +
                 "> An HTTP & HTTP/2 client for Android and Java applications.  \n" +
                 "> [hongyangAndroid](https://github.com/hongyangAndroid/okhttputils)\n" +
+                "### EventBus\n" +
+                "> Event bus for Android and Java that simplifies communication between Activities, Fragments, Threads, Services, etc. Less code, better quality.  \n" +
+                "> [greenrobot](https://github.com/greenrobot/EventBus)\n" +
                 "### Butter Knife\n" +
                 "> Field and method binding for Android views which uses annotation processing to generate boilerplate code for you.  \n" +
                 "> [JakeWharton](https://github.com/JakeWharton/butterknife)\n" +

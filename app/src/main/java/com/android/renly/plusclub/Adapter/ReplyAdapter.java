@@ -113,7 +113,6 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.BaseViewHold
         @Override
         void setData(int pos) {
             // 不是第一次加载
-            Log.e("print","setData " + pos + " loadState " + loadState);
             container.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             switch (loadState) {
@@ -140,7 +139,6 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.BaseViewHold
                     break;
                 case STATE_LOAD_NOTHING:
                     // 没有数据填充无数据
-                    Log.e("print","STATE_LOAD_NOTHING" + getItemCount());
                     progressBar.setVisibility(View.GONE);
                     if (getItemCount() == 1){
                         loadMoreText.setText("暂无数据");

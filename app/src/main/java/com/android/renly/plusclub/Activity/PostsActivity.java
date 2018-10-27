@@ -213,6 +213,7 @@ public class PostsActivity extends BaseActivity
             }
         }.start();
         isPullDownRefresh = true;
+        adapter = null;
         getPostListData(1);
         max_page = 1;
     }
@@ -264,27 +265,26 @@ public class PostsActivity extends BaseActivity
         if (isPullDownRefresh) {
             // 下拉刷新的请求
             postList.clear();
-            adapter.changeLoadMoreState(STATE_LOADING);
+            if (adapter != null)
+                adapter.changeLoadMoreState(STATE_LOADING);
         }
         JSONObject jsonObject = JSON.parseObject(JsonDataArray);
         // 尾页处理
-        if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")
-                && jsonObject.getInteger("current_page") != 1) {
-            if (adapter != null)
+        if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")) {
+            if (adapter != null){
                 adapter.changeLoadMoreState(STATE_LOAD_NOTHING);
-            return;
+                return;
+            }else
+                load_nothing = true;
         }
         JSONArray array = JSON.parseArray(jsonObject.getString("data"));
         for (int i = 0; i < array.size(); i++) {
             postList.add(JSON.parseObject(array.getString(i), Post.class));
-            printLog(postList.get(postList.size() - 1).toString());
         }
-        if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")
-                && adapter != null)
-            adapter.changeLoadMoreState(STATE_LOAD_NOTHING);
 
     }
 
+    private boolean load_nothing = false;
     private void initpostList() {
         // 初始化fragmentPool池
 //        fragmentPool = new ArrayList<>();
@@ -310,6 +310,10 @@ public class PostsActivity extends BaseActivity
 //            fragment.setArguments(bundle);
 //            loadPanel(fragment, fragmentPool.size() == 1 ? null : fragmentPool.get(fragmentPool.size() - 2));
         });
+        if (load_nothing){
+            adapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+            load_nothing = false;
+        }
     }
 
     /**

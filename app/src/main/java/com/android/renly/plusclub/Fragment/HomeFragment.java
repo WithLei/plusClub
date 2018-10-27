@@ -46,9 +46,11 @@ import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 
@@ -177,28 +179,26 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void getWeatherData() {
-        Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            OkHttpUtils.get()
-                    .url(NetConfig.GET_WEATHER_URL)
-                    .build()
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            printLog("getWeatherData onError");
-                            emitter.onError(new Throwable("onError"));
-                        }
+        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
+                .url(NetConfig.GET_WEATHER_URL)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        printLog("getWeatherData onError");
+                        emitter.onError(new Throwable("onError"));
+                    }
 
-                        @Override
-                        public void onResponse(String response, int id) {
-                            if (!response.contains("weatherinfo")) {
-                                emitter.onError(new Throwable("onError"));
-                            } else {
-                                JSONObject jsonObject = JSON.parseObject(response);
-                                emitter.onNext(jsonObject.getString("weatherinfo"));
-                            }
+                    @Override
+                    public void onResponse(String response, int id) {
+                        if (!response.contains("weatherinfo")) {
+                            emitter.onError(new Throwable("onError"));
+                        } else {
+                            JSONObject jsonObject = JSON.parseObject(response);
+                            emitter.onNext(jsonObject.getString("weatherinfo"));
                         }
-                    });
-        })
+                    }
+                }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<String>() {
@@ -276,6 +276,7 @@ public class HomeFragment extends BaseFragment {
                 break;
             case R.id.iv_home_search:
                 ToastProgramError();
+                testRxjava();
                 break;
             case R.id.tip_login:
                 Intent intent = new Intent(getmActivity(), LoginActivity.class);
@@ -286,6 +287,45 @@ public class HomeFragment extends BaseFragment {
                 in.putExtra("category", "E-M-P-T-Y");
                 getmActivity().startActivity(in);
         }
+    }
+
+    private void testRxjava() {
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+                    printLog("rxjava start");
+                    emitter.onError(new Throwable("rxjava onError"));
+                    printLog("rxjava after onError");
+                    emitter.onNext("rxjava onNext");
+                    printLog("rxjava after onNext");
+                    emitter.onComplete();
+                    printLog("rxjava after onComplete");
+                }
+
+        )
+                .retryWhen(throwableObservable -> {
+                    printLog("retryWhen");
+                    return null;
+                })
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        printLog("onSubscribe()");
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        printLog("onNext() " + s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        printLog("onError() " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        printLog("onComplete()");
+                    }
+                });
     }
 
     private static final int REFRESH_END = 2;
@@ -334,6 +374,42 @@ public class HomeFragment extends BaseFragment {
                         }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                if (throwable.getMessage().equals("getNewToken")) {
+                                    printLog("retryWhen");
+                                    OkHttpUtils.post()
+                                            .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
+                                            .addHeader("Authorization", "Bearer " + App.getToken(getmActivity()))
+                                            .build()
+                                            .execute(new StringCallback() {
+                                                @Override
+                                                public void onError(Call call, Exception e, int id) {
+                                                    printLog("HomeFragment getNewToken onError");
+                                                }
+
+                                                @Override
+                                                public void onResponse(String response, int id) {
+                                                    JSONObject obj = JSON.parseObject(response);
+                                                    if (obj.getInteger("code") != 20000) {
+                                                        printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆" + obj.getInteger("code"));
+                                                    } else {
+                                                        App.setToken(getContext(), obj.getString("result"));
+                                                        printLog("重新获取Token成功");
+                                                    }
+                                                }
+                                            });
+                                }
+                                return Observable.error(throwable);
+                            }
+                        });
+                    }
+                })
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -352,8 +428,8 @@ public class HomeFragment extends BaseFragment {
                     @Override
                     public void onError(Throwable e) {
                         printLog("onError()" + e.getMessage());
-                        if (e.getMessage().equals("getNewToken"))
-                            getNewToken();
+//                        if (e.getMessage().equals("getNewToken"))
+//                            getNewToken();
                     }
 
                     @Override
@@ -385,7 +461,7 @@ public class HomeFragment extends BaseFragment {
                             printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
                         } else {
                             App.setToken(getContext(), obj.getString("result"));
-                            getUserAvator();
+
                         }
                     }
                 });

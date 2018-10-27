@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Course;
+import com.android.renly.plusclub.Bean.MessageEvent;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.Common.NetConfig;
@@ -22,6 +23,7 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
 import org.angmarch.views.NiceSpinner;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -93,8 +95,7 @@ public class ScheduleActivity extends BaseActivity {
     protected void initView() {
         ivToolbarMenu.setImageResource(R.drawable.ic_check_black_24dp);
         ivToolbarMenu.setOnClickListener(view -> {
-            // 这里传不给homeActivity
-            setResult(RESULT_OK);
+            EventBus.getDefault().post(new MessageEvent("scheduleRefresh"));
             finishActivity();
         });
         initSlidr();
@@ -292,7 +293,6 @@ public class ScheduleActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK);
         super.onBackPressed();
     }
 

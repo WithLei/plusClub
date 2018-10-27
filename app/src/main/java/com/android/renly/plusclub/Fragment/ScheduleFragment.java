@@ -117,7 +117,6 @@ public class ScheduleFragment extends BaseFragment {
                 contents[x][y] = "";
         for (int i = 0; i < scheduleList.size(); i++) {
             Course course = scheduleList.get(i);
-            printLog(course.toString());
             if (course.getSd_week() == 1 && nowWeek%2 == 0){
                 printLog("nowWeek=" + nowWeek);
                 continue;

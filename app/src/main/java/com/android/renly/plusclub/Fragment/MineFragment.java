@@ -280,14 +280,14 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        printLog("HomeFragment getNewToken onError");
+                        printLog("MineFragment getNewToken onError");
                     }
 
                     @Override
                     public void onResponse(String response, int id) {
                         JSONObject obj = JSON.parseObject(response);
                         if (obj.getInteger("code") != 20000) {
-                            printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
+                            printLog("MineFragment getNewToken() onResponse获取Token失败,重新登陆");
                         } else {
                             App.setToken(getContext(), obj.getString("result"));
                             getUserAvator();

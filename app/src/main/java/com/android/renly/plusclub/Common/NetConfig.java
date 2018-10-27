@@ -1,7 +1,7 @@
 package com.android.renly.plusclub.Common;
 
 public class NetConfig {
-    public static final String User_Agent_KEY = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0";
+    public static final String User_Agent_KEY = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36";
     // VPN 登陆官网
     public static final String vpnSigninURL = "https://webvpn.lsu.edu.cn/users/sign_in";
 

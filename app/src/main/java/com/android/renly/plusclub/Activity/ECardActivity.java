@@ -109,13 +109,17 @@ public class ECardActivity extends BaseActivity {
             getlt();
             return;
         }
-        printLog(cookie + " " + App.getEduid(this) + " " + App.getEduPwd(this));
+        printLog(cookie + " " + cookie.substring(cookie.indexOf("=")+1,cookie.length()) +" " + App.getEduid(this) + " " + App.getEduPwd(this));
         OkHttpUtils.post()
                 .url(NetConfig.ECARD_LOGIN_PLUS)
                 .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
                 .addHeader("Accept-Encoding","gzip, deflate, br")
-                .addHeader("Accept-Language","zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3")
+                .addHeader("Accept-Language","en,zh-CN;q=0.9,zh;q=0.8,en-GB;q=0.7")
+                .addHeader("Cache-Control","max-age=0")
+                .addHeader("Origin","https://ca.webvpn.lsu.edu.cn")
+                .addHeader("Upgrade-Insecure-Requests","1")
                 .addHeader("Connection","keep-alive")
+                .addHeader("Content-Length","199")
                 .addHeader("Content-Type","application/x-www-form-urlencoded")
                 .addHeader("Cookie",cookie)
                 .addHeader("Host","ca.webvpn.lsu.edu.cn")
@@ -128,7 +132,7 @@ public class ECardActivity extends BaseActivity {
                 .addParams("losetime","240")
                 .addParams("lt",lt)
                 .addParams("password",App.getEduPwd(this))
-                .addParams("submit1","+")
+                .addParams("submit1", " ")
                 .addParams("username",App.getEduid(this))
                 .addParams("useValidateCode","0")
                 .build()
@@ -152,7 +156,7 @@ public class ECardActivity extends BaseActivity {
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        printLog("onError" + e.getMessage());
+                        printLog("onError " + e.getMessage());
 
                     }
 
