@@ -3,6 +3,7 @@ package com.android.renly.plusclub.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,10 +86,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.BaseViewHold
     //改变状态
     public void changeLoadMoreState(int i) {
         this.loadState = i;
-        int ii = getItemCount() - 1;
-        if (ii >= 0 && getItemViewType(ii) == TYPE_LOADMORE) {
-            notifyItemChanged(ii);
-        }
+        notifyItemChanged(0);
     }
 
     public interface OnItemClickListener {
@@ -115,6 +113,7 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.BaseViewHold
         @Override
         void setData(int pos) {
             // 不是第一次加载
+            Log.e("print","setData " + pos + " loadState " + loadState);
             container.setLayoutParams(new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             switch (loadState) {
@@ -138,17 +137,12 @@ public class ReplyAdapter extends RecyclerView.Adapter<ReplyAdapter.BaseViewHold
                 case STATE_LOADING:
                     loadMoreText.setText("加载中");
                     progressBar.setVisibility(View.VISIBLE);
-                    // 第一次加载
-                    if (getItemCount() == 0){
-                        progressBar.setVisibility(View.GONE);
-                        container.setLayoutParams(new LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    }
                     break;
                 case STATE_LOAD_NOTHING:
                     // 没有数据填充无数据
+                    Log.e("print","STATE_LOAD_NOTHING" + getItemCount());
                     progressBar.setVisibility(View.GONE);
-                    if (getItemCount() == 0){
+                    if (getItemCount() == 1){
                         loadMoreText.setText("暂无数据");
                     }else{
                         loadMoreText.setText("暂无更多");

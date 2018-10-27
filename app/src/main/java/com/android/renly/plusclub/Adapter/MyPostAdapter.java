@@ -88,10 +88,7 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.BaseViewHo
     //改变状态
     public void changeLoadMoreState(int i) {
         this.loadState = i;
-        int ii = getItemCount() - 1;
-        if (ii >= 0 && getItemViewType(ii) == TYPE_LOADMORE) {
-            notifyItemChanged(ii);
-        }
+        notifyItemChanged(0);
     }
 
     public interface OnItemClickListener {
@@ -129,7 +126,7 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.BaseViewHo
                     loadMoreText.setText("需要登录");
                     progressBar.setVisibility(View.GONE);
                     // 没有数据填充第一次加载
-                    if (getItemCount() == 0){
+                    if (getItemCount() == 1){
                         container.setLayoutParams(new LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     }
@@ -151,7 +148,7 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.BaseViewHo
                 case STATE_LOAD_NOTHING:
                     // 没有数据填充无数据
                     progressBar.setVisibility(View.GONE);
-                    if (getItemCount() == 0){
+                    if (getItemCount() == 1){
                         loadMoreText.setText("暂无数据");
                     }else{
                         loadMoreText.setText("暂无更多");

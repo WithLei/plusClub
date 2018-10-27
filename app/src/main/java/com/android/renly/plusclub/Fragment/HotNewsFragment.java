@@ -409,6 +409,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
      * 初始化帖子列表数据
      */
     private void initListData(String JsonDataArray, int type) {
+        printLog("initListData" + type);
         if (isPullDownRefresh) {
             // 处理下拉刷新的请求
             switch (type) {
@@ -431,21 +432,29 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
         }
         JSONObject jsonObject = JSON.parseObject(JsonDataArray);
         // 尾页处理
-        if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")
-                && jsonObject.getInteger("current_page") != 1) {
+        if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")) {
             switch (type) {
                 case TYPE_NEW:
-                    if (postAdapter != null)
+                    if (postAdapter != null){
                         postAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
                         return ;
+                    }else{
+                        new_loadnothing = true;
+                    }
                 case TYPE_REPLY:
-                    if (replyAdapter != null)
+                    if (replyAdapter != null){
                         replyAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
-                        return ;
+                        return;
+                    }else{
+                        reply_loadnothing = true;
+                    }
                 case TYPE_MY:
-                    if (myPostAdapter != null)
+                    if (myPostAdapter != null){
                         myPostAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
                         return ;
+                    }else{
+                        my_loadnothing = true;
+                    }
             }
         }
         JSONArray array = JSON.parseArray(jsonObject.getString("data"));
@@ -453,28 +462,23 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
             case TYPE_NEW:
                 for (int i = 0; i < array.size(); i++)
                     postList.add(JSON.parseObject(array.getString(i), Post.class));
-                if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")
-                    && postAdapter != null)
-                    postAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
                 break;
             case TYPE_REPLY:
                 for (int i = 0; i < array.size(); i++)
                     replyList.add(JSON.parseObject(array.getString(i), SimplePost.class));
-                if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")
-                        && replyAdapter != null)
-                    replyAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
                 break;
             case TYPE_MY:
                 for (int i = 0; i < array.size(); i++)
                     myList.add(JSON.parseObject(array.getString(i), SimplePost.class));
-                if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")
-                        && myPostAdapter != null)
-                    myPostAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
                 break;
         }
 
     }
 
+
+    private boolean new_loadnothing = false;
+    private boolean reply_loadnothing = false;
+    private boolean my_loadnothing = false;
     private void initList(int type) {
         switch (type) {
             case TYPE_NEW:
@@ -486,6 +490,10 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                     intent.putExtra("isNormalPost",true);
                     startActivity(intent);
                 });
+                if (new_loadnothing){
+                    postAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                    new_loadnothing = false;
+                }
                 break;
             case TYPE_REPLY:
                 replyAdapter = new ReplyAdapter(getActivity(), replyList);
@@ -496,6 +504,11 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                     intent.putExtra("isNormalPost",false);
                     startActivity(intent);
                 });
+                // 初次加载
+                if (reply_loadnothing){
+                    replyAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                    reply_loadnothing = false;
+                }
                 break;
             case TYPE_MY:
                 myPostAdapter = new MyPostAdapter(getActivity(), myList);
@@ -506,6 +519,10 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                     intent.putExtra("isNormalPost",false);
                     startActivity(intent);
                 });
+                if (my_loadnothing){
+                    myPostAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                    my_loadnothing = false;
+                }
                 break;
         }
         if (type == TYPE_NEW)
