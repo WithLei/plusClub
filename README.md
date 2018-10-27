@@ -35,6 +35,10 @@ It extends the observer pattern to support sequences of data/events and adds ope
 >An HTTP & HTTP/2 client for Android and Java applications.  
 [hongyangAndroid](https://github.com/hongyangAndroid/okhttputils)
 
+### EventBus  
+>Event bus for Android and Java that simplifies communication between Activities, Fragments, Threads, Services, etc. Less code, better quality.  
+[greenrobot](https://github.com/greenrobot/EventBus)
+
 ### Butter Knife
 >Field and method binding for Android views which uses annotation processing to generate boilerplate code for you.  
 [JakeWharton](https://github.com/JakeWharton/butterknife)
