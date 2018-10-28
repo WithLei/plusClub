@@ -301,10 +301,24 @@ public class HomeFragment extends BaseFragment {
                 }
 
         )
-                .retryWhen(throwableObservable -> {
-                    printLog("retryWhen");
-                    return null;
-                })
+//                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+//                    @Override
+//                    public ObservableSource<String> apply(Observable<Throwable> throwableObservable) throws Exception {
+//                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+//                            @Override
+//                            public ObservableSource<String> apply(Throwable throwable) throws Exception {
+//                                return Observable.create(emitter -> {
+//                                    printLog("doIn new Observable");
+//                                }).flatMap(new Function<List<String>, ObservableSource<String>>() {
+//                                    @Override
+//                                    public ObservableSource<String> apply(List<String> lists) {
+//                                        return null;
+//                                    }
+//                                });
+//                            }
+//                        });
+//                    }
+//                })
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -329,11 +343,15 @@ public class HomeFragment extends BaseFragment {
     }
 
     private static final int REFRESH_END = 2;
+    private static final int GET_NEWTOKEN = 3;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case REFRESH_END:
+                    break;
+                case GET_NEWTOKEN:
+                    getNewToken();
                     break;
             }
         }
@@ -374,42 +392,6 @@ public class HomeFragment extends BaseFragment {
                         }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
-                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-
-                            @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                                if (throwable.getMessage().equals("getNewToken")) {
-                                    printLog("retryWhen");
-                                    OkHttpUtils.post()
-                                            .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                                            .addHeader("Authorization", "Bearer " + App.getToken(getmActivity()))
-                                            .build()
-                                            .execute(new StringCallback() {
-                                                @Override
-                                                public void onError(Call call, Exception e, int id) {
-                                                    printLog("HomeFragment getNewToken onError");
-                                                }
-
-                                                @Override
-                                                public void onResponse(String response, int id) {
-                                                    JSONObject obj = JSON.parseObject(response);
-                                                    if (obj.getInteger("code") != 20000) {
-                                                        printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆" + obj.getInteger("code"));
-                                                    } else {
-                                                        App.setToken(getContext(), obj.getString("result"));
-                                                        printLog("重新获取Token成功");
-                                                    }
-                                                }
-                                            });
-                                }
-                                return Observable.error(throwable);
-                            }
-                        });
-                    }
-                })
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -428,8 +410,8 @@ public class HomeFragment extends BaseFragment {
                     @Override
                     public void onError(Throwable e) {
                         printLog("onError()" + e.getMessage());
-//                        if (e.getMessage().equals("getNewToken"))
-//                            getNewToken();
+                        if (e.getMessage().equals("getNewToken"))
+                            handler.sendEmptyMessage(GET_NEWTOKEN);
                     }
 
                     @Override
@@ -459,9 +441,11 @@ public class HomeFragment extends BaseFragment {
                         JSONObject obj = JSON.parseObject(response);
                         if (obj.getInteger("code") != 20000) {
                             printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
+                            doRefresh();
                         } else {
+                            printLog("获取Token成功");
                             App.setToken(getContext(), obj.getString("result"));
-
+                            getUserAvator();
                         }
                     }
                 });
