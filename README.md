@@ -8,21 +8,22 @@
 
 ## 项目介绍
 [PlusClub](http://118.24.0.78/#/home)校园论坛
-支持主题切换、发帖、回帖、课程表、校园卡收支
+支持主题切换、发帖、回帖、课程表、校园卡收支[开发中]
 
 Web端项目：[Robinson28years/lsuplusclub](https://github.com/Robinson28years/lsuplusclub)  
 前移动端项目：[xiaoshidefeng/PLUS-for-Android](https://github.com/xiaoshidefeng/PLUS-for-Android)
 
 ## 项目展示
-<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/1.png" width="80" hegiht="80" align=center />
-<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/2.png" width="80" hegiht="80" align=center /> 
-<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/3.png" width="80" hegiht="80" align=center />
-<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/4.png" width="80" hegiht="80" align=center /> 
-<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/5.png" width="80" hegiht="80" align=center />
-<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/6.png" width="80" hegiht="80" align=center /> 
-<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/7.png" width="80" hegiht="80" align=center />
-<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/8.png" width="80" hegiht="80" align=center /> 
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/1.png" width="250" hegiht="500" align=left />
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/2.png" width="250" hegiht="500" align=center /> 
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/3.png" width="250" hegiht="500" align=left />
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/4.png" width="250" hegiht="500" align=center /> 
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/5.png" width="250" hegiht="500" align=left />
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/6.png" width="250" hegiht="500" align=center /> 
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/7.png" width="250" hegiht="500" align=left />
+<img src="https://github.com/WithLei/plusClub/blob/master/screenshots/8.png" width="250" hegiht="500" align=center />  
 
+  
 ## 意见和反馈
 联系我们：
  - heyrenly@163.com
