@@ -47,6 +47,9 @@ public class NetConfig {
     // PlusClub api基地址
     public static final String BASE_PLUSCLUB = "http://118.24.0.78/api/";
 
+    // plusClub 项目地址
+    public static final String PLUSCLUB_ITEM = "https://github.com/WithLei/plusClub";
+
     // 获取PlusClub realease api
     public static final String GITHUB_GET_RELEASE = "https://api.github.com/repos/WithLei/plusClub/releases/latest";
 

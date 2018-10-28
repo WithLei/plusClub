@@ -188,7 +188,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 break;
             case 2:
                 // 分享Plus客户端
-                String data = "这个手机Plus客户端非常不错，分享给你们。";
+                String data = "这个Plus Club客户端非常不错，分享给你们。" + NetConfig.PLUSCLUB_ITEM;
                 IntentUtils.shareApp(getActivity(), data);
                 break;
             case 3:

@@ -237,6 +237,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
         }.start();
 
         getData(1);
+        printLog("ruaruarua");
         switch (currentType) {
             case TYPE_NEW:
                 max_page_post = 1;
@@ -246,6 +247,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                 break;
             case TYPE_MY:
                 max_page_my = 1;
+                printLog("lalalallala");
                 break;
         }
     }
@@ -489,7 +491,9 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
         }
         JSONObject jsonObject = JSON.parseObject(JsonDataArray);
         // 尾页处理
-        if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")) {
+        printLog("current " + jsonObject.getInteger("current_page") + " last " + jsonObject.getInteger("last_page"));
+        if (jsonObject.getInteger("current_page") > jsonObject.getInteger("last_page")
+        || (jsonObject.getInteger("current_page") == 1 && jsonObject.getInteger("current_page") == jsonObject.getInteger("last_page")) ){
             switch (type) {
                 case TYPE_NEW:
                     if (postAdapter != null) {
