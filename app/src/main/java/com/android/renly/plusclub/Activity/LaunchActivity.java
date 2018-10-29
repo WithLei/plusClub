@@ -24,8 +24,8 @@ public class LaunchActivity extends Activity{
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_launch);
-//        App app = (App) getApplication();
-//        app.regReciever();
+        App app = (App) getApplication();
+        app.regReciever();
         setCopyRight();
         doPreWrok();
         new Handler().postDelayed(() -> enterHome(), WAIT_TIME);

@@ -101,11 +101,11 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         currentTheme = App.getCustomTheme(this);
         currentSelect = getSelect();
 
-//        if (currentSelect == THEME_NIGHT) {
-//            nightViews.setVisibility(View.GONE);
-//        } else {
-//            nightViews.setVisibility(View.VISIBLE);
-//        }
+        if (currentSelect == THEME_NIGHT) {
+            nightViews.setVisibility(View.GONE);
+        } else {
+            nightViews.setVisibility(View.VISIBLE);
+        }
 
         tvThemeStartTimeText.setText(App.getDarkModeTime(this)[0] + ":00");
         tvThemeEndTimeText.setText(App.getDarkModeTime(this)[1] + ":00");
