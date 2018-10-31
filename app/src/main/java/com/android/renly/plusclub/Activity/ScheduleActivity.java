@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -36,6 +37,13 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -58,24 +66,6 @@ public class ScheduleActivity extends BaseActivity {
     private String[][] contents;
     private ScheduleGridAdapter adapter;
     List<Course> scheduleList = new ArrayList<>();
-
-    // 第一次不会从DB中取数据，只会从web获取
-    private static final int SHOW_SCHEDULE_FROM_EDU = 1;
-    private static final int SHOW_SCHEDULE_FROM_DB = 2;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SHOW_SCHEDULE_FROM_EDU:
-                    initScheduleDataFromEdu(msg);
-                    ToastShort("更新课表完成");
-                    break;
-                case SHOW_SCHEDULE_FROM_DB:
-                    initScheduleDataFromDB();
-                    break;
-            }
-        }
-    };
 
     @Override
     protected int getLayoutID() {
@@ -117,9 +107,6 @@ public class ScheduleActivity extends BaseActivity {
         spinner.attachDataSource(dataset);
         spinner.setBackgroundResource(R.drawable.tv_round_border);
         spinner.setTextColor(getResources().getColor(R.color.white));
-//        StateListDrawable drawable = new StateListDrawable();
-//        drawable.addState(new int[]{android.R.attr.state_window_focused},getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
-//        drawable.addState(new int[]{android.R.attr.state_focused},getResources().getDrawable(R.drawable.ic_expand_less_black_24dp));
         spinner.setSelectedIndex(nowWeek - 1);
         spinner.setArrowDrawable(getResources().getDrawable(R.drawable.ic_expand_more_black_24dp));
         spinner.setArrowTintColor(R.color.white);
@@ -146,44 +133,67 @@ public class ScheduleActivity extends BaseActivity {
         try {
             gbkName = new String(userName.getBytes("GB2312"));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.e("Exception","ScheduleActivity getScheduleFromEdu " + e.getMessage());
         }
-        OkHttpUtils.get()
-                .url(NetConfig.BASE_EDU_GETINFO_RS)
-                .addParams("xh", eduid)
-                .addParams("xm", gbkName)
-                .addParams(App.queryScheduleParam, App.queryScheduleValue)
-                .addHeader("Cookie", cookie)
-                .addHeader("Host", "jwgl.webvpn.lsu.edu.cn")
-                .addHeader("Referer", NetConfig.BASE_EDU_HOST_ME + eduid)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(Response response, int id) throws Exception {
-                        String responseHTML = new String(response.body().bytes(), "GB2312");
+        String finalGbkName = gbkName;
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            OkHttpUtils.get()
+                    .url(NetConfig.BASE_EDU_GETINFO_RS)
+                    .addParams("xh", eduid)
+                    .addParams("xm", finalGbkName)
+                    .addParams(App.queryScheduleParam, App.queryScheduleValue)
+                    .addHeader("Cookie", cookie)
+                    .addHeader("Host", "jwgl.webvpn.lsu.edu.cn")
+                    .addHeader("Referer", NetConfig.BASE_EDU_HOST_ME + eduid)
+                    .build()
+                    .execute(new Callback() {
+                        @Override
+                        public Object parseNetworkResponse(Response response, int id) throws Exception {
+                            String responseHTML = new String(response.body().bytes(), "GB2312");
 //                        writeData("/sdcard/Test/getScheduleHTML.txt", responseHTML);
-                        List<Course> scheduleList = getScheduleList(responseHTML);
-                        String JsonObjs = JSON.toJSONString(scheduleList);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("JsonObjs", JsonObjs);
-                        Message msg = new Message();
-                        msg.what = SHOW_SCHEDULE_FROM_EDU;
-                        msg.setData(bundle);
-                        handler.sendMessage(msg);
-                        return null;
+                            List<Course> scheduleList = getScheduleList(responseHTML);
+                            String JsonObjs = JSON.toJSONString(scheduleList);
+                            emitter.onNext(JsonObjs);
+                            return null;
+                        }
+
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            printLog("ScheduleActivity getSchedule onError");
+                            printLog(e.getMessage());
+                        }
+
+                        @Override
+                        public void onResponse(Object response, int id) {
+                            printLog("ScheduleActivity getSchedule onResponse");
+                        }
+                    });
+        })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("getSchedule onError");
-                        printLog(e.getMessage());
+                    public void onNext(String s) {
+                        initScheduleDataFromEdu(s);
+                        ToastShort("更新课表完成");
                     }
 
                     @Override
-                    public void onResponse(Object response, int id) {
-                        printLog("getSchedule onResponse");
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
+
     }
 
     /**
@@ -209,10 +219,9 @@ public class ScheduleActivity extends BaseActivity {
     /**
      * 初始化从教务系统爬来的Schedule数据 存到 DB中
      *
-     * @param msg
+     * @param JsonObjs
      */
-    private void initScheduleDataFromEdu(Message msg) {
-        String JsonObjs = msg.getData().getString("JsonObjs");
+    private void initScheduleDataFromEdu(String JsonObjs) {
         scheduleList = JSON.parseArray(JsonObjs, Course.class);
         MyDB db = new MyDB(this);
         for (int i = 0; i < scheduleList.size(); i++) {

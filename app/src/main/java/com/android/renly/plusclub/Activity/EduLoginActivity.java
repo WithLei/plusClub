@@ -36,6 +36,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Headers;
 import okhttp3.Response;
@@ -63,62 +70,7 @@ public class EduLoginActivity extends BaseActivity {
     private String user_eduid = "";
     private String user_edupwd = "";
     private String cookie = "";
-    private String __VIEWSTATE = "";
-    private Bitmap bm;
     private SharedPreferences sp;
-
-    private static final int GET_CHECK_IMAGE = 1;
-    private static final int LOGIN_SUCCESS = 2;
-    private static final int LOGIN_FAIL_VERIFATION_ERROR = 3;
-    private static final int LOGIN_FAIL_USERNAME_EMPTY = 4;
-    private static final int LOGIN_FAIL_PASSWORD_ERROR = 5;
-    private static final int LOGIN_FAIL_PASSWORD_EMPTY = 6;
-    private static final int LOGIN_FAIL_SYSTEMBUSY = 7;
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case GET_CHECK_IMAGE:
-                    ivCheck.setImageBitmap(bm);
-                    etCheck.setText("");
-                    break;
-                case LOGIN_SUCCESS:
-                    AfterSuccessLogin(msg.getData().getString("stuName"));
-                    break;
-                case LOGIN_FAIL_VERIFATION_ERROR:
-                    etCheck.setText("");
-                    ToastShort("验证码输入错误");
-                    printLog("验证码输入错误");
-                    //刷新验证码
-                    GetVerifation();
-                    break;
-                case LOGIN_FAIL_USERNAME_EMPTY:
-                    ToastShort("学号为空");
-                    printLog("学号为空");
-                    //刷新验证码
-                    GetVerifation();
-                    break;
-                case LOGIN_FAIL_PASSWORD_ERROR:
-                    ToastShort("学号或密码错误");
-                    printLog("学号或密码错误");
-                    //刷新验证码
-                    GetVerifation();
-                    break;
-                case LOGIN_FAIL_PASSWORD_EMPTY:
-                    ToastShort("密码为空");
-                    printLog("密码为空");
-                    //刷新验证码
-                    GetVerifation();
-                    break;
-                case LOGIN_FAIL_SYSTEMBUSY:
-                    ToastShort("错误原因：系统正忙！");
-                    printLog("错误原因：系统正忙！");
-                    GetCookies();
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,7 +172,7 @@ public class EduLoginActivity extends BaseActivity {
      */
     private void GetCookies() {
         cookie = "";
-        OkHttpUtils.get()
+        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
                 .url(NetConfig.BASE_EDU_PLUS)
                 .build()
                 .execute(new Callback() {
@@ -234,24 +186,46 @@ public class EduLoginActivity extends BaseActivity {
                                 else
                                     cookie += headers.value(i);
                         }
-                        printLog("cookie:" + cookie);
-                        GetVIEWSTATE(response.body().string());
-                        //刷新验证码
-                        GetVerifation();
+                        emitter.onNext(response.body().string());
                         return null;
                     }
 
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Log.e("print", "GetCookies onError" + call.toString());
-                        e.printStackTrace();
+                        emitter.onError(new Throwable("GetCookies onError" + call.toString()));
                     }
 
                     @Override
                     public void onResponse(Object response, int id) {
                         Log.e("print", "GetCookies onResponse");
                     }
+                }))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        GetVIEWSTATE(s);
+                        //刷新验证码
+                        GetVerifation();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        printLog(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
+
     }
 
 
@@ -261,8 +235,6 @@ public class EduLoginActivity extends BaseActivity {
     private void GetVIEWSTATE(String body) {
         String x = body.split("name=\"__VIEWSTATE\" value=\"")[1];
         x = x.split("\" />")[0];
-        printLog(x);
-        __VIEWSTATE = x;
         App.set__VIEWSTATE(this, x);
     }
 
@@ -272,7 +244,7 @@ public class EduLoginActivity extends BaseActivity {
     private void isLogin() {
         if (sp.getString("id", "").isEmpty())
             return;
-        OkHttpUtils.post()
+        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.post()
                 .url(NetConfig.BASE_EDU_HOST_ME)
                 .addHeader("Cookie", cookie)
                 .build()
@@ -280,7 +252,7 @@ public class EduLoginActivity extends BaseActivity {
                     @Override
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "GB2312");
-                        checkLoginSuccess(responseHTML);
+                        emitter.onNext(responseHTML);
 //                        writeData("/sdcard/Test/isLoginHTML.txt", responseHTML);
                         return null;
                     }
@@ -294,30 +266,80 @@ public class EduLoginActivity extends BaseActivity {
                     public void onResponse(Object response, int id) {
                         printLog("isLogin() onResponse");
                     }
+                }))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        checkLoginSuccess(s);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
+
     }
 
     /**
      * 获取验证码图片
      */
     private void GetVerifation() {
-        OkHttpUtils.post()
-                .url(NetConfig.CHECKIMG_URL_RS)
-                .addHeader("Cookie", cookie)
-                .build()
-                .execute(new BitmapCallback() {
+        Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> {
+            OkHttpUtils.post()
+                    .url(NetConfig.CHECKIMG_URL_RS)
+                    .addHeader("Cookie", cookie)
+                    .build()
+                    .execute(new BitmapCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            emitter.onError(new Throwable("EduLoginActivity GetVerifation onError"));
+                        }
+
+                        @Override
+                        public void onResponse(Bitmap response, int id) {
+                            printLog("GetVerifation onResponse");
+                            emitter.onNext(response);
+                        }
+                    });
+        })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Bitmap>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("GetVerifation onError");
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onResponse(Bitmap response, int id) {
-                        printLog("GetVerifation onResponse");
-                        bm = response;
-                        handler.sendEmptyMessage(GET_CHECK_IMAGE);
+                    public void onNext(Bitmap bitmap) {
+                        ivCheck.setImageBitmap(bitmap);
+                        etCheck.setText("");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
+
     }
 
     /**
@@ -328,43 +350,66 @@ public class EduLoginActivity extends BaseActivity {
      * @param checkid
      */
     private void doLogin(String eduid, String pwd, String checkid) {
-        OkHttpUtils.post()
-                .url(NetConfig.BASE_EDU_PLUS)
-                .addParams("__VIEWSTATE", App.get__VIEWSTATE(this))
-                .addParams("Button1", "")
-                .addParams("hidPdrs", "")
-                .addParams("hidsc", "")
-                .addParams("lbLanguage", "")
-                .addParams("RadioButtonList1", "%D1%A7%C9%FA")
-                .addParams("TextBox2", pwd)
-                .addParams("txtSecretCode", checkid)
-                .addParams("txtUserName", eduid)
-                .addHeader("Cookie", cookie)
-                .build()
-                .execute(new Callback() {
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            OkHttpUtils.post()
+                    .url(NetConfig.BASE_EDU_PLUS)
+                    .addParams("__VIEWSTATE", App.get__VIEWSTATE(this))
+                    .addParams("Button1", "")
+                    .addParams("hidPdrs", "")
+                    .addParams("hidsc", "")
+                    .addParams("lbLanguage", "")
+                    .addParams("RadioButtonList1", "%D1%A7%C9%FA")
+                    .addParams("TextBox2", pwd)
+                    .addParams("txtSecretCode", checkid)
+                    .addParams("txtUserName", eduid)
+                    .addHeader("Cookie", cookie)
+                    .build()
+                    .execute(new Callback() {
+                        @Override
+                        public Object parseNetworkResponse(Response response, int id) throws Exception {
+                            String responseHTML = new String(response.body().bytes(), "GB2312");
+                            user_eduid = eduid;
+                            user_edupwd = pwd;
+                            emitter.onNext(responseHTML);
+                            return null;
+                        }
+
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            Log.e("print", "doLogin() onError" + call.toString());
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onResponse(Object response, int id) {
+                            Log.e("print", "doLogin() onResponse");
+                        }
+                    });
+        })
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
                     @Override
-                    public Object parseNetworkResponse(Response response, int id) throws Exception {
-                        String responseHTML = new String(response.body().bytes(), "GB2312");
-//                        printLog(responseHTML);
-                        user_eduid = eduid;
-                        user_edupwd = pwd;
-                        checkLoginSuccess(responseHTML);
-//                        writeData("/sdcard/Test/doLoginHTML.txt", responseHTML);
-//                        openHostPage();
-                        return null;
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        Log.e("print", "doLogin() onError" + call.toString());
-                        e.printStackTrace();
+                    public void onNext(String s) {
+                        checkLoginSuccess(s);
                     }
 
                     @Override
-                    public void onResponse(Object response, int id) {
-                        Log.e("print", "doLogin() onResponse");
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
+
     }
 
     /**
@@ -392,34 +437,56 @@ public class EduLoginActivity extends BaseActivity {
                     stuName = stuName.substring(0, stuName.length() - 2);
                 printLog("stuName " + stuName);
 
-                Message msg = new Message();
-                Bundle bundle = new Bundle();
-                bundle.putString("stuName", stuName);
-                msg.setData(bundle);
-                msg.what = LOGIN_SUCCESS;
-                handler.sendMessage(msg);
+//                Message msg = new Message();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("stuName", stuName);
+//                msg.setData(bundle);
+//                msg.what = LOGIN_SUCCESS;
+//                handler.sendMessage(msg);
+                AfterSuccessLogin(stuName);
                 return;
             }
         }
         for (Element link : alert) {
             //获取错误信息
             if (link.data().contains("验证码不正确")) {
-                handler.sendEmptyMessage(LOGIN_FAIL_VERIFATION_ERROR);
+//                handler.sendEmptyMessage(LOGIN_FAIL_VERIFATION_ERROR);
+                etCheck.setText("");
+                ToastShort("验证码输入错误");
+                printLog("验证码输入错误");
+                //刷新验证码
+                GetVerifation();
                 return;
             } else if (link.data().contains("username不能为空")) {
-                handler.sendEmptyMessage(LOGIN_FAIL_USERNAME_EMPTY);
+//                handler.sendEmptyMessage(LOGIN_FAIL_USERNAME_EMPTY);
+                ToastShort("学号为空");
+                printLog("学号为空");
+                //刷新验证码
+                GetVerifation();
                 return;
             } else if (link.data().contains("password错误")) {
-                handler.sendEmptyMessage(LOGIN_FAIL_PASSWORD_ERROR);
+//                handler.sendEmptyMessage(LOGIN_FAIL_PASSWORD_ERROR);
+                ToastShort("学号或密码错误");
+                printLog("学号或密码错误");
+                //刷新验证码
+                GetVerifation();
                 return;
             } else if (link.data().contains("password不能为空")) {
-                handler.sendEmptyMessage(LOGIN_FAIL_PASSWORD_EMPTY);
+//                handler.sendEmptyMessage(LOGIN_FAIL_PASSWORD_EMPTY);
+                ToastShort("密码为空");
+                printLog("密码为空");
+                //刷新验证码
+                GetVerifation();
                 return;
             }
         }
         for (Element link : err) {
-            if (link.text().equals("错误原因：系统正忙！"))
-                handler.sendEmptyMessage(LOGIN_FAIL_SYSTEMBUSY);
+            if (link.text().equals("错误原因：系统正忙！")){
+                ToastShort("错误原因：系统正忙！");
+                printLog("错误原因：系统正忙！");
+                GetCookies();
+//                handler.sendEmptyMessage(LOGIN_FAIL_SYSTEMBUSY);
+            }
         }
     }
 
@@ -427,8 +494,7 @@ public class EduLoginActivity extends BaseActivity {
      * 成功登陆后的操作
      */
     private void AfterSuccessLogin(String stuName) {
-//        ToastShort("登陆成功");
-        MyToast.showText(this, "登录成功", Toast.LENGTH_SHORT, true);
+        MyToast.showText(this, "登陆成功", Toast.LENGTH_SHORT, true);
         SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(App.COOKIE, cookie);

@@ -1,5 +1,6 @@
 package com.android.renly.plusclub.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import com.android.renly.plusclub.UI.BatchRadioButton;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,44 +95,54 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     private MyPostAdapter myPostAdapter;
 
     private static final int GET_DATA_SUCCESS = 2;
-    private Handler handler = new Handler() {
+    private MyHandler handler  = new MyHandler(getmActivity());
+    class MyHandler extends Handler{
+        private WeakReference<Activity> weakReference;
+        public MyHandler(Activity mActivity){
+            weakReference = new WeakReference<>(mActivity);
+        }
+
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case GET_DATA_SUCCESS:
-                    int type = msg.getData().getInt("type");
-                    initListData(msg.getData().getString("data"), type);
-                    // 处理第一次刷新和后续刷新
-                    switch (type) {
-                        case TYPE_NEW:
-                            if (postAdapter == null)
-                                initList(type);
-                            else
-                                postAdapter.notifyDataSetChanged();
-                            break;
-                        case TYPE_REPLY:
-                            if (replyAdapter == null)
-                                initList(type);
-                            else
-                                replyAdapter.notifyDataSetChanged();
-                            break;
-                        case TYPE_MY:
-                            if (myPostAdapter == null)
-                                initList(type);
-                            else
-                                myPostAdapter.notifyDataSetChanged();
-                            break;
-                    }
-                    isPullDownRefresh = false;
-                    isPullUpRefresh = false;
-                    tvHotnewsShowlogin.setVisibility(View.GONE);
-                    rv.setVisibility(View.VISIBLE);
-                    if (refreshLayout.isRefreshing())
-                        refreshLayout.setRefreshing(false);
-                    break;
+            super.handleMessage(msg);
+            Activity mActivity = weakReference.get();
+            if (mActivity != null){
+                switch (msg.what) {
+                    case GET_DATA_SUCCESS:
+                        int type = msg.getData().getInt("type");
+                        initListData(msg.getData().getString("data"), type);
+                        // 处理第一次刷新和后续刷新
+                        switch (type) {
+                            case TYPE_NEW:
+                                if (postAdapter == null)
+                                    initList(type);
+                                else
+                                    postAdapter.notifyDataSetChanged();
+                                break;
+                            case TYPE_REPLY:
+                                if (replyAdapter == null)
+                                    initList(type);
+                                else
+                                    replyAdapter.notifyDataSetChanged();
+                                break;
+                            case TYPE_MY:
+                                if (myPostAdapter == null)
+                                    initList(type);
+                                else
+                                    myPostAdapter.notifyDataSetChanged();
+                                break;
+                        }
+                        isPullDownRefresh = false;
+                        isPullUpRefresh = false;
+                        tvHotnewsShowlogin.setVisibility(View.GONE);
+                        rv.setVisibility(View.VISIBLE);
+                        if (refreshLayout.isRefreshing())
+                            refreshLayout.setRefreshing(false);
+                        break;
+                }
             }
         }
-    };
+    }
 
 
     @Override

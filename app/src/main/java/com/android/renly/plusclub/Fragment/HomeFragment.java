@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.EditAcitivity;
+import com.android.renly.plusclub.Activity.HomeActivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
@@ -88,11 +89,11 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initData(Context content) {
-        if (App.ISLOGIN(getmActivity())) {
-            MyDB db = new MyDB(getmActivity());
-            if (db.isUserExist(App.getUid(getmActivity())))
+        if (App.ISLOGIN(mActivity)) {
+            MyDB db = new MyDB(mActivity);
+            if (db.isUserExist(App.getUid(mActivity)))
                 Picasso.get()
-                        .load(db.getUserAvatarPath(App.getUid(getmActivity())))
+                        .load(db.getUserAvatarPath(App.getUid(mActivity)))
                         .placeholder(R.drawable.image_placeholder)
                         .into(ciHomeImg);
             else
@@ -124,7 +125,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void doRefresh() {
-        if (App.ISLOGIN(getmActivity())) {
+        if (App.ISLOGIN(mActivity)) {
             getUserAvator();
             llLogintip.setVisibility(View.GONE);
             llEdittip.setVisibility(View.VISIBLE);
@@ -137,14 +138,14 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initForumList() {
-        ForumAdapter adapter = new ForumAdapter(getmActivity(), forumList);
+        ForumAdapter adapter = new ForumAdapter(mActivity, forumList);
         adapter.setOnItemClickListener(pos -> {
-            Intent intent = new Intent(getmActivity(), PostsActivity.class);
+            Intent intent = new Intent(mActivity, PostsActivity.class);
             intent.putExtra("Title", forumList.get(pos).getTitle());
             intent.putExtra("category", forumList.get(pos).getCategory());
             startActivity(intent);
         });
-        GridLayoutManager layoutManager = new GridLayoutManager(getmActivity(), 4);
+        GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
         list.setClipToPadding(false);
         list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
@@ -234,12 +235,6 @@ public class HomeFragment extends BaseFragment {
         forumList.add(new Forum("论坛反馈", R.drawable.ic_05, 2, "feedback"));
         forumList.add(new Forum("校园交易", R.drawable.ic_06, 2, "transaction"));
         forumList.add(new Forum("公告活动", R.drawable.ic_07, 2, "activity"));
-
-        headers = new String[]{
-                "休闲娱乐",
-                "校园生活",
-                "学术交流"
-        };
     }
 
     @Override
@@ -264,28 +259,28 @@ public class HomeFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ci_home_img:
-                if (App.ISLOGIN(getmActivity())) {
-                    Intent intent = new Intent(getmActivity(), UserDetailActivity.class);
-                    intent.putExtra("userid", App.getUid(getmActivity()));
-                    getmActivity().startActivity(intent);
+                if (App.ISLOGIN(mActivity)) {
+                    Intent intent = new Intent(mActivity, UserDetailActivity.class);
+                    intent.putExtra("userid", App.getUid(mActivity));
+                    mActivity.startActivity(intent);
                 } else {
-                    Intent intent = new Intent(getmActivity(), LoginActivity.class);
-                    getmActivity().startActivityForResult(intent, LoginActivity.requestCode);
+                    Intent intent = new Intent(mActivity, LoginActivity.class);
+                    mActivity.startActivityForResult(intent, LoginActivity.requestCode);
                 }
-                getmActivity().overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
+                mActivity.overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
                 break;
             case R.id.iv_home_search:
                 ToastProgramError();
                 testRxjava();
                 break;
             case R.id.tip_login:
-                Intent intent = new Intent(getmActivity(), LoginActivity.class);
-                getmActivity().startActivityForResult(intent, LoginActivity.requestCode);
+                Intent intent = new Intent(mActivity, LoginActivity.class);
+                mActivity.startActivityForResult(intent, LoginActivity.requestCode);
                 break;
             case R.id.tip_edit:
-                Intent in = new Intent(getmActivity(), EditAcitivity.class);
+                Intent in = new Intent(mActivity, EditAcitivity.class);
                 in.putExtra("category", "E-M-P-T-Y");
-                getmActivity().startActivity(in);
+                mActivity.startActivity(in);
         }
     }
 
@@ -361,7 +356,7 @@ public class HomeFragment extends BaseFragment {
         Observable.create((ObservableOnSubscribe<String>) emitter ->
                 OkHttpUtils.get()
                         .url(NetConfig.BASE_USERDETAIL_PLUS)
-                        .addHeader("Authorization", "Bearer " + App.getToken(getmActivity()))
+                        .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
                         .build()
                         .execute(new StringCallback() {
                             @Override
@@ -428,7 +423,7 @@ public class HomeFragment extends BaseFragment {
     private void getNewToken() {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(getmActivity()))
+                .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -449,5 +444,12 @@ public class HomeFragment extends BaseFragment {
                         }
                     }
                 });
+    }
+
+    private HomeActivity mActivity;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (HomeActivity)context;
     }
 }
