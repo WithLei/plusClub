@@ -23,6 +23,8 @@ Web端项目：[Robinson28years/lsuplusclub](https://github.com/Robinson28years/
 <img src="https://github.com/WithLei/plusClub/blob/master/screenshots/7.png" width="250" hegiht="500" align=left />
 <img src="https://github.com/WithLei/plusClub/blob/master/screenshots/8.png" width="250" hegiht="500" align=center />  
 
+## 博客
+ - Android模拟教务系统登陆：https://blog.csdn.net/qq_42895379/article/details/83098443
   
 ## 意见和反馈
 联系我们：
