@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.AboutActivity;
+import com.android.renly.plusclub.Activity.HomeActivity;
 import com.android.renly.plusclub.Activity.LabActivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Activity.OpenSourceActivity;
@@ -67,9 +68,6 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     TextView tvMineUserName;
     @BindView(R.id.tv_mine_user_email)
     TextView tvMineUserEmail;
-    private String username, uid;
-    //记录上次创建时候是否登录
-    private boolean isLoginLast = false;
 
     private final int[] icons = new int[]{
 //            R.drawable.ic_autorenew_black_24dp,
@@ -105,7 +103,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
             ob.put("title", titles[i]);
             list.add(ob);
         }
-        lvMineFunctionList.setAdapter(new SimpleAdapter(getActivity(), list, R.layout.item_function, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
+        lvMineFunctionList.setAdapter(new SimpleAdapter(mActivity, list, R.layout.item_function, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
         lvMineFunctionList.setOnItemClickListener(this);
         initView();
     }
@@ -119,9 +117,9 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     }
 
     private void initInfo() {
-        if (App.ISLOGIN(getActivity())) {
+        if (App.ISLOGIN(mActivity)) {
             getUserAvator();
-            tvMineUserName.setText(App.getName(getActivity()));
+            tvMineUserName.setText(App.getName(mActivity));
         } else {
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
             tvMineUserName.setText("点击头像登陆");
@@ -151,15 +149,15 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ci_mine_user_img:
-                if (!App.ISLOGIN(getActivity())) {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    getActivity().startActivityForResult(intent, LoginActivity.requestCode);
+                if (!App.ISLOGIN(mActivity)) {
+                    Intent intent = new Intent(mActivity, LoginActivity.class);
+                    mActivity.startActivityForResult(intent, LoginActivity.requestCode);
                 } else {
-                    Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-                    intent.putExtra("userid", App.getUid(getActivity()));
-                    getActivity().startActivity(intent);
+                    Intent intent = new Intent(mActivity, UserDetailActivity.class);
+                    intent.putExtra("userid", App.getUid(mActivity));
+                    mActivity.startActivity(intent);
                 }
-                getActivity().overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
+                mActivity.overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
                 break;
             case R.id.ll_mine_history:
                 break;
@@ -177,19 +175,19 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         switch (position) {
             case 0:
                 // 主题设置
-                Intent intent = new Intent(getActivity(), ThemeActivity.class);
-                getActivity().startActivityForResult(intent, ThemeActivity.requestCode);
-//                getActivity().overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
+                Intent intent = new Intent(mActivity, ThemeActivity.class);
+                mActivity.startActivityForResult(intent, ThemeActivity.requestCode);
+//                mActivity.overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
                 break;
             case 1:
                 // 设置
-                Intent intent1 = new Intent(getActivity(),SettingActivity.class);
-                getActivity().startActivityForResult(intent1, SettingActivity.requestCode);
+                Intent intent1 = new Intent(mActivity,SettingActivity.class);
+                mActivity.startActivityForResult(intent1, SettingActivity.requestCode);
                 break;
             case 2:
                 // 分享Plus客户端
                 String data = "这个Plus Club客户端非常不错，分享给你们。" + NetConfig.PLUSCLUB_ITEM;
-                IntentUtils.shareApp(getActivity(), data);
+                IntentUtils.shareApp(mActivity, data);
                 break;
             case 3:
                 // 关于本程序
@@ -209,7 +207,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     public void getUserAvator() {
         OkHttpUtils.get()
                 .url(NetConfig.BASE_USERDETAIL_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
+                .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -266,7 +264,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
         tvMineUserName.setText(userName);
         tvMineUserEmail.setVisibility(View.VISIBLE);
-        tvMineUserEmail.setText(App.getEmail(getActivity()));
+        tvMineUserEmail.setText(App.getEmail(mActivity));
     }
 
     /**
@@ -275,7 +273,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     private void getNewToken() {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
+                .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -294,5 +292,12 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                         }
                     }
                 });
+    }
+
+    private HomeActivity mActivity;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (HomeActivity)context;
     }
 }

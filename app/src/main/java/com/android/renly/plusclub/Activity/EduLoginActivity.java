@@ -99,6 +99,7 @@ public class EduLoginActivity extends BaseActivity {
         GetVerifation();
         btnLoginSetEnabled();
         etMobile.setText(App.getEduid(this));
+        etMobile.setSelection(etMobile.getText().length());
         etMobile.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -297,24 +298,22 @@ public class EduLoginActivity extends BaseActivity {
      * 获取验证码图片
      */
     private void GetVerifation() {
-        Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> {
-            OkHttpUtils.post()
-                    .url(NetConfig.CHECKIMG_URL_RS)
-                    .addHeader("Cookie", cookie)
-                    .build()
-                    .execute(new BitmapCallback() {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            emitter.onError(new Throwable("EduLoginActivity GetVerifation onError"));
-                        }
+        Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> OkHttpUtils.post()
+                .url(NetConfig.CHECKIMG_URL_RS)
+                .addHeader("Cookie", cookie)
+                .build()
+                .execute(new BitmapCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        emitter.onError(new Throwable("EduLoginActivity GetVerifation onError"));
+                    }
 
-                        @Override
-                        public void onResponse(Bitmap response, int id) {
-                            printLog("GetVerifation onResponse");
-                            emitter.onNext(response);
-                        }
-                    });
-        })
+                    @Override
+                    public void onResponse(Bitmap response, int id) {
+                        printLog("GetVerifation onResponse");
+                        emitter.onNext(response);
+                    }
+                }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Bitmap>() {
@@ -331,7 +330,7 @@ public class EduLoginActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        printLog(e.getMessage());
                     }
 
                     @Override
@@ -350,49 +349,44 @@ public class EduLoginActivity extends BaseActivity {
      * @param checkid
      */
     private void doLogin(String eduid, String pwd, String checkid) {
-        Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            OkHttpUtils.post()
-                    .url(NetConfig.BASE_EDU_PLUS)
-                    .addParams("__VIEWSTATE", App.get__VIEWSTATE(this))
-                    .addParams("Button1", "")
-                    .addParams("hidPdrs", "")
-                    .addParams("hidsc", "")
-                    .addParams("lbLanguage", "")
-                    .addParams("RadioButtonList1", "%D1%A7%C9%FA")
-                    .addParams("TextBox2", pwd)
-                    .addParams("txtSecretCode", checkid)
-                    .addParams("txtUserName", eduid)
-                    .addHeader("Cookie", cookie)
-                    .build()
-                    .execute(new Callback() {
-                        @Override
-                        public Object parseNetworkResponse(Response response, int id) throws Exception {
-                            String responseHTML = new String(response.body().bytes(), "GB2312");
-                            user_eduid = eduid;
-                            user_edupwd = pwd;
-                            emitter.onNext(responseHTML);
-                            return null;
-                        }
+        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.post()
+                .url(NetConfig.BASE_EDU_PLUS)
+                .addParams("__VIEWSTATE", App.get__VIEWSTATE(this))
+                .addParams("Button1", "")
+                .addParams("hidPdrs", "")
+                .addParams("hidsc", "")
+                .addParams("lbLanguage", "")
+                .addParams("RadioButtonList1", "%D1%A7%C9%FA")
+                .addParams("TextBox2", pwd)
+                .addParams("txtSecretCode", checkid)
+                .addParams("txtUserName", eduid)
+                .addHeader("Cookie", cookie)
+                .build()
+                .execute(new Callback() {
+                    @Override
+                    public Object parseNetworkResponse(Response response, int id) throws Exception {
+                        String responseHTML = new String(response.body().bytes(), "GB2312");
+                        user_eduid = eduid;
+                        user_edupwd = pwd;
+                        emitter.onNext(responseHTML);
+                        return null;
+                    }
 
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            Log.e("print", "doLogin() onError" + call.toString());
-                            e.printStackTrace();
-                        }
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        emitter.onError(new Throwable("doLogin() onError " + call.toString() + " " + e.getMessage()));
+                    }
 
-                        @Override
-                        public void onResponse(Object response, int id) {
-                            Log.e("print", "doLogin() onResponse");
-                        }
-                    });
-        })
+                    @Override
+                    public void onResponse(Object response, int id) {
+                        Log.e("print", "doLogin() onResponse");
+                    }
+                }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<String>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
+                    public void onSubscribe(Disposable d) {}
 
                     @Override
                     public void onNext(String s) {
@@ -401,13 +395,11 @@ public class EduLoginActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        printLog(e.getMessage());
                     }
 
                     @Override
-                    public void onComplete() {
-
-                    }
+                    public void onComplete() {}
                 });
 
     }
@@ -436,13 +428,6 @@ public class EduLoginActivity extends BaseActivity {
                 if (index >= 0)
                     stuName = stuName.substring(0, stuName.length() - 2);
                 printLog("stuName " + stuName);
-
-//                Message msg = new Message();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("stuName", stuName);
-//                msg.setData(bundle);
-//                msg.what = LOGIN_SUCCESS;
-//                handler.sendMessage(msg);
                 AfterSuccessLogin(stuName);
                 return;
             }
@@ -450,7 +435,6 @@ public class EduLoginActivity extends BaseActivity {
         for (Element link : alert) {
             //获取错误信息
             if (link.data().contains("验证码不正确")) {
-//                handler.sendEmptyMessage(LOGIN_FAIL_VERIFATION_ERROR);
                 etCheck.setText("");
                 ToastShort("验证码输入错误");
                 printLog("验证码输入错误");
@@ -458,21 +442,18 @@ public class EduLoginActivity extends BaseActivity {
                 GetVerifation();
                 return;
             } else if (link.data().contains("username不能为空")) {
-//                handler.sendEmptyMessage(LOGIN_FAIL_USERNAME_EMPTY);
                 ToastShort("学号为空");
                 printLog("学号为空");
                 //刷新验证码
                 GetVerifation();
                 return;
             } else if (link.data().contains("password错误")) {
-//                handler.sendEmptyMessage(LOGIN_FAIL_PASSWORD_ERROR);
                 ToastShort("学号或密码错误");
                 printLog("学号或密码错误");
                 //刷新验证码
                 GetVerifation();
                 return;
             } else if (link.data().contains("password不能为空")) {
-//                handler.sendEmptyMessage(LOGIN_FAIL_PASSWORD_EMPTY);
                 ToastShort("密码为空");
                 printLog("密码为空");
                 //刷新验证码
