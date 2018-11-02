@@ -44,6 +44,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 
 public class MineFragment extends BaseFragment implements AdapterView.OnItemClickListener {
@@ -205,56 +212,60 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     }
 
     public void getUserAvator() {
-        OkHttpUtils.get()
-                .url(NetConfig.BASE_USERDETAIL_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
-                .build()
-                .execute(new StringCallback() {
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            OkHttpUtils.get()
+                    .url(NetConfig.BASE_USERDETAIL_PLUS)
+                    .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            printLog("getUserAvator onError" + e.getMessage());
+                            ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            if (!response.contains("code")) {
+                                ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
+                                return;
+                            }
+                            JSONObject jsonObject = JSON.parseObject(response);
+                            if (jsonObject.getInteger("code") == 50011) {
+                                getNewToken();
+                            } else if (jsonObject.getInteger("code") != 20000) {
+                                ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
+                            } else {
+                                emitter.onNext(jsonObject.getString("result"));
+                            }
+
+                        }
+                    });
+        })
+                .observeOn(Schedulers.newThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
                     @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("getUserAvator onError" + e.getMessage());
-                        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+                    public void onSubscribe(Disposable d) {}
+
+                    @Override
+                    public void onNext(String s) {
+                        JSONObject obj = JSON.parseObject(s);
+                        String avatarSrc = obj.getString("avatar");
+                        String name = obj.getString("name");
+                        setInfo(avatarSrc, name);
                     }
 
                     @Override
-                    public void onResponse(String response, int id) {
-                        if (!response.contains("code")) {
-                            ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
-                            return;
-                        }
-                        JSONObject jsonObject = JSON.parseObject(response);
-                        if (jsonObject.getInteger("code") == 50011) {
-                            getNewToken();
-                        } else if (jsonObject.getInteger("code") != 20000) {
-                            ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
-                        } else {
-                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
-                            String avatarSrc = obj.getString("avatar");
-                            String name = obj.getString("name");
-                            Message msg = new Message();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("avatar", avatarSrc);
-                            bundle.putString("name", name);
-                            msg.setData(bundle);
-                            msg.what = GET_INFO;
-                            handler.sendMessage(msg);
-                        }
+                    public void onError(Throwable e) {
 
                     }
+
+                    @Override
+                    public void onComplete() {}
                 });
-    }
 
-    private static final int GET_INFO = 2;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case GET_INFO:
-                    setInfo(msg.getData().getString("avatar"), msg.getData().getString("name"));
-                    break;
-            }
-        }
-    };
+    }
 
     private void setInfo(String avatarSrc, String userName) {
         Picasso.get()

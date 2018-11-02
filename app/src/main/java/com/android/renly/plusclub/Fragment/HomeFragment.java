@@ -251,7 +251,6 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        handler.removeCallbacksAndMessages(null);
         unbinder.unbind();
     }
 
@@ -337,21 +336,6 @@ public class HomeFragment extends BaseFragment {
                 });
     }
 
-    private static final int REFRESH_END = 2;
-    private static final int GET_NEWTOKEN = 3;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case REFRESH_END:
-                    break;
-                case GET_NEWTOKEN:
-                    getNewToken();
-                    break;
-            }
-        }
-    };
-
     public void getUserAvator() {
         Observable.create((ObservableOnSubscribe<String>) emitter ->
                 OkHttpUtils.get()
@@ -406,7 +390,7 @@ public class HomeFragment extends BaseFragment {
                     public void onError(Throwable e) {
                         printLog("onError()" + e.getMessage());
                         if (e.getMessage().equals("getNewToken"))
-                            handler.sendEmptyMessage(GET_NEWTOKEN);
+                            getNewToken();
                     }
 
                     @Override
