@@ -13,6 +13,7 @@ import com.android.renly.plusclub.Checknet.NetworkReceiver;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.DataBase.SQLiteHelper;
 import com.android.renly.plusclub.Utils.DateUtils;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.text.SimpleDateFormat;
 
@@ -25,8 +26,14 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         this.context = getApplicationContext();
-
+        initConfig();
         regReciever();
+    }
+
+    private void initConfig() {
+        if (BuildConfig.DEBUG) {
+            LeakCanary.install(this);
+        }
     }
 
     @Override
