@@ -242,8 +242,8 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                         }
                     });
         })
-                .observeOn(Schedulers.newThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {}

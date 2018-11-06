@@ -94,51 +94,22 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     private ReplyAdapter replyAdapter;
     private MyPostAdapter myPostAdapter;
 
-    private static final int GET_DATA_SUCCESS = 2;
-    private MyHandler handler  = new MyHandler(getmActivity());
+    private MyHandler handler  = new MyHandler(getActivity());
     class MyHandler extends Handler{
         private WeakReference<Activity> weakReference;
         public MyHandler(Activity mActivity){
             weakReference = new WeakReference<>(mActivity);
+            printLog("myHandler()");
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             Activity mActivity = weakReference.get();
+            printLog("handleMessage01");
             if (mActivity != null){
+                printLog("handleMessage02 ");
                 switch (msg.what) {
-                    case GET_DATA_SUCCESS:
-                        int type = msg.getData().getInt("type");
-                        initListData(msg.getData().getString("data"), type);
-                        // 处理第一次刷新和后续刷新
-                        switch (type) {
-                            case TYPE_NEW:
-                                if (postAdapter == null)
-                                    initList(type);
-                                else
-                                    postAdapter.notifyDataSetChanged();
-                                break;
-                            case TYPE_REPLY:
-                                if (replyAdapter == null)
-                                    initList(type);
-                                else
-                                    replyAdapter.notifyDataSetChanged();
-                                break;
-                            case TYPE_MY:
-                                if (myPostAdapter == null)
-                                    initList(type);
-                                else
-                                    myPostAdapter.notifyDataSetChanged();
-                                break;
-                        }
-                        isPullDownRefresh = false;
-                        isPullUpRefresh = false;
-                        tvHotnewsShowlogin.setVisibility(View.GONE);
-                        rv.setVisibility(View.VISIBLE);
-                        if (refreshLayout.isRefreshing())
-                            refreshLayout.setRefreshing(false);
-                        break;
                 }
             }
         }
@@ -162,8 +133,29 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
         postList = new ArrayList<>();
         replyList = new ArrayList<>();
         myList = new ArrayList<>();
+        initObserver();
         getData(1);
         initView();
+    }
+
+    private Observer<String> observer;
+    private void initObserver() {
+        observer = new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {}
+
+            @Override
+            public void onNext(String s) {
+                JSONObject obj = JSON.parseObject(s);
+                afterGetDataSuccess(obj.getInteger("type"),obj.getString("data"));
+            }
+
+            @Override
+            public void onError(Throwable e) {}
+
+            @Override
+            public void onComplete() {}
+        };
     }
 
     private void initView() {
@@ -249,7 +241,6 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
         }.start();
 
         getData(1);
-        printLog("ruaruarua");
         switch (currentType) {
             case TYPE_NEW:
                 max_page_post = 1;
@@ -259,7 +250,6 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                 break;
             case TYPE_MY:
                 max_page_my = 1;
-                printLog("lalalallala");
                 break;
         }
     }
@@ -288,97 +278,50 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
      * 从服务器获取帖子
      */
     private void getReplyListData(int page) {
-        Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            OkHttpUtils.get()
-                    .url(NetConfig.BASE_USER_PLUS + App.getUid(getActivity()) + "/comments")
-                    .addParams("page", page + "")
-                    .build()
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
+        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
+                .url(NetConfig.BASE_USER_PLUS + App.getUid(getActivity()) + "/comments")
+                .addParams("page", page + "")
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastNetWorkError();
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        if (!response.contains("code")) {
                             ToastNetWorkError();
+                            if (replyAdapter != null)
+                                replyAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                            return;
                         }
 
-                        @Override
-                        public void onResponse(String response, int id) {
-                            if (!response.contains("code")) {
-                                ToastNetWorkError();
-                                if (replyAdapter != null)
-                                    replyAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
-                                return;
-                            }
-
-                            JSONObject dataObj = JSON.parseObject(response);
-                            if (dataObj.getInteger("code") == 50011) {
-                                getNewToken(page);
-                            } else if (dataObj.getInteger("code") != 20000) {
-                                emitter.onError(new Throwable("20000 "));
-                                ToastShort("服务器出状况惹，稍等喔( • ̀ω•́ )✧");
-                            } else {
-                                max_page_reply = max_page_reply >= page ? max_page_reply : page;
-                                emitter.onNext(dataObj.getString("data"));
-                            }
+                        JSONObject dataObj = JSON.parseObject(response);
+                        if (dataObj.getInteger("code") == 50011) {
+                            getNewToken(page);
+                        } else if (dataObj.getInteger("code") != 20000) {
+                            emitter.onError(new Throwable("20000 "));
+                            ToastShort("服务器出状况惹，稍等喔( • ̀ω•́ )✧");
+                        } else {
+                            max_page_reply = max_page_reply >= page ? max_page_reply : page;
+                            JSONObject obj = new JSONObject();
+                            obj.put("type",TYPE_REPLY);
+                            obj.put("data",dataObj.getString("data"));
+                            emitter.onNext(obj.toJSONString());
                         }
-                    });
-        })
+                    }
+                }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        int type = TYPE_REPLY;
-                        initListData(s, type);
-                        // 处理第一次刷新和后续刷新
-                        switch (type) {
-                            case TYPE_NEW:
-                                if (postAdapter == null)
-                                    initList(type);
-                                else
-                                    postAdapter.notifyDataSetChanged();
-                                break;
-                            case TYPE_REPLY:
-                                if (replyAdapter == null)
-                                    initList(type);
-                                else
-                                    replyAdapter.notifyDataSetChanged();
-                                break;
-                            case TYPE_MY:
-                                if (myPostAdapter == null)
-                                    initList(type);
-                                else
-                                    myPostAdapter.notifyDataSetChanged();
-                                break;
-                        }
-                        isPullDownRefresh = false;
-                        isPullUpRefresh = false;
-                        tvHotnewsShowlogin.setVisibility(View.GONE);
-                        rv.setVisibility(View.VISIBLE);
-                        if (refreshLayout.isRefreshing())
-                            refreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                .subscribe(observer);
     }
 
     /**
-     * 从服务器获取帖子
+     * 从服务器获取我的帖子
      */
     private void getMyListData(int page) {
-        OkHttpUtils.get()
+        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
                 .url(NetConfig.BASE_USER_PLUS + App.getUid(getActivity()) + "/discussions")
                 .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
                 .addParams("page", page + "")
@@ -405,24 +348,24 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                             ToastShort("服务器出状况惹，稍等喔( • ̀ω•́ )✧");
                         } else {
                             max_page_my = max_page_my >= page ? max_page_my : page;
-                            Message msg = new Message();
-                            msg.what = GET_DATA_SUCCESS;
-                            Bundle bundle = new Bundle();
-                            bundle.putString("data", dataObj.getString("data"));
-                            bundle.putInt("type", TYPE_MY);
-                            msg.setData(bundle);
-                            handler.removeCallbacksAndMessages(null);
-                            handler.sendMessage(msg);
+                            JSONObject obj = new JSONObject();
+                            obj.put("type",TYPE_MY);
+                            obj.put("data",dataObj.getString("data"));
+                            emitter.onNext(obj.toJSONString());
                         }
                     }
-                });
+                }))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+
     }
 
     /**
      * 从服务器获取帖子
      */
     private void getPostListData(int page) {
-        OkHttpUtils.get()
+        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
                 .url(NetConfig.BASE_POST_PLUS)
                 .addParams("page", page + "")
                 .build()
@@ -446,17 +389,17 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                             ToastShort("服务器出状况惹，稍等喔( • ̀ω•́ )✧");
                         } else {
                             max_page_post = max_page_post >= page ? max_page_post : page;
-                            Message msg = new Message();
-                            msg.what = GET_DATA_SUCCESS;
-                            Bundle bundle = new Bundle();
-                            bundle.putString("data", dataObj.getString("data"));
-                            bundle.putInt("type", TYPE_NEW);
-                            msg.setData(bundle);
-                            handler.removeCallbacksAndMessages(null);
-                            handler.sendMessage(msg);
+                            JSONObject obj = new JSONObject();
+                            obj.put("type",TYPE_NEW);
+                            obj.put("data",dataObj.getString("data"));
+                            emitter.onNext(obj.toJSONString());
                         }
                     }
-                });
+                }))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+
     }
 
     /**
@@ -634,6 +577,38 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                         }
                     }
                 });
+    }
+
+    private void afterGetDataSuccess(int type, String data){
+        initListData(data, type);
+        // 处理第一次刷新和后续刷新
+        switch (type) {
+            case TYPE_NEW:
+                if (postAdapter == null)
+                    initList(type);
+                else
+                    postAdapter.notifyDataSetChanged();
+                break;
+            case TYPE_REPLY:
+                if (replyAdapter == null)
+                    initList(type);
+                else
+                    replyAdapter.notifyDataSetChanged();
+                break;
+            case TYPE_MY:
+                if (myPostAdapter == null)
+                    initList(type);
+                else
+                    myPostAdapter.notifyDataSetChanged();
+                break;
+        }
+        printLog("handleMessage03");
+        isPullDownRefresh = false;
+        isPullUpRefresh = false;
+        tvHotnewsShowlogin.setVisibility(View.GONE);
+        rv.setVisibility(View.VISIBLE);
+        if (refreshLayout.isRefreshing())
+            refreshLayout.setRefreshing(false);
     }
 
     @Override
