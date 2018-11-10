@@ -23,6 +23,7 @@ import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.ForumAdapter;
+import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Forum;
 import com.android.renly.plusclub.Bean.User;
@@ -45,13 +46,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 
@@ -151,7 +149,7 @@ public class HomeFragment extends BaseFragment {
         list.setAdapter(adapter);
     }
 
-    private void initWeatherView(boolean isSuccess, String weatherObj) {
+    private void initWeatherView(boolean isSuccess, String weather) {
         ivWeather.setImageResource(R.drawable.ic_sun);
         int currentHour = DateUtils.getHourTimeOfDay();
         if (currentHour <= 5 || currentHour >= 19) {
@@ -166,8 +164,8 @@ public class HomeFragment extends BaseFragment {
         }
 
         if (isSuccess) {
-            JSONObject jsonObject = JSON.parseObject(weatherObj);
-            String weather = jsonObject.getString("weather");
+//            JSONObject jsonObject = JSON.parseObject(weatherObj);
+//            String weather = jsonObject.getString("weather");
             if (weather.contains("晴"))
                 return;
             else if (weather.contains("雨"))
@@ -180,50 +178,9 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void getWeatherData() {
-        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
-                .url(NetConfig.GET_WEATHER_URL)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("getWeatherData onError");
-                        emitter.onError(new Throwable("onError"));
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        if (!response.contains("weatherinfo")) {
-                            emitter.onError(new Throwable("onError"));
-                        } else {
-                            JSONObject jsonObject = JSON.parseObject(response);
-                            emitter.onNext(jsonObject.getString("weatherinfo"));
-                        }
-                    }
-                }))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(String s) {
-                        initWeatherView(true, s);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        initWeatherView(false, null);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
+        RetrofitService.getWeather("101210801")
+                .subscribe(weather -> initWeatherView(true, weather.getWeatherinfo().getWeather()),
+                        throwable -> initWeatherView(false, null));
     }
 
     private void initForumListData() {
@@ -405,6 +362,7 @@ public class HomeFragment extends BaseFragment {
      * 获取新的Token
      */
     private void getNewToken() {
+
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
                 .addHeader("Authorization", "Bearer " + App.getToken(mActivity))

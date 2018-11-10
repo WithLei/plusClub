@@ -8,7 +8,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.ThemeActivity;
+import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.Checknet.NetworkReceiver;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.DataBase.SQLiteHelper;
@@ -17,9 +20,12 @@ import com.squareup.leakcanary.LeakCanary;
 
 import java.text.SimpleDateFormat;
 
+import io.reactivex.functions.Consumer;
+import okhttp3.ResponseBody;
+
 public class App extends Application {
 
-    public static Context context;
+    private static Context context;
     private NetworkReceiver receiver;
 
     @Override
@@ -34,6 +40,7 @@ public class App extends Application {
         if (BuildConfig.DEBUG) {
             LeakCanary.install(this);
         }
+        RetrofitService.init();
     }
 
     @Override
@@ -62,6 +69,10 @@ public class App extends Application {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(receiver, intentFilter);
+    }
+
+    public static Context getContext(){
+        return context;
     }
 
     //是否为校园网
