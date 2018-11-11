@@ -1,10 +1,9 @@
 package com.android.renly.plusclub.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import com.android.renly.plusclub.Adapter.ForumAdapter;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Forum;
-import com.android.renly.plusclub.Bean.User;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.DataBase.MyDB;
@@ -48,9 +46,9 @@ import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import okhttp3.Call;
 
 public class HomeFragment extends BaseFragment {
@@ -164,8 +162,6 @@ public class HomeFragment extends BaseFragment {
         }
 
         if (isSuccess) {
-//            JSONObject jsonObject = JSON.parseObject(weatherObj);
-//            String weather = jsonObject.getString("weather");
             if (weather.contains("晴"))
                 return;
             else if (weather.contains("雨"))
@@ -177,6 +173,7 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    @SuppressLint("CheckResult")
     private void getWeatherData() {
         RetrofitService.getWeather("101210801")
                 .subscribe(weather -> initWeatherView(true, weather.getWeatherinfo().getWeather()),
@@ -252,6 +249,12 @@ public class HomeFragment extends BaseFragment {
                 }
 
         )
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        printLog("rxjava onSubscribe");
+                    }
+                })
 //                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
 //                    @Override
 //                    public ObservableSource<String> apply(Observable<Throwable> throwableObservable) throws Exception {
@@ -293,69 +296,35 @@ public class HomeFragment extends BaseFragment {
                 });
     }
 
+    @SuppressLint("CheckResult")
     public void getUserAvator() {
-        Observable.create((ObservableOnSubscribe<String>) emitter ->
-                OkHttpUtils.get()
-                        .url(NetConfig.BASE_USERDETAIL_PLUS)
-                        .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
-                        .build()
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onError(Call call, Exception e, int id) {
-                                printLog("getUserAvator onError" + e.getMessage());
-                                ToastNetWorkError();
+        // 这里出现的问题在于获取成功Token后并没有更新header
+        RetrofitService.getUserAvatar(getActivity())
+                // 申请更新Token
+                .doOnSubscribe(disposable -> RetrofitService.getNewToken(getActivity())
+                        .subscribe(responseBody -> {
+                            JSONObject obj = JSON.parseObject(responseBody.string());
+                            if (obj.getInteger("code") != 20000) {
+                                doRefresh();
+                                throw new Exception("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
+                            } else {
+                                printLog("获取Token成功");
+                                App.setToken(getContext(), obj.getString("result"));
                             }
-
-                            @Override
-                            public void onResponse(String response, int id) {
-                                if (!response.contains("code")) {
-                                    ToastNetWorkError();
-                                    return;
-                                }
-                                JSONObject jsonObject = JSON.parseObject(response);
-                                if (jsonObject.getInteger("code") == 50011) {
-                                    emitter.onError(new Throwable("getNewToken"));
-                                } else if (jsonObject.getInteger("code") != 20000) {
-                                    ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
-                                    printLog("getInfoError" + response);
-                                } else {
-                                    JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
-                                    String avatarSrc = obj.getString("avatar");
-                                    emitter.onNext(avatarSrc);
-                                }
-
-                            }
-                        }))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(String path) {
-                        printLog("onNext()");
-                        Picasso.get()
-                                .load(path)
-                                .placeholder(R.drawable.image_placeholder)
-                                .into(ciHomeImg);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        printLog("onError()" + e.getMessage());
-                        if (e.getMessage().equals("getNewToken"))
-                            getNewToken();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
+                        }, throwable -> printLog("HomeFragment getUserAvatar getNewToken Error" + throwable.getMessage())))
+                .doOnComplete(() -> ((HomeActivity) getActivity()).doRefresh())
+                .subscribe(responseBody -> {
+                            printLog("homefragment responseBody " + responseBody.string());
+                            JSONObject jsonObject = JSON.parseObject(responseBody.string());
+                            String path = "";
+                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+                            path = obj.getString("avatar");
+                            Picasso.get()
+                                    .load(path)
+                                    .placeholder(R.drawable.image_placeholder)
+                                    .into(ciHomeImg);
+                        },
+                        throwable -> printLog("HomeFragment getUserAvatar observer " + throwable.getMessage()));
     }
 
     /**
@@ -389,9 +358,10 @@ public class HomeFragment extends BaseFragment {
     }
 
     private HomeActivity mActivity;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (HomeActivity)context;
+        mActivity = (HomeActivity) context;
     }
 }

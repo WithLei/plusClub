@@ -6,22 +6,12 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.Checknet.NetworkReceiver;
-import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.DataBase.SQLiteHelper;
 import com.android.renly.plusclub.Utils.DateUtils;
 import com.squareup.leakcanary.LeakCanary;
-
-import java.text.SimpleDateFormat;
-
-import io.reactivex.functions.Consumer;
-import okhttp3.ResponseBody;
 
 public class App extends Application {
 

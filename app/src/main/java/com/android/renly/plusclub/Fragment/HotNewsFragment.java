@@ -99,7 +99,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
         private WeakReference<Activity> weakReference;
         public MyHandler(Activity mActivity){
             weakReference = new WeakReference<>(mActivity);
-            printLog("myHandler()");
+            printLog("hotnewsFragment myHandler()");
         }
 
         @Override

@@ -166,7 +166,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         unbinder = ButterKnife.bind(this);
     }
 
-    private void doRefresh() {
+    public static void doRefresh() {
         if (homeFragment != null)
             homeFragment.doRefresh();
         if (hotNewsFragment != null)
@@ -177,10 +177,10 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
             mineFragment.doRefresh();
     }
 
-    private HomeFragment homeFragment;
-    private HotNewsFragment hotNewsFragment;
-    private ScheduleFragment scheduleFragment;
-    private MineFragment mineFragment;
+    private static HomeFragment homeFragment;
+    private static  HotNewsFragment hotNewsFragment;
+    private static ScheduleFragment scheduleFragment;
+    private static MineFragment mineFragment;
 
     private void initViewpager() {
         viewPager = findViewById(R.id.view_pager);

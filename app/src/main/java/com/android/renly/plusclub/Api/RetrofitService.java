@@ -2,8 +2,9 @@ package com.android.renly.plusclub.Api;
 
 import android.content.Context;
 
+import com.android.renly.plusclub.Api.Api.PlusClubApi;
 import com.android.renly.plusclub.Api.Bean.Weather;
-import com.android.renly.plusclub.Api.Bean.WeatherInfo;
+import com.android.renly.plusclub.Api.Api.WeatherApi;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.NetConfig;
 
@@ -17,7 +18,6 @@ import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.Result;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -62,6 +62,7 @@ public class RetrofitService {
         weatherApi = retrofit.create(WeatherApi.class);
     }
 
+
     /**************************************             API             **************************************/
 
     /**
@@ -78,6 +79,36 @@ public class RetrofitService {
      */
     public static Observable<ResponseBody> getNewToken(Context context){
         return plusClubApi.getNewToken("Bearer " + App.getToken(context))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 获取头像信息
+     */
+    public static Observable<ResponseBody> getUserAvatar(Context context) {
+        return plusClubApi.getUserAvatar("Bearer " + App.getToken(context))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 登陆操作
+     * @param email
+     * @param pwd
+     * @return
+     */
+    public static Observable<ResponseBody> doLogin(String email, String pwd){
+        return plusClubApi.doLogin(email, pwd)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 获取用户个人信息
+     */
+    public static Observable<ResponseBody> getUserDetails(Context context) {
+        return plusClubApi.getUserDetails("Bearer " + App.getToken(context))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }

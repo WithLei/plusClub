@@ -1,10 +1,9 @@
 package com.android.renly.plusclub.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import com.android.renly.plusclub.Activity.OpenSourceActivity;
 import com.android.renly.plusclub.Activity.SettingActivity;
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
+import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.Common.NetConfig;
@@ -32,8 +32,6 @@ import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.IntentUtils;
 import com.squareup.picasso.Picasso;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,14 +42,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.Call;
 
 public class MineFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     @BindView(R.id.ci_mine_user_img)
@@ -119,7 +109,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         initInfo();
     }
 
-    public void doRefresh(){
+    public void doRefresh() {
         initInfo();
     }
 
@@ -188,7 +178,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                 break;
             case 1:
                 // 设置
-                Intent intent1 = new Intent(mActivity,SettingActivity.class);
+                Intent intent1 = new Intent(mActivity, SettingActivity.class);
                 mActivity.startActivityForResult(intent1, SettingActivity.requestCode);
                 break;
             case 2:
@@ -211,59 +201,29 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         }
     }
 
+    @SuppressLint("CheckResult")
     public void getUserAvator() {
-        Observable.create((ObservableOnSubscribe<String>) emitter -> {
-            OkHttpUtils.get()
-                    .url(NetConfig.BASE_USERDETAIL_PLUS)
-                    .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
-                    .build()
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
-                            printLog("getUserAvator onError" + e.getMessage());
-                            ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
-                        }
-
-                        @Override
-                        public void onResponse(String response, int id) {
-                            if (!response.contains("code")) {
-                                ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
-                                return;
-                            }
-                            JSONObject jsonObject = JSON.parseObject(response);
-                            if (jsonObject.getInteger("code") == 50011) {
-                                getNewToken();
-                            } else if (jsonObject.getInteger("code") != 20000) {
-                                ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
-                            } else {
-                                emitter.onNext(jsonObject.getString("result"));
-                            }
-
-                        }
-                    });
-        })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {}
-
-                    @Override
-                    public void onNext(String s) {
-                        JSONObject obj = JSON.parseObject(s);
-                        String avatarSrc = obj.getString("avatar");
-                        String name = obj.getString("name");
-                        setInfo(avatarSrc, name);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {}
-                });
+        RetrofitService.getUserAvatar(getActivity())
+//                .doOnSubscribe(disposable -> RetrofitService.getNewToken(getActivity())
+//                        .subscribe(responseBody -> {
+//                            JSONObject obj = JSON.parseObject(responseBody.string());
+//                            if (obj.getInteger("code") != 20000) {
+//                                doRefresh();
+//                                throw new Exception("MineFragment getNewToken() onResponse获取Token失败,重新登陆");
+//                            } else {
+//                                printLog("获取Token成功");
+//                                App.setToken(getContext(), obj.getString("result"));
+//                            }
+//                        }, throwable -> printLog("MineFragment getUserAvatar getNewToken Error" + throwable.getMessage())))
+                .subscribe(responseBody -> {
+                            JSONObject jsonObject = JSON.parseObject(responseBody.string());
+                            String avatarSrc = "", name = "";
+                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+                            avatarSrc = obj.getString("avatar");
+                            name = obj.getString("name");
+                            setInfo(avatarSrc, name);
+                        },
+                        throwable -> printLog("MineFragment getUserAvatar Observer " + throwable.getMessage()));
 
     }
 
@@ -278,37 +238,11 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         tvMineUserEmail.setText(App.getEmail(mActivity));
     }
 
-    /**
-     * 获取新的Token
-     */
-    private void getNewToken() {
-        OkHttpUtils.post()
-                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("MineFragment getNewToken onError");
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000) {
-                            printLog("MineFragment getNewToken() onResponse获取Token失败,重新登陆");
-                        } else {
-                            App.setToken(getContext(), obj.getString("result"));
-                            getUserAvator();
-                        }
-                    }
-                });
-    }
-
     private HomeActivity mActivity;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (HomeActivity)context;
+        mActivity = (HomeActivity) context;
     }
 }
