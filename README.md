@@ -25,6 +25,7 @@ Web端项目：[Robinson28years/lsuplusclub](https://github.com/Robinson28years/
 
 ## 博客
  - Android模拟教务系统登陆：https://blog.csdn.net/qq_42895379/article/details/83098443
+ - OkHttp+Retrofit+Dagger2+RxJava+MVP架构 学习笔记 https://blog.csdn.net/qq_42895379/article/details/83786905
   
 ## 意见和反馈
 联系我们：
