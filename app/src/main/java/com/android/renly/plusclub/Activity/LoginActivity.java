@@ -188,7 +188,7 @@ public class LoginActivity extends BaseActivity {
      */
     @SuppressLint("CheckResult")
     private void getUserInfo() {
-        RetrofitService.getUserDetails(this)
+        RetrofitService.getUserDetails()
                 .subscribe(responseBody -> {
                     JSONObject jsonObject = JSON.parseObject(responseBody.string());
                     if (jsonObject.getInteger("code") != 20000){

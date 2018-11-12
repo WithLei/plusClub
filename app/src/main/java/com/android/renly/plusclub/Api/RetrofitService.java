@@ -3,6 +3,7 @@ package com.android.renly.plusclub.Api;
 import android.content.Context;
 
 import com.android.renly.plusclub.Api.Api.PlusClubApi;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.Api.Bean.Weather;
 import com.android.renly.plusclub.Api.Api.WeatherApi;
 import com.android.renly.plusclub.App;
@@ -77,8 +78,8 @@ public class RetrofitService {
     /**
      * 获取新的Token
      */
-    public static Observable<ResponseBody> getNewToken(Context context){
-        return plusClubApi.getNewToken("Bearer " + App.getToken(context))
+    public static Observable<ResponseBody> getNewToken(){
+        return plusClubApi.getNewToken("Bearer " + Store.getInstance().getToken())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -86,8 +87,8 @@ public class RetrofitService {
     /**
      * 获取头像信息
      */
-    public static Observable<ResponseBody> getUserAvatar(Context context) {
-        return plusClubApi.getUserAvatar("Bearer " + App.getToken(context))
+    public static Observable<ResponseBody> getUserAvatar() {
+        return plusClubApi.getUserAvatar("Bearer " + Store.getInstance().getToken())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -107,8 +108,8 @@ public class RetrofitService {
     /**
      * 获取用户个人信息
      */
-    public static Observable<ResponseBody> getUserDetails(Context context) {
-        return plusClubApi.getUserDetails("Bearer " + App.getToken(context))
+    public static Observable<ResponseBody> getUserDetails() {
+        return plusClubApi.getUserDetails("Bearer " + Store.getInstance().getToken())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }

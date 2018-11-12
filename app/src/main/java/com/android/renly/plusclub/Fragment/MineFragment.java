@@ -203,27 +203,49 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
     @SuppressLint("CheckResult")
     public void getUserAvator() {
-        RetrofitService.getUserAvatar(getActivity())
-//                .doOnSubscribe(disposable -> RetrofitService.getNewToken(getActivity())
-//                        .subscribe(responseBody -> {
-//                            JSONObject obj = JSON.parseObject(responseBody.string());
-//                            if (obj.getInteger("code") != 20000) {
-//                                doRefresh();
-//                                throw new Exception("MineFragment getNewToken() onResponse获取Token失败,重新登陆");
-//                            } else {
-//                                printLog("获取Token成功");
-//                                App.setToken(getContext(), obj.getString("result"));
-//                            }
-//                        }, throwable -> printLog("MineFragment getUserAvatar getNewToken Error" + throwable.getMessage())))
+//        RetrofitService.getUserAvatar()
+////                .doOnSubscribe(disposable -> RetrofitService.getNewToken(getActivity())
+////                        .subscribe(responseBody -> {
+////                            JSONObject obj = JSON.parseObject(responseBody.string());
+////                            if (obj.getInteger("code") != 20000) {
+////                                doRefresh();
+////                                throw new Exception("MineFragment getNewToken() onResponse获取Token失败,重新登陆");
+////                            } else {
+////                                printLog("获取Token成功");
+////                                App.setToken(getContext(), obj.getString("result"));
+////                            }
+////                        }, throwable -> printLog("MineFragment getUserAvatar getNewToken Error" + throwable.getMessage())))
+//                .subscribe(responseBody -> {
+//                            JSONObject jsonObject = JSON.parseObject(responseBody.string());
+//                            String avatarSrc = "", name = "";
+//                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+//                            avatarSrc = obj.getString("avatar");
+//                            name = obj.getString("name");
+//                            setInfo(avatarSrc, name);
+//                        },
+//                        throwable -> printLog("MineFragment getUserAvatar Observer " + throwable.getMessage()));
+
+        RetrofitService.getNewToken()
+                .doOnComplete(() -> RetrofitService.getUserAvatar()
+                        .subscribe(responseBody -> {
+                                    JSONObject jsonObject = JSON.parseObject(responseBody.string());
+                                    String avatarSrc = "", name = "";
+                                    JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+                                    avatarSrc = obj.getString("avatar");
+                                    name = obj.getString("name");
+                                    setInfo(avatarSrc, name);
+                                },
+                                throwable -> printLog("MineFragment getUserAvatar Observer " + throwable.getMessage())))
                 .subscribe(responseBody -> {
-                            JSONObject jsonObject = JSON.parseObject(responseBody.string());
-                            String avatarSrc = "", name = "";
-                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
-                            avatarSrc = obj.getString("avatar");
-                            name = obj.getString("name");
-                            setInfo(avatarSrc, name);
-                        },
-                        throwable -> printLog("MineFragment getUserAvatar Observer " + throwable.getMessage()));
+                    JSONObject obj = JSON.parseObject(responseBody.string());
+                    if (obj.getInteger("code") != 20000) {
+                        doRefresh();
+                        throw new Exception("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
+                    } else {
+                        printLog("获取Token成功");
+                        App.setToken(getContext(), obj.getString("result"));
+                    }
+                }, throwable -> printLog("HomeFragment getUserAvatar getNewToken Error" + throwable.getMessage()));
 
     }
 

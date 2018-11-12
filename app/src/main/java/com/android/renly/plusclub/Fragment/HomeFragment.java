@@ -22,6 +22,7 @@ import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.ForumAdapter;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Forum;
@@ -36,20 +37,31 @@ import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 
 public class HomeFragment extends BaseFragment {
     @BindView(R.id.ci_home_img)
@@ -296,24 +308,67 @@ public class HomeFragment extends BaseFragment {
                 });
     }
 
+    private static final String ERROR_RETRY = "error_retry";
     @SuppressLint("CheckResult")
     public void getUserAvator() {
-        // 这里出现的问题在于获取成功Token后并没有更新header
-        RetrofitService.getUserAvatar(getActivity())
-                // 申请更新Token
-                .doOnSubscribe(disposable -> RetrofitService.getNewToken(getActivity())
-                        .subscribe(responseBody -> {
-                            JSONObject obj = JSON.parseObject(responseBody.string());
-                            if (obj.getInteger("code") != 20000) {
-                                doRefresh();
-                                throw new Exception("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
-                            } else {
-                                printLog("获取Token成功");
-                                App.setToken(getContext(), obj.getString("result"));
+        Observable<Object> observable = Observable.defer(new Callable<ObservableSource<? extends String>>() {
+            @Override
+            public ObservableSource<? extends String> call() throws Exception {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(NetConfig.BASE_USERDETAIL_PLUS)
+                        .header("Authorization", "Bearer " + Store.getInstance().getToken())
+                        .build();
+                String token = client.newCall(request).execute().body().string();
+                return Observable.just(token);
+            }
+        }).flatMap(new Function<String, ObservableSource<?>>() {
+            @Override
+            public ObservableSource<?> apply(String s) throws Exception {
+                return Observable.create(new ObservableOnSubscribe<String>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<String> emitter) {
+
+                    }
+                });
+            }
+        })
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    private int mRetryCount = 0;
+
+                    @Override
+                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) {
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+//                                if (mRetryCount++ < 3 && throwable instanceof IOException)
+                                    return Observable.error(new Throwable(ERROR_RETRY));
                             }
-                        }, throwable -> printLog("HomeFragment getUserAvatar getNewToken Error" + throwable.getMessage())))
-                .doOnComplete(() -> ((HomeActivity) getActivity()).doRefresh())
-                .subscribe(responseBody -> {
+                        });
+                    }
+                });
+        DisposableObserver<String>observer = new DisposableObserver<String>() {
+            @Override
+            public void onNext(String s) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((Consumer<? super Object>) observer);
+        RetrofitService.getNewToken()
+                .doOnComplete(() -> RetrofitService.getUserAvatar()
+                        .subscribe(responseBody -> {
                             printLog("homefragment responseBody " + responseBody.string());
                             JSONObject jsonObject = JSON.parseObject(responseBody.string());
                             String path = "";
@@ -324,7 +379,44 @@ public class HomeFragment extends BaseFragment {
                                     .placeholder(R.drawable.image_placeholder)
                                     .into(ciHomeImg);
                         },
-                        throwable -> printLog("HomeFragment getUserAvatar observer " + throwable.getMessage()));
+                        throwable -> printLog("HomeFragment getUserAvatar observer " + throwable.getMessage())))
+                .subscribe(responseBody -> {
+                    JSONObject obj = JSON.parseObject(responseBody.string());
+                    if (obj.getInteger("code") != 20000) {
+                        doRefresh();
+                        throw new Exception("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
+                    } else {
+                        printLog("获取Token成功");
+                        Store.getInstance().setToken(obj.getString("result"));
+                    }
+                }, throwable -> printLog("HomeFragment getUserAvatar getNewToken Error : " + throwable.getMessage()));
+        // 这里出现的问题在于获取成功Token后并没有更新header
+//        RetrofitService.getUserAvatar()
+//                // 申请更新Token
+//                .doOnSubscribe(disposable -> RetrofitService.getNewToken()
+//                        .subscribe(responseBody -> {
+//                            JSONObject obj = JSON.parseObject(responseBody.string());
+//                            if (obj.getInteger("code") != 20000) {
+//                                doRefresh();
+//                                throw new Exception("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
+//                            } else {
+//                                printLog("获取Token成功");
+//                                App.setToken(getContext(), obj.getString("result"));
+//                            }
+//                        }, throwable -> printLog("HomeFragment getUserAvatar getNewToken Error" + throwable.getMessage())))
+//                .doOnComplete(() -> ((HomeActivity) getActivity()).doRefresh())
+//                .subscribe(responseBody -> {
+//                            printLog("homefragment responseBody " + responseBody.string());
+//                            JSONObject jsonObject = JSON.parseObject(responseBody.string());
+//                            String path = "";
+//                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+//                            path = obj.getString("avatar");
+//                            Picasso.get()
+//                                    .load(path)
+//                                    .placeholder(R.drawable.image_placeholder)
+//                                    .into(ciHomeImg);
+//                        },
+//                        throwable -> printLog("HomeFragment getUserAvatar observer " + throwable.getMessage()));
     }
 
     /**
