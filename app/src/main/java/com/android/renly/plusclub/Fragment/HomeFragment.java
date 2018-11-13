@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +60,11 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class HomeFragment extends BaseFragment {
@@ -308,54 +312,42 @@ public class HomeFragment extends BaseFragment {
                 });
     }
 
-    private static final String ERROR_RETRY = "error_retry";
     @SuppressLint("CheckResult")
-    public void getUserAvator() {
-        Observable<Object> observable = Observable.defer(new Callable<ObservableSource<? extends String>>() {
-            @Override
-            public ObservableSource<? extends String> call() throws Exception {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(NetConfig.BASE_USERDETAIL_PLUS)
-                        .header("Authorization", "Bearer " + Store.getInstance().getToken())
-                        .build();
-                String token = client.newCall(request).execute().body().string();
-                return Observable.just(token);
-            }
-        }).flatMap(new Function<String, ObservableSource<?>>() {
-            @Override
-            public ObservableSource<?> apply(String s) throws Exception {
-                return Observable.create(new ObservableOnSubscribe<String>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<String> emitter) {
+    public synchronized void getUserAvator() {
+        Observable<String> observable = RetrofitService.getNewToken();
 
-                    }
-                });
-            }
-        })
-                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
-                    private int mRetryCount = 0;
-
-                    @Override
-                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) {
-                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-                            @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
-//                                if (mRetryCount++ < 3 && throwable instanceof IOException)
-                                    return Observable.error(new Throwable(ERROR_RETRY));
-                            }
-                        });
-                    }
-                });
-        DisposableObserver<String>observer = new DisposableObserver<String>() {
+        DisposableObserver<String> observer = new DisposableObserver<String>() {
             @Override
             public void onNext(String s) {
+                Observable.create((ObservableOnSubscribe<String>) emitter -> {
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(NetConfig.BASE_USERDETAIL_PLUS)
+                            .header("Authorization", "Bearer " + Store.getInstance().getToken())
+                            .get()
+                            .build();
+                    String response = client.newCall(request).execute().body().string();
+                    printLog(response);
+                    emitter.onNext(response);
+                })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(responseString -> {
+                            JSONObject jsonObject = JSON.parseObject(responseString);
+                            String path = "";
+                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+                            path = obj.getString("avatar");
+                            Picasso.get()
+                                    .load(path)
+                                    .placeholder(R.drawable.image_placeholder)
+                                    .into(ciHomeImg);
+                        });
 
             }
 
             @Override
             public void onError(Throwable e) {
-
+                Log.e("print", "HomeFragment_getUserAvator_onError: " + e.getMessage());
             }
 
             @Override
@@ -365,88 +357,7 @@ public class HomeFragment extends BaseFragment {
         };
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((Consumer<? super Object>) observer);
-        RetrofitService.getNewToken()
-                .doOnComplete(() -> RetrofitService.getUserAvatar()
-                        .subscribe(responseBody -> {
-                            printLog("homefragment responseBody " + responseBody.string());
-                            JSONObject jsonObject = JSON.parseObject(responseBody.string());
-                            String path = "";
-                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
-                            path = obj.getString("avatar");
-                            Picasso.get()
-                                    .load(path)
-                                    .placeholder(R.drawable.image_placeholder)
-                                    .into(ciHomeImg);
-                        },
-                        throwable -> printLog("HomeFragment getUserAvatar observer " + throwable.getMessage())))
-                .subscribe(responseBody -> {
-                    JSONObject obj = JSON.parseObject(responseBody.string());
-                    if (obj.getInteger("code") != 20000) {
-                        doRefresh();
-                        throw new Exception("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
-                    } else {
-                        printLog("获取Token成功");
-                        Store.getInstance().setToken(obj.getString("result"));
-                    }
-                }, throwable -> printLog("HomeFragment getUserAvatar getNewToken Error : " + throwable.getMessage()));
-        // 这里出现的问题在于获取成功Token后并没有更新header
-//        RetrofitService.getUserAvatar()
-//                // 申请更新Token
-//                .doOnSubscribe(disposable -> RetrofitService.getNewToken()
-//                        .subscribe(responseBody -> {
-//                            JSONObject obj = JSON.parseObject(responseBody.string());
-//                            if (obj.getInteger("code") != 20000) {
-//                                doRefresh();
-//                                throw new Exception("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
-//                            } else {
-//                                printLog("获取Token成功");
-//                                App.setToken(getContext(), obj.getString("result"));
-//                            }
-//                        }, throwable -> printLog("HomeFragment getUserAvatar getNewToken Error" + throwable.getMessage())))
-//                .doOnComplete(() -> ((HomeActivity) getActivity()).doRefresh())
-//                .subscribe(responseBody -> {
-//                            printLog("homefragment responseBody " + responseBody.string());
-//                            JSONObject jsonObject = JSON.parseObject(responseBody.string());
-//                            String path = "";
-//                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
-//                            path = obj.getString("avatar");
-//                            Picasso.get()
-//                                    .load(path)
-//                                    .placeholder(R.drawable.image_placeholder)
-//                                    .into(ciHomeImg);
-//                        },
-//                        throwable -> printLog("HomeFragment getUserAvatar observer " + throwable.getMessage()));
-    }
-
-    /**
-     * 获取新的Token
-     */
-    private void getNewToken() {
-
-        OkHttpUtils.post()
-                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(mActivity))
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("HomeFragment getNewToken onError");
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000) {
-                            printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
-                            doRefresh();
-                        } else {
-                            printLog("获取Token成功");
-                            App.setToken(getContext(), obj.getString("result"));
-                            getUserAvator();
-                        }
-                    }
-                });
+                .subscribe(observer);
     }
 
     private HomeActivity mActivity;

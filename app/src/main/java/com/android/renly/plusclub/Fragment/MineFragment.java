@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.android.renly.plusclub.Activity.OpenSourceActivity;
 import com.android.renly.plusclub.Activity.SettingActivity;
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseFragment;
@@ -42,6 +44,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class MineFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     @BindView(R.id.ci_mine_user_img)
@@ -202,51 +211,48 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     }
 
     @SuppressLint("CheckResult")
-    public void getUserAvator() {
-//        RetrofitService.getUserAvatar()
-////                .doOnSubscribe(disposable -> RetrofitService.getNewToken(getActivity())
-////                        .subscribe(responseBody -> {
-////                            JSONObject obj = JSON.parseObject(responseBody.string());
-////                            if (obj.getInteger("code") != 20000) {
-////                                doRefresh();
-////                                throw new Exception("MineFragment getNewToken() onResponse获取Token失败,重新登陆");
-////                            } else {
-////                                printLog("获取Token成功");
-////                                App.setToken(getContext(), obj.getString("result"));
-////                            }
-////                        }, throwable -> printLog("MineFragment getUserAvatar getNewToken Error" + throwable.getMessage())))
-//                .subscribe(responseBody -> {
-//                            JSONObject jsonObject = JSON.parseObject(responseBody.string());
-//                            String avatarSrc = "", name = "";
-//                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
-//                            avatarSrc = obj.getString("avatar");
-//                            name = obj.getString("name");
-//                            setInfo(avatarSrc, name);
-//                        },
-//                        throwable -> printLog("MineFragment getUserAvatar Observer " + throwable.getMessage()));
+    public synchronized void getUserAvator() {
+        Observable<String> observable = RetrofitService.getNewToken();
 
-        RetrofitService.getNewToken()
-                .doOnComplete(() -> RetrofitService.getUserAvatar()
-                        .subscribe(responseBody -> {
-                                    JSONObject jsonObject = JSON.parseObject(responseBody.string());
-                                    String avatarSrc = "", name = "";
-                                    JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
-                                    avatarSrc = obj.getString("avatar");
-                                    name = obj.getString("name");
-                                    setInfo(avatarSrc, name);
-                                },
-                                throwable -> printLog("MineFragment getUserAvatar Observer " + throwable.getMessage())))
-                .subscribe(responseBody -> {
-                    JSONObject obj = JSON.parseObject(responseBody.string());
-                    if (obj.getInteger("code") != 20000) {
-                        doRefresh();
-                        throw new Exception("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
-                    } else {
-                        printLog("获取Token成功");
-                        App.setToken(getContext(), obj.getString("result"));
-                    }
-                }, throwable -> printLog("HomeFragment getUserAvatar getNewToken Error" + throwable.getMessage()));
+        DisposableObserver<String> observer = new DisposableObserver<String>() {
+            @Override
+            public void onNext(String s) {
+                Observable.create((ObservableOnSubscribe<String>) emitter -> {
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(NetConfig.BASE_USERDETAIL_PLUS)
+                            .header("Authorization", "Bearer " + Store.getInstance().getToken())
+                            .get()
+                            .build();
+                    String response = client.newCall(request).execute().body().string();
+                    printLog(response);
+                    emitter.onNext(response);
+                })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(responseString -> {
+                            JSONObject jsonObject = JSON.parseObject(responseString);
+                            String avatarSrc = "", name = "";
+                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
+                            avatarSrc = obj.getString("avatar");
+                            name = obj.getString("name");
+                            setInfo(avatarSrc, name);
+                        });
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                Log.e("print", "MineFragment_getUserAvator_onError: " + e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
     }
 
     private void setInfo(String avatarSrc, String userName) {

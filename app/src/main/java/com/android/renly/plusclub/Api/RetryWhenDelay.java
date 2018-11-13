@@ -1,18 +1,8 @@
 package com.android.renly.plusclub.Api;
 
 import android.content.Context;
-import android.util.Log;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.App;
-
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.ObservableSource;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.functions.Func1;
 

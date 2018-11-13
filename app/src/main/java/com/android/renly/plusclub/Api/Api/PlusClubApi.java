@@ -9,10 +9,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PlusClubApi {
-    // 更新Token
-    @POST("refresh")
-    Observable<ResponseBody>getNewToken(@Header("Authorization")String Authorization);
-
     // 获取头像
     @GET("get_user_details")
     Observable<ResponseBody>getUserAvatar(@Header("Authorization")String Authorization);
