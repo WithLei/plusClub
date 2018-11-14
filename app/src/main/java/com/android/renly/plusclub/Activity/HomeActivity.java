@@ -1,5 +1,6 @@
 package com.android.renly.plusclub.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -17,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Adapter.MainPageAdapter;
+import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.Bean.MessageEvent;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.BaseFragment;
@@ -41,7 +43,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.functions.Consumer;
 import okhttp3.Call;
+import okhttp3.ResponseBody;
 
 public class HomeActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
     @BindView(R.id.bottom_bar)
@@ -52,18 +56,6 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     private long mExitTime;
     private Unbinder unbinder;
     private String version_name;
-
-    private static final int GET_VERSION = 2333;
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case GET_VERSION:
-                    afterGetVersion(msg.getData().getString("obj"));
-                    break;
-            }
-        }
-    };
 
     @Override
     protected int getLayoutID() {
@@ -76,6 +68,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         discoverVersion();
     }
 
+    @SuppressLint("CheckResult")
     private void discoverVersion() {
         PackageManager manager = getPackageManager();
         PackageInfo info = null;
@@ -88,30 +81,13 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         if (info != null) {
             version_name = info.versionName;
         }
-        OkHttpUtils.get()
-                .url(NetConfig.GITHUB_GET_RELEASE)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        if (!response.contains("url"))
-                            return;
-                        else{
-                            Message msg = new Message();
-                            msg.what = GET_VERSION;
-                            Bundle bundle = new Bundle();
-                            // 这里有bug
-                            bundle.putString("obj",response);
-                            msg.setData(bundle);
-                            handler.sendMessage(msg);
-                        }
-                    }
-                });
+        RetrofitService.getRelease()
+                .subscribe(responseBody -> {
+                    String response = responseBody.string();
+                    if (!response.contains("url"))
+                        return;
+                    afterGetVersion(response);
+                }, throwable -> printLog("HomeActivity discoverVersion onError " + throwable.getMessage()));
     }
 
     @Override
@@ -247,6 +223,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleMessageEvent(MessageEvent messageEvent){
+        // 使用EventBus接受消息，当更新schedule后返回主页刷新课程表
         if (scheduleFragment != null)
             scheduleFragment.doRefresh();
     }

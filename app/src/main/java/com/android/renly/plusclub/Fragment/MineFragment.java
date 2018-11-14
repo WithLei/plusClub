@@ -47,6 +47,7 @@ import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
@@ -231,13 +232,17 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(responseString -> {
+                            if (!responseString.contains("result")) {
+                                printLog("MineFragment getAvatar subscribe 获取用户信息出错 需要处理");
+                                return;
+                            }
                             JSONObject jsonObject = JSON.parseObject(responseString);
                             String avatarSrc = "", name = "";
                             JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
                             avatarSrc = obj.getString("avatar");
                             name = obj.getString("name");
                             setInfo(avatarSrc, name);
-                        });
+                        }, throwable -> printLog("MineFragment getAvatar subscribe onError " + throwable.getMessage()));
             }
 
             @Override

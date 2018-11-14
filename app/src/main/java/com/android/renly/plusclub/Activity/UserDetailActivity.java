@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
@@ -131,7 +132,7 @@ public class UserDetailActivity extends BaseActivity {
             // 获取用户个人信息
             OkHttpUtils.get()
                     .url(NetConfig.BASE_USERDETAIL_PLUS)
-                    .addHeader("Authorization", "Bearer " + App.getToken(this))
+                    .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                     .build()
                     .execute(new StringCallback() {
                         @Override
@@ -146,7 +147,9 @@ public class UserDetailActivity extends BaseActivity {
                                 return;
                             }
                             JSONObject jsonObject = JSON.parseObject(response);
-                            if (jsonObject.getInteger("code") != 20000) {
+                            if (jsonObject.getInteger("code") == 50011){
+                                getNewToken();
+                            }else if (jsonObject.getInteger("code") != 20000) {
                                 ToastShort("查无此用户信息");
                             } else {
                                 Message msg = new Message();
@@ -176,9 +179,7 @@ public class UserDetailActivity extends BaseActivity {
                                 return;
                             }
                             JSONObject jsonObject = JSON.parseObject(response);
-                            if (jsonObject.getInteger("code") == 50011){
-                                getNewToken();
-                            }else if (jsonObject.getInteger("code") != 20000) {
+                            if (jsonObject.getInteger("code") != 20000) {
                                 ToastShort("查无此用户信息");
                             } else {
                                 Message msg = new Message();
@@ -200,7 +201,7 @@ public class UserDetailActivity extends BaseActivity {
     private void getNewToken() {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization","Bearer " + App.getToken(this))
+                .addHeader("Authorization","Bearer " + Store.getInstance().getToken())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -214,7 +215,7 @@ public class UserDetailActivity extends BaseActivity {
                         if (obj.getInteger("code") != 20000){
                             printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
                         }else{
-                            App.setToken(UserDetailActivity.this,obj.getString("result"));
+                            Store.getInstance().setToken(obj.getString("result"));
                             getInfo();
                         }
                     }

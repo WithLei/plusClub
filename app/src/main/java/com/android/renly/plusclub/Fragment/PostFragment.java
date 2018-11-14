@@ -32,6 +32,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.CommentAdapter;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Comment;
 import com.android.renly.plusclub.Bean.Post;
@@ -162,7 +163,7 @@ public class PostFragment extends BaseFragment {
     private void postComments(String comment) {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_POSTCOMMENT_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
+                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                 .addParams("body", comment + StringUtils.getTextTail(getActivity()))
                 .addParams("discussion_id", postID + "")
                 .build()
@@ -197,7 +198,7 @@ public class PostFragment extends BaseFragment {
     private void getNewToken(String comment) {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
+                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -211,7 +212,7 @@ public class PostFragment extends BaseFragment {
                         if (obj.getInteger("code") != 20000) {
                             printLog("PostFragment getNewToken() onResponse获取Token失败,重新登陆");
                         } else {
-                            App.setToken(getContext(), obj.getString("result"));
+                            Store.getInstance().setToken("result");
                             postComments(comment);
                         }
                     }

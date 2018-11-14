@@ -62,19 +62,6 @@ public class LoginActivity extends BaseActivity {
     protected int getLayoutID() {
         return R.layout.activity_login;
     }
-    private static final int SHOW_SOFTINPUT = 16;
-
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case SHOW_SOFTINPUT:
-                    showSoftInput();
-                    break;
-            }
-        }
-    };
-
 
     @Override
     protected void initData() {
@@ -87,7 +74,15 @@ public class LoginActivity extends BaseActivity {
         initText();
 
         btnLoginSetEnabled();
-        handler.sendEmptyMessageDelayed(SHOW_SOFTINPUT, 1000);
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            showSoftInput();
+//            runOnUiThread(() -> showSoftInput());
+        }).start();
     }
 
     private void initText() {
@@ -216,7 +211,6 @@ public class LoginActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-        handler.removeCallbacksAndMessages(null);
     }
 
 }

@@ -134,18 +134,6 @@ public class App extends Application {
         editor.apply();
     }
 
-    public static String getToken(Context context){
-        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        return sp.getString(USER_TOKEN_KEY, "");
-    }
-
-    public static void setToken(Context context, String token) {
-        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(USER_TOKEN_KEY, token);
-        editor.apply();
-    }
-
     public static String getEduid(Context context){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_EDUID_KEY,"");

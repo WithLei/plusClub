@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.NetConfig;
@@ -177,7 +178,7 @@ public class EditAcitivity extends BaseActivity {
             return;
         OkHttpUtils.post()
                 .url(NetConfig.BASE_POST_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(this))
+                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                 .addParams("title", title)
                 .addParams("body", content + StringUtils.getTextTail(this))
                 .addParams("categories", currentCategory)
@@ -216,7 +217,7 @@ public class EditAcitivity extends BaseActivity {
     private void getNewToken(String title, String content) {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(this))
+                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -230,7 +231,7 @@ public class EditAcitivity extends BaseActivity {
                         if (obj.getInteger("code") != 20000) {
                             printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
                         } else {
-                            App.setToken(EditAcitivity.this, obj.getString("result"));
+                            Store.getInstance().setToken(obj.getString("result"));
                             doPost(title, content);
                         }
                     }

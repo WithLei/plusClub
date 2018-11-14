@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.android.renly.plusclub.Api.Api.GithubApi;
 import com.android.renly.plusclub.Api.Api.PlusClubApi;
 import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.Api.Bean.Weather;
@@ -41,6 +42,7 @@ public class RetrofitService {
 
     private static PlusClubApi plusClubApi;
     private static WeatherApi weatherApi;
+    private static GithubApi githubApi;
 
     private RetrofitService() {
         throw new AssertionError();
@@ -73,6 +75,15 @@ public class RetrofitService {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         weatherApi = retrofit.create(WeatherApi.class);
+
+        retrofit = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(NetConfig.GITHUB_GET_RELEASE)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+        githubApi = retrofit.create(GithubApi.class);
+
     }
 
 
@@ -163,6 +174,15 @@ public class RetrofitService {
     public static Observable<ResponseBody> getUserDetails() {
         return plusClubApi.getUserDetails("Bearer " + Store.getInstance().getToken())
                 .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 获取app版本信息
+     */
+    public static Observable<ResponseBody> getRelease() {
+        return githubApi.getVersion(NetConfig.GITHUB_GET_RELEASE)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

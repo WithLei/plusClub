@@ -333,6 +333,10 @@ public class HomeFragment extends BaseFragment {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(responseString -> {
+                            if (!responseString.contains("result")){
+                                printLog("HomeFragment getAvatar subscribe 获取用户信息出错 需要处理");
+                                return;
+                            }
                             JSONObject jsonObject = JSON.parseObject(responseString);
                             String path = "";
                             JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
@@ -341,7 +345,7 @@ public class HomeFragment extends BaseFragment {
                                     .load(path)
                                     .placeholder(R.drawable.image_placeholder)
                                     .into(ciHomeImg);
-                        });
+                        }, throwable -> printLog("HomeFragment getAvatar subscribe onError " + throwable.getMessage()));
 
             }
 

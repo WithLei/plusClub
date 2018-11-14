@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -16,7 +17,7 @@ public class NetworkUtil {
     public static void regetToken(Context context){
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization","Bearer " + App.getToken(context))
+                .addHeader("Authorization","Bearer " + Store.getInstance().getToken())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -30,7 +31,7 @@ public class NetworkUtil {
                         if (obj.getInteger("code") != 20000){
                             Log.e("print","HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
                         }else{
-                            App.setToken(context,obj.getString("result"));
+                            Store.getInstance().setToken(obj.getString("result"));
                         }
                     }
                 });

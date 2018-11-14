@@ -23,6 +23,7 @@ import com.android.renly.plusclub.Activity.PostActivity;
 import com.android.renly.plusclub.Adapter.MyPostAdapter;
 import com.android.renly.plusclub.Adapter.PostAdapter;
 import com.android.renly.plusclub.Adapter.ReplyAdapter;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Bean.SimplePost;
@@ -323,7 +324,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     private void getMyListData(int page) {
         Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
                 .url(NetConfig.BASE_USER_PLUS + App.getUid(getActivity()) + "/discussions")
-                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
+                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                 .addParams("page", page + "")
                 .build()
                 .execute(new StringCallback() {
@@ -558,7 +559,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     private void getNewToken(int page) {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(getActivity()))
+                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -572,7 +573,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
                         if (obj.getInteger("code") != 20000) {
                             printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
                         } else {
-                            App.setToken(getContext(), obj.getString("result"));
+                            Store.getInstance().setToken(obj.getString("result"));
                             getData(page);
                         }
                     }

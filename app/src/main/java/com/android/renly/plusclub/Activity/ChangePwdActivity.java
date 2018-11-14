@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
@@ -105,7 +106,7 @@ public class ChangePwdActivity extends BaseActivity {
     private void submit() {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_RESETPWD_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(this))
+                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                 .addParams("password", oldPass.getText().toString())
                 .addParams("newpassword", newPass2.getText().toString())
                 .build()
@@ -143,7 +144,7 @@ public class ChangePwdActivity extends BaseActivity {
     private void getNewToken() {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + App.getToken(ChangePwdActivity.this))
+                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -157,7 +158,7 @@ public class ChangePwdActivity extends BaseActivity {
                         if (obj.getInteger("code") != 20000) {
                             printLog("ChangePwdAcitivity getNewToken() onResponse获取Token失败,重新登陆");
                         } else {
-                            App.setToken(ChangePwdActivity.this, obj.getString("result"));
+                            Store.getInstance().setToken(obj.getString("result"));
                             submit();
                         }
                     }

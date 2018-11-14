@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
@@ -217,10 +218,9 @@ public class SignActivity extends BaseActivity {
                         if (!response.contains("code")){
                             ToastNetWorkError();
                         }else if (obj.getInteger("code") == 20000){
-                            App.setToken(SignActivity.this, obj.getString("result"));
+                            Store.getInstance().setToken(obj.getString("result"));
                             MyToast.showText(SignActivity.this,"注册成功",true);
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                            hideKeyBoard();
                             finishActivity();
                         }
                     }
