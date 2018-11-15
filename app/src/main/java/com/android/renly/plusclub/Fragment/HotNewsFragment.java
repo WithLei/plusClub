@@ -1,5 +1,6 @@
 package com.android.renly.plusclub.Fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import com.android.renly.plusclub.Adapter.MyPostAdapter;
 import com.android.renly.plusclub.Adapter.PostAdapter;
 import com.android.renly.plusclub.Adapter.ReplyAdapter;
 import com.android.renly.plusclub.Api.Bean.Store;
+import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Bean.SimplePost;
@@ -48,8 +50,10 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
+import okhttp3.ResponseBody;
 
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOADING;
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_FAIL;
@@ -124,7 +128,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
 
     @Override
     protected void initData(Context content) {
-        if (!App.ISLOGIN(content)) {
+        if (!App.ISLOGIN()) {
             tvHotnewsShowlogin.setText("登陆后就可以看了喔 ٩(๑❛ᴗ❛๑)۶");
             tvHotnewsShowlogin.setVisibility(View.VISIBLE);
             rv.setVisibility(View.GONE);
@@ -222,7 +226,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
      * 执行刷新操作
      */
     public void doRefresh() {
-        if (!App.ISLOGIN(getmActivity())) {
+        if (!App.ISLOGIN()) {
             tvHotnewsShowlogin.setText("登陆后就可以看了喔 ٩(๑❛ᴗ❛๑)۶");
             tvHotnewsShowlogin.setVisibility(View.VISIBLE);
             rv.setVisibility(View.GONE);
@@ -278,9 +282,10 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     /**
      * 从服务器获取帖子
      */
+    @SuppressLint("CheckResult")
     private void getReplyListData(int page) {
         Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
-                .url(NetConfig.BASE_USER_PLUS + App.getUid(getActivity()) + "/comments")
+                .url(NetConfig.BASE_USER_PLUS + App.getUid() + "/comments")
                 .addParams("page", page + "")
                 .build()
                 .execute(new StringCallback() {
@@ -323,7 +328,7 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
      */
     private void getMyListData(int page) {
         Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
-                .url(NetConfig.BASE_USER_PLUS + App.getUid(getActivity()) + "/discussions")
+                .url(NetConfig.BASE_USER_PLUS + App.getUid() + "/discussions")
                 .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
                 .addParams("page", page + "")
                 .build()
@@ -556,28 +561,10 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
     /**
      * 获取新的Token
      */
+    @SuppressLint("CheckResult")
     private void getNewToken(int page) {
-        OkHttpUtils.post()
-                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("HomeFragment getNewToken onError");
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000) {
-                            printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
-                        } else {
-                            Store.getInstance().setToken(obj.getString("result"));
-                            getData(page);
-                        }
-                    }
-                });
+        RetrofitService.getNewToken()
+                .subscribe(s -> getData(page));
     }
 
     private void afterGetDataSuccess(int type, String data){

@@ -98,7 +98,7 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(this);
 
-        currentTheme = App.getCustomTheme(this);
+        currentTheme = App.getCustomTheme();
         currentSelect = getSelect();
 
         if (currentSelect == THEME_NIGHT) {
@@ -107,8 +107,8 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
             nightViews.setVisibility(View.VISIBLE);
         }
 
-        tvThemeStartTimeText.setText(App.getDarkModeTime(this)[0] + ":00");
-        tvThemeEndTimeText.setText(App.getDarkModeTime(this)[1] + ":00");
+        tvThemeStartTimeText.setText(App.getDarkModeTime()[0] + ":00");
+        tvThemeEndTimeText.setText(App.getDarkModeTime()[1] + ":00");
 
 //        auto.setOnCheckedChangeListener((buttonView, isChecked) -> {
 //            App.setAutoDarkMode(this, isChecked);
@@ -117,17 +117,17 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         startView.setOnClickListener(v -> {
             new TimePickerDialog(this, (view, hourOfDay, minute) -> {
                 tvThemeStartTimeText.setText(hourOfDay + ":00");
-                App.setDarkModeTime(this, true, hourOfDay);
+                App.setDarkModeTime( true, hourOfDay);
                 Log.d("==", hourOfDay + "");
-            }, App.getDarkModeTime(this)[0], 0, true).show();
+            }, App.getDarkModeTime()[0], 0, true).show();
         });
 
         endView.setOnClickListener(v -> {
             new TimePickerDialog(this, (view, hourOfDay, minute) -> {
                 tvThemeEndTimeText.setText(hourOfDay + ":00");
                 Log.d("==", hourOfDay + "");
-                App.setDarkModeTime(this, false, hourOfDay);
-            }, App.getDarkModeTime(this)[1], 0, true).show();
+                App.setDarkModeTime(false, hourOfDay);
+            }, App.getDarkModeTime()[1], 0, true).show();
         });
     }
 
@@ -140,8 +140,8 @@ public class ThemeActivity extends BaseActivity implements AdapterView.OnItemCli
         int to = curr;
 
         // 选择的主题与之前的主题不同
-        if (App.getCustomTheme(this) != themeIds[currentSelect]) {
-            App.setCustomTheme(this, themeIds[currentSelect]);
+        if (App.getCustomTheme() != themeIds[currentSelect]) {
+            App.setCustomTheme(themeIds[currentSelect]);
             isChange = true;
             if (themeIds[currentSelect] == THEME_NIGHT) {
                 // 选择的是夜间模式

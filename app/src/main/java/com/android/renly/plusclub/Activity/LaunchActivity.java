@@ -35,7 +35,7 @@ public class LaunchActivity extends Activity{
      * 做一些启动前的工作
      */
     private void doPreWrok() {
-        App.setCookie(this,"");
+        App.setCookie("");
     }
 
     private void enterHome() {

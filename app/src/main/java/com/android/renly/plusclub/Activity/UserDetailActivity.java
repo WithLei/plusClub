@@ -95,7 +95,7 @@ public class UserDetailActivity extends BaseActivity {
     private void getUserInfo() {
         Intent intent = getIntent();
         userid = intent.getExtras().getLong("userid");
-        if (TextUtils.equals(String.valueOf(userid), String.valueOf(App.getUid(this))))
+        if (TextUtils.equals(String.valueOf(userid), String.valueOf(App.getUid())))
             isLoginUser = true;
         getInfo();
     }
@@ -121,7 +121,7 @@ public class UserDetailActivity extends BaseActivity {
      * 点击退出登录按钮后
      */
     private void onLogout() {
-        App.setIsLogout(this);
+        App.setIsLogout();
         setResult(RESULT_OK);
         MyToast.showText(this, "退出登录成功", Toast.LENGTH_SHORT, true);
         finishActivity();

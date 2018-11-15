@@ -196,7 +196,7 @@ public abstract class BaseActivity extends FragmentActivity {
      */
     public void switchTheme() {
         //直接夜间 设置退出
-        int theme = App.getCustomTheme(this);
+        int theme = App.getCustomTheme();
         int cur = AppCompatDelegate.getDefaultNightMode();
         int to = cur;
         boolean autoChnage = false;
@@ -206,9 +206,9 @@ public abstract class BaseActivity extends FragmentActivity {
             to = AppCompatDelegate.MODE_NIGHT_YES;
         } else {
             //白天主题
-            if (App.isAutoDarkMode(this)) {
+            if (App.isAutoDarkMode()) {
                 autoChnage = true;
-                int[] time = App.getDarkModeTime(this);
+                int[] time = App.getDarkModeTime();
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 //                if ((hour >= time[0] || hour < time[1])) {
                     //自动切换

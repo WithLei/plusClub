@@ -68,15 +68,12 @@ public class App extends Application {
     //是否为校园网
     public static boolean IS_SCHOOL_NET = false;
 
-    public static boolean ISLOGIN(Context context) {
+    public static boolean ISLOGIN() {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
-        if (sp.getBoolean(IS_LOGIN, false) && !TextUtils.isEmpty(String.valueOf(sp.getLong(USER_UID_KEY, 0))))
-            return true;
-        else
-            return false;
+        return sp.getBoolean(IS_LOGIN, false) && !TextUtils.isEmpty(String.valueOf(sp.getLong(USER_UID_KEY, 0)));
     }
 
-    public static void setIsLogout(Context context){
+    public static void setIsLogout(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(IS_LOGIN, false);
@@ -86,139 +83,139 @@ public class App extends Application {
         editor.apply();
     }
 
-    public static String getEmail(Context context) {
+    public static String getEmail() {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_EMAIL_KEY, "");
     }
 
-    public static void setEmail(Context context, String email) {
+    public static void setEmail(String email) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(USER_EMAIL_KEY, email);
         editor.apply();
     }
 
-    public static long getUid(Context context) {
+    public static long getUid() {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getLong(USER_UID_KEY, 0);
     }
 
-    public static void setUid(Context context, long uid) {
+    public static void setUid(long uid) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putLong(USER_UID_KEY, uid);
         editor.apply();
     }
 
-    public static String getName(Context context) {
+    public static String getUserName() {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_NAME_KEY, "");
     }
 
-    public static void setName(Context context, String name) {
+    public static void setUserName(String name) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(USER_NAME_KEY, name);
         editor.apply();
     }
 
-    public static String getRole(Context context) {
+    public static String getRole() {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_ROLE_KEY, "");
     }
 
-    public static void setRole(Context context, String role) {
+    public static void setRole(String role) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(USER_ROLE_KEY, role);
         editor.apply();
     }
 
-    public static String getEduid(Context context){
+    public static String getEduid(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_EDUID_KEY,"");
     }
 
-    public static void setEduid(Context context, String eduid){
+    public static void setEduid(String eduid){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(USER_EDUID_KEY, eduid);
         editor.apply();
     }
 
-    public static String getCookie(Context context){
+    public static String getCookie(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(COOKIE,"");
     }
 
-    public static void setCookie(Context context, String Cookie){
+    public static void setCookie(String Cookie){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(COOKIE, Cookie);
         editor.apply();
     }
 
-    public static String getEduName(Context context){
+    public static String getEduName(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_EDUNAME_KEY,"");
     }
 
-    public static void setEduName(Context context, String name){
+    public static void setEduName(String name){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(USER_EDUNAME_KEY, name);
         editor.apply();
     }
 
-    public static String getPwd(Context context){
+    public static String getPwd(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_PWD_KEY,"");
     }
 
-    public static void setPwd(Context context, String pwd){
+    public static void setPwd(String pwd){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(USER_PWD_KEY, pwd);
         editor.apply();
     }
 
-    public static String getEduPwd(Context context){
+    public static String getEduPwd(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_EDUPWD_KEY,"");
     }
 
-    public static void setEduPwd(Context context, String pwd){
+    public static void setEduPwd(String pwd){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(USER_EDUPWD_KEY, pwd);
         editor.apply();
     }
 
-    public static int getCustomTheme(Context context) {
+    public static int getCustomTheme() {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getInt(THEME_KEY, 0);
     }
 
-    public static void setCustomTheme(Context context, int theme) {
+    public static void setCustomTheme(int theme) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(THEME_KEY, theme);
         editor.apply();
     }
 
-    public static boolean isAutoDarkMode(Context context) {
+    public static boolean isAutoDarkMode() {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getBoolean(AUTO_DARK_MODE_KEY, true);
     }
 
-    public static void setAutoDarkMode(Context context, boolean value) {
+    public static void setAutoDarkMode(boolean value) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(AUTO_DARK_MODE_KEY, value);
         editor.apply();
     }
 
-    public static void setDarkModeTime(Context context, boolean isStart, int value) {
+    public static void setDarkModeTime(boolean isStart, int value) {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         if (isStart) {
@@ -229,7 +226,7 @@ public class App extends Application {
         editor.apply();
     }
 
-    public static int[] getDarkModeTime(Context context) {
+    public static int[] getDarkModeTime() {
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         int[] ret = new int[2];
         ret[0] = sp.getInt(START_DARK_TIME_KEY, 21);
@@ -237,19 +234,19 @@ public class App extends Application {
         return ret;
     }
 
-    public static boolean isRemeberPwdUser(Context context){
+    public static boolean isRemeberPwdUser(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getBoolean(IS_REMEBER_PWD_USER,false);
     }
 
-    public static void setRemeberPwdUser(Context context,boolean isRemeber){
+    public static void setRemeberPwdUser(boolean isRemeber){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(IS_REMEBER_PWD_USER,isRemeber);
         editor.apply();
     }
 
-    public static void setScheduleStartWeek(Context context,int nowWeek){
+    public static void setScheduleStartWeek(int nowWeek){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         long nowTime = System.currentTimeMillis();
@@ -258,7 +255,7 @@ public class App extends Application {
         editor.apply();
     }
 
-    public static int getScheduleNowWeek(Context context){
+    public static int getScheduleNowWeek(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         long startWeekTime = sp.getLong(SCHEDULE_START_WEEK,0);
         if (startWeekTime == 0)
@@ -268,26 +265,24 @@ public class App extends Application {
         return week + 1;
     }
 
-    public static String get__VIEWSTATE(Context context){
+    public static String get__VIEWSTATE(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(_VIEWSTATE_VALUE,"");
     }
 
-    public static void set__VIEWSTATE(Context context,String value){
+    public static void set__VIEWSTATE(String value){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(_VIEWSTATE_VALUE,value);
         editor.apply();
     }
 
-    public static boolean isTextShowTail(Context context){
-        if (context == null)
-            Log.e("print","context == null");
+    public static boolean isTextShowTail(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getBoolean(TEXT_SHOW_TAIL,false);
     }
 
-    public static void setTextShowTail(Context context,boolean value){
+    public static void setTextShowTail(boolean value){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(TEXT_SHOW_TAIL,value);

@@ -86,12 +86,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initText() {
-        if (App.isRemeberPwdUser(this)) {
-            etLoginName.setText(App.getEmail(this));
-            etLoginPas.setText(App.getPwd(this));
+        if (App.isRemeberPwdUser()) {
+            etLoginName.setText(App.getEmail());
+            etLoginPas.setText(App.getPwd());
             cbRemUser.setChecked(true);
         } else{
-            etLoginName.setText(App.getEmail(this));
+            etLoginName.setText(App.getEmail());
             cbRemUser.setChecked(false);
         }
         etLoginName.setSelection(etLoginName.getText().length());

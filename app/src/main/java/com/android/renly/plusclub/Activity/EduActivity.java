@@ -105,7 +105,7 @@ public class EduActivity extends BaseActivity {
                 .addParams("__EVENTARGUMENT", "")
                 .addParams("__EVENTTARGET", "likTc")
                 //无__VIEWSTATE参数不能够正常post
-                .addParams("__VIEWSTATE", App.get__VIEWSTATE(this))
+                .addParams("__VIEWSTATE", App.get__VIEWSTATE())
                 .build()
                 .execute(new Callback() {
                     @Override

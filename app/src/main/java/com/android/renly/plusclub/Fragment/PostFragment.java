@@ -2,6 +2,7 @@ package com.android.renly.plusclub.Fragment;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -33,9 +34,11 @@ import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.CommentAdapter;
 import com.android.renly.plusclub.Api.Bean.Store;
+import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Comment;
 import com.android.renly.plusclub.Bean.Post;
+import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
@@ -54,7 +57,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.functions.Consumer;
 import okhttp3.Call;
+import okhttp3.ResponseBody;
 
 public class PostFragment extends BaseFragment {
     @BindView(R.id.article_title)
@@ -95,26 +100,6 @@ public class PostFragment extends BaseFragment {
 
     private String from = "";
 
-    private static final int GET_COMMENTDATA = 2;
-    private static final int REFRESH_COMMENTLIST = 4;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case GET_COMMENTDATA:
-                    initCommentListData(msg.getData().getString("CommentJsonObj"));
-                    if (adapter == null)
-                        initCommentList();
-                    else
-                        adapter.notifyDataSetChanged();
-                    break;
-                case REFRESH_COMMENTLIST:
-                    getCommentListData();
-                    break;
-            }
-        }
-    };
-
     @Override
     public int getLayoutid() {
         return R.layout.fragment_post;
@@ -144,7 +129,7 @@ public class PostFragment extends BaseFragment {
             mInputBarView = LayoutInflater.from(getContext()).inflate(R.layout.my_input_bar, null);
             et = mInputBarView.findViewById(R.id.ed_comment);
             mInputBarView.findViewById(R.id.btn_send).setOnClickListener(view -> {
-                if (!App.ISLOGIN(getActivity())) {
+                if (!App.ISLOGIN()) {
                     ToastShort("是不是忘了登录？(ฅ′ω`ฅ)");
                     return;
                 }
@@ -160,63 +145,33 @@ public class PostFragment extends BaseFragment {
         }
     }
 
+    @SuppressLint("CheckResult")
     private void postComments(String comment) {
-        OkHttpUtils.post()
-                .url(NetConfig.BASE_POSTCOMMENT_PLUS)
-                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
-                .addParams("body", comment + StringUtils.getTextTail(getActivity()))
-                .addParams("discussion_id", postID + "")
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastNetWorkError();
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        if (!response.contains("code")) {
-                            ToastNetWorkError();
-                            return;
-                        }
-                        JSONObject jsonObject = JSON.parseObject(response);
-                        if (jsonObject.getInteger("code") == 50011) {
-                            getNewToken(comment);
-                        } else {
-                            printLog(response);
-                            ToastShort("发布成功");
-                            hideKeyboard();
-                            handler.sendEmptyMessage(REFRESH_COMMENTLIST);
-                        }
-                    }
-                });
+        RetrofitService.doPostComment(comment + StringUtils.getTextTail(getActivity()), postID)
+                .subscribe(responseBody -> {
+                    String response = responseBody.string();
+                            if (!response.contains("code")) {
+                                ToastNetWorkError();
+                                return;
+                            }
+                            JSONObject jsonObject = JSON.parseObject(response);
+                            if (jsonObject.getInteger("code") == 50011) {
+                                getNewToken(comment);
+                            } else {
+                                ToastShort("发布成功");
+                                ((BaseActivity)getmActivity()).hideKeyBoard();
+                                getCommentListData();
+                            }
+                }, throwable -> ToastNetWorkError());
     }
 
     /**
      * 获取新的Token
      */
+    @SuppressLint("CheckResult")
     private void getNewToken(String comment) {
-        OkHttpUtils.post()
-                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("PostFragment getNewToken onError");
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000) {
-                            printLog("PostFragment getNewToken() onResponse获取Token失败,重新登陆");
-                        } else {
-                            Store.getInstance().setToken("result");
-                            postComments(comment);
-                        }
-                    }
-                });
+        RetrofitService.getNewToken()
+                .subscribe(s -> postComments(comment));
     }
 
     /**
@@ -242,33 +197,24 @@ public class PostFragment extends BaseFragment {
     }
 
     /**
-     * 根据acitivity获取的POSTID从服务器获取[回复对象含User对象]详情
+     * 根据activity获取的POSTID从服务器获取[回复对象含User对象]详情
      */
+    @SuppressLint("CheckResult")
     private void getCommentListData() {
-        OkHttpUtils.get()
-                .url(NetConfig.BASE_POST_PLUS + "/" + postID)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+        RetrofitService.getCommentListData(postID)
+                .subscribe(responseBody -> {
+                    String response = responseBody.string();
+                    JSONObject obj = JSON.parseObject(response);
+                    if (obj.getInteger("code") != 20000) {
+                        ToastShort("获取评论失败惹，再试试( • ̀ω•́ )✧");
+                        return;
                     }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000) {
-                            ToastShort("获取评论失败惹，再试试( • ̀ω•́ )✧");
-                        } else {
-                            Message msg = new Message();
-                            msg.what = GET_COMMENTDATA;
-                            Bundle bundle = new Bundle();
-                            bundle.putString("CommentJsonObj", obj.getString("data"));
-                            msg.setData(bundle);
-                            handler.sendMessage(msg);
-                        }
-                    }
-                });
+                    initCommentListData(obj.getString("data"));
+                    if (adapter == null)
+                        initCommentList();
+                    else
+                        adapter.notifyDataSetChanged();
+                }, throwable -> ToastNetWorkError());
     }
 
     private void initCommentListData(String CommentJsonObj) {
@@ -288,8 +234,6 @@ public class PostFragment extends BaseFragment {
             tvCommentSuggest.setVisibility(View.GONE);
             loadBottom.setVisibility(View.VISIBLE);
         }
-//        JSONObject obj = JSON.parseObject(PostJsonString);
-//        commentList = JSON.parseArray(obj.getString("comments"),Comment.class);
     }
 
     /**
@@ -412,12 +356,6 @@ public class PostFragment extends BaseFragment {
     @Override
     public void ScrollToTop() {
         rvComment.scrollToPosition(0);
-    }
-
-    public void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        // 隐藏软键盘
-        imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
     }
 
     @Override

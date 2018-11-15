@@ -124,9 +124,9 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     }
 
     private void initInfo() {
-        if (App.ISLOGIN(mActivity)) {
+        if (App.ISLOGIN()) {
             getUserAvator();
-            tvMineUserName.setText(App.getName(mActivity));
+            tvMineUserName.setText(App.getUserName());
         } else {
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
             tvMineUserName.setText("点击头像登陆");
@@ -156,12 +156,12 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ci_mine_user_img:
-                if (!App.ISLOGIN(mActivity)) {
+                if (!App.ISLOGIN()) {
                     Intent intent = new Intent(mActivity, LoginActivity.class);
                     mActivity.startActivityForResult(intent, LoginActivity.requestCode);
                 } else {
                     Intent intent = new Intent(mActivity, UserDetailActivity.class);
-                    intent.putExtra("userid", App.getUid(mActivity));
+                    intent.putExtra("userid", App.getUid());
                     mActivity.startActivity(intent);
                 }
                 mActivity.overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
@@ -268,7 +268,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
         tvMineUserName.setText(userName);
         tvMineUserEmail.setVisibility(View.VISIBLE);
-        tvMineUserEmail.setText(App.getEmail(mActivity));
+        tvMineUserEmail.setText(App.getEmail());
     }
 
     private HomeActivity mActivity;

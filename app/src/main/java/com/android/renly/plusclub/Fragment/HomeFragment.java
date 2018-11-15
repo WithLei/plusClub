@@ -101,11 +101,11 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initData(Context content) {
-        if (App.ISLOGIN(mActivity)) {
-            MyDB db = new MyDB(mActivity);
-            if (db.isUserExist(App.getUid(mActivity)))
+        if (App.ISLOGIN()) {
+            MyDB db = new MyDB(App.getContext());
+            if (db.isUserExist(App.getUid()))
                 Picasso.get()
-                        .load(db.getUserAvatarPath(App.getUid(mActivity)))
+                        .load(db.getUserAvatarPath(App.getUid()))
                         .placeholder(R.drawable.image_placeholder)
                         .into(ciHomeImg);
             else
@@ -137,7 +137,7 @@ public class HomeFragment extends BaseFragment {
     }
 
     public void doRefresh() {
-        if (App.ISLOGIN(mActivity)) {
+        if (App.ISLOGIN()) {
             getUserAvator();
             llLogintip.setVisibility(View.GONE);
             llEdittip.setVisibility(View.VISIBLE);
@@ -228,9 +228,9 @@ public class HomeFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ci_home_img:
-                if (App.ISLOGIN(mActivity)) {
+                if (App.ISLOGIN()) {
                     Intent intent = new Intent(mActivity, UserDetailActivity.class);
-                    intent.putExtra("userid", App.getUid(mActivity));
+                    intent.putExtra("userid", App.getUid());
                     mActivity.startActivity(intent);
                 } else {
                     Intent intent = new Intent(mActivity, LoginActivity.class);

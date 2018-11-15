@@ -143,7 +143,7 @@ public class PostsActivity extends BaseActivity
     protected void initView() {
         initToolBar(true, title);
         addToolbarMenu(R.drawable.ic_create_black_24dp).setOnClickListener(view -> {
-            if (App.ISLOGIN(this)) {
+            if (App.ISLOGIN()) {
                 Intent intent = new Intent(PostsActivity.this, EditAcitivity.class);
                 intent.putExtra("category",currentCategory);
                 startActivityForResult(intent, EditAcitivity.requestCode);

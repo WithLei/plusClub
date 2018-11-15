@@ -1,5 +1,6 @@
 package com.android.renly.plusclub.Activity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -12,10 +13,11 @@ import android.widget.ImageView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Api.Bean.Store;
-import com.android.renly.plusclub.App;
+import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.Listener.MyTextWatcher;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.Utils.StringUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -26,6 +28,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.functions.Consumer;
 import okhttp3.Call;
 
 public class ChangePwdActivity extends BaseActivity {
@@ -66,44 +69,20 @@ public class ChangePwdActivity extends BaseActivity {
     }
 
     private void initEditText() {
-        newPass.addTextChangedListener(new TextWatcher() {
+        MyTextWatcher myTextWatcher = new MyTextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterMyTextChanged(Editable editable) {
                 checkInput();
             }
-        });
-        newPass2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                checkInput();
-            }
-        });
+        };
+        newPass.addTextChangedListener(myTextWatcher);
+        newPass2.addTextChangedListener(myTextWatcher);
     }
 
     /**
      * 提交操作
      */
-    private void submit() {
+    private synchronized void submit() {
         OkHttpUtils.post()
                 .url(NetConfig.BASE_RESETPWD_PLUS)
                 .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
@@ -141,28 +120,10 @@ public class ChangePwdActivity extends BaseActivity {
     /**
      * 获取新的Token
      */
+    @SuppressLint("CheckResult")
     private void getNewToken() {
-        OkHttpUtils.post()
-                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("ChangePwdAcitivity getNewToken onError" + e.getMessage());
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000) {
-                            printLog("ChangePwdAcitivity getNewToken() onResponse获取Token失败,重新登陆");
-                        } else {
-                            Store.getInstance().setToken(obj.getString("result"));
-                            submit();
-                        }
-                    }
-                });
+        RetrofitService.getNewToken()
+                .subscribe(s -> submit());
     }
 
     private void checkInput() {

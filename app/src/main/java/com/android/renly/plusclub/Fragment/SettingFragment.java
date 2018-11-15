@@ -195,12 +195,12 @@ public class SettingFragment extends PreferenceFragment
 
     private void initUserGroup() {
         group_user = (PreferenceCategory)findPreference("group_user");
-        if (!App.ISLOGIN(mActivity)){
+        if (!App.ISLOGIN()){
             getPreferenceScreen().removePreference(group_user);
         }else{
             user_logout = findPreference("user_logout");
             user_logout.setOnPreferenceClickListener(preference -> {
-                App.setIsLogout(mActivity);
+                App.setIsLogout();
                 MyToast.showText(mActivity, "退出登录成功", Toast.LENGTH_SHORT, true);
                 ((SettingActivity)mActivity).afterLogout();
                 return true;
@@ -217,11 +217,11 @@ public class SettingFragment extends PreferenceFragment
         setting_show_tail = (SwitchPreference) findPreference(App.TEXT_SHOW_TAIL);
 
         setting_show_tail.setOnPreferenceChangeListener((preference, o) -> {
-            App.setTextShowTail(mActivity, !App.isTextShowTail(mActivity));
+            App.setTextShowTail(!App.isTextShowTail());
             return true;
         });
         setting_user_tail = (EditTextPreference) findPreference(App.TEXT_TAIL);
-        setting_user_tail.setEnabled(App.isTextShowTail(mActivity));
+        setting_user_tail.setEnabled(App.isTextShowTail());
         setting_user_tail.setSummary(sharedPreferences.getString(App.TEXT_TAIL, "无小尾巴"));
     }
 
@@ -229,8 +229,7 @@ public class SettingFragment extends PreferenceFragment
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case App.TEXT_SHOW_TAIL:
-                // 这里除了问题
-                setting_user_tail.setEnabled(App.isTextShowTail(mActivity));
+                setting_user_tail.setEnabled(App.isTextShowTail());
                 setting_user_tail.setSummary(sharedPreferences.getString(App.TEXT_TAIL, "无小尾巴"));
                 break;
             case App.TEXT_TAIL:

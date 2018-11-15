@@ -1,5 +1,6 @@
 package com.android.renly.plusclub.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Api.Bean.Store;
+import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.NetConfig;
@@ -33,7 +35,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.functions.Consumer;
 import okhttp3.Call;
+import okhttp3.ResponseBody;
 
 public class EditAcitivity extends BaseActivity {
     @BindView(R.id.editor)
@@ -173,69 +177,41 @@ public class EditAcitivity extends BaseActivity {
     /**
      * 发送帖子
      */
+    @SuppressLint("CheckResult")
     private void doPost(String title, String content) {
-        if (currentCategory == categories[6] && !App.getRole(this).equals("admin"))
+        if (currentCategory.equals(categories[6]) && !App.getRole().equals("admin"))
             return;
-        OkHttpUtils.post()
-                .url(NetConfig.BASE_POST_PLUS)
-                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
-                .addParams("title", title)
-                .addParams("body", content + StringUtils.getTextTail(this))
-                .addParams("categories", currentCategory)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("EditActivity doPost onError" + e.getMessage());
+        RetrofitService.doPost(title, content, currentCategory)
+                .subscribe(responseBody -> {
+                    String response = responseBody.string();
+                    if (!response.contains("code")) {
                         ToastNetWorkError();
+                        return;
                     }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        if (!response.contains("code")) {
-                            ToastNetWorkError();
-                            return;
-                        }
-                        JSONObject jsonObject = JSON.parseObject(response);
-                        if (jsonObject.getInteger("code") == 50011) {
-                            getNewToken(title, content);
-                        } else if (jsonObject.getInteger("code") != 20000) {
-                            ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
-                            printLog("getInfoError" + response);
-                        } else {
-                            setResult(RESULT_OK);
-                            ToastShort("发布成功");
-                            finishActivity();
-                        }
+                    JSONObject jsonObject = JSON.parseObject(response);
+                    if (jsonObject.getInteger("code") == 50011) {
+                        getNewToken(title, content);
+                    } else if (jsonObject.getInteger("code") != 20000) {
+                        ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
+                        printLog("getInfoError" + response);
+                    } else {
+                        setResult(RESULT_OK);
+                        ToastShort("发布成功");
+                        finishActivity();
                     }
+                }, throwable -> {
+                    printLog("EditActivity doPost onError:" + throwable.getMessage());
+                    ToastNetWorkError();
                 });
     }
 
     /**
      * 获取新的Token
      */
+    @SuppressLint("CheckResult")
     private void getNewToken(String title, String content) {
-        OkHttpUtils.post()
-                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization", "Bearer " + Store.getInstance().getToken())
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        printLog("HomeFragment getNewToken onError");
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000) {
-                            printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
-                        } else {
-                            Store.getInstance().setToken(obj.getString("result"));
-                            doPost(title, content);
-                        }
-                    }
-                });
+        RetrofitService.getNewToken()
+                .subscribe(s -> doPost(title,content));
     }
 
     /**

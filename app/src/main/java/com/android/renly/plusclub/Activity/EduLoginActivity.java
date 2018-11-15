@@ -98,7 +98,7 @@ public class EduLoginActivity extends BaseActivity {
         RichText.fromMarkdown(text).into(tvEduloginTip);
         GetVerifation();
         btnLoginSetEnabled();
-        etMobile.setText(App.getEduid(this));
+        etMobile.setText(App.getEduid());
         etMobile.setSelection(etMobile.getText().length());
         etMobile.addTextChangedListener(new TextWatcher() {
             @Override
@@ -236,7 +236,7 @@ public class EduLoginActivity extends BaseActivity {
     private void GetVIEWSTATE(String body) {
         String x = body.split("name=\"__VIEWSTATE\" value=\"")[1];
         x = x.split("\" />")[0];
-        App.set__VIEWSTATE(this, x);
+        App.set__VIEWSTATE(x);
     }
 
     /**
@@ -351,7 +351,7 @@ public class EduLoginActivity extends BaseActivity {
     private void doLogin(String eduid, String pwd, String checkid) {
         Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.post()
                 .url(NetConfig.BASE_EDU_PLUS)
-                .addParams("__VIEWSTATE", App.get__VIEWSTATE(this))
+                .addParams("__VIEWSTATE", App.get__VIEWSTATE())
                 .addParams("Button1", "")
                 .addParams("hidPdrs", "")
                 .addParams("hidsc", "")

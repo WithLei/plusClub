@@ -109,7 +109,7 @@ public class ECardActivity extends BaseActivity {
             getlt();
             return;
         }
-        printLog(cookie + " " + cookie.substring(cookie.indexOf("=")+1,cookie.length()) +" " + App.getEduid(this) + " " + App.getEduPwd(this));
+        printLog(cookie + " " + cookie.substring(cookie.indexOf("=")+1,cookie.length()) +" " + App.getEduid() + " " + App.getEduPwd());
         OkHttpUtils.post()
                 .url(NetConfig.ECARD_LOGIN_PLUS)
                 .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
@@ -131,9 +131,9 @@ public class ECardActivity extends BaseActivity {
                 .addParams("isremenberme","0")
                 .addParams("losetime","240")
                 .addParams("lt",lt)
-                .addParams("password",App.getEduPwd(this))
+                .addParams("password",App.getEduPwd())
                 .addParams("submit1", " ")
-                .addParams("username",App.getEduid(this))
+                .addParams("username",App.getEduid())
                 .addParams("useValidateCode","0")
                 .build()
                 .execute(new Callback() {

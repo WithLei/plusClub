@@ -185,4 +185,49 @@ public class RetrofitService {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    /**
+     * 获取帖子
+     */
+    public static Observable<ResponseBody> getPost(long id) {
+        return plusClubApi.getPost(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 发送帖子
+     */
+    public static Observable<ResponseBody> doPost(String title, String content, String categories) {
+        return plusClubApi.doPost("Bearer " + Store.getInstance().getToken(), title, content, categories)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 获取帖子详情列表，根据activity获取的POSTID从服务器获取[回复对象含User对象]详情
+     */
+    public static Observable<ResponseBody> getCommentListData(long id) {
+        return plusClubApi.getCommentListData(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 发表评论
+     */
+    public static Observable<ResponseBody> doPostComment(String comment, long discussion_id) {
+        return plusClubApi.postComment("Bearer " + Store.getInstance().getToken(), comment, discussion_id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 获取回复帖子
+     */
+    public static Observable<ResponseBody> getReplyPostList(long id, int page) {
+        return plusClubApi.getReplyPostList(id, page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

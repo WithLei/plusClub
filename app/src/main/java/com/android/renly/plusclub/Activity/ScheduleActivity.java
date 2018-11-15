@@ -75,9 +75,9 @@ public class ScheduleActivity extends BaseActivity {
     @Override
     protected void initData() {
         contents = new String[6][7];
-        eduid = App.getEduid(this);
-        userName = App.getEduName(this);
-        cookie = App.getCookie(this);
+        eduid = App.getEduid();
+        userName = App.getEduName();
+        cookie = App.getCookie();
 
     }
 

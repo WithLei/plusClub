@@ -176,7 +176,7 @@ public class MyPostAdapter extends RecyclerView.Adapter<MyPostAdapter.BaseViewHo
             SimplePost object = postList.get(pos);
             articleTitle.setText(object.getTitle());
             postTime.setText(" " + object.getUpdated_at());
-            authorName.setText(App.getName(context));
+            authorName.setText(App.getUserName());
         }
     }
 

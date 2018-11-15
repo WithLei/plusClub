@@ -54,10 +54,10 @@ public class ScheduleFragment extends BaseFragment {
     @Override
     protected void initData(Context content) {
         contents = new String[6][7];
-        nowWeek = App.getScheduleNowWeek(mActivity);
+        nowWeek = App.getScheduleNowWeek();
         if (nowWeek <= 0)
-            App.setScheduleStartWeek(mActivity,1);
-        nowWeek = App.getScheduleNowWeek(mActivity);
+            App.setScheduleStartWeek(1);
+        nowWeek = App.getScheduleNowWeek();
         printLog("nowWeek:" + nowWeek);
         initView();
     }
@@ -69,13 +69,13 @@ public class ScheduleFragment extends BaseFragment {
 
     private void initView() {
         initSpinner();
-        MyDB db = new MyDB(mActivity);
+        MyDB db = new MyDB(App.getContext());
         if (db.isScheduleExist())
             initScheduleDataFromDB();
     }
 
     public void doRefresh(){
-        MyDB db = new MyDB(mActivity);
+        MyDB db = new MyDB(App.getContext());
         if (db.isScheduleExist())
             initScheduleDataFromDB();
     }
@@ -98,7 +98,7 @@ public class ScheduleFragment extends BaseFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 nowWeek = pos+1;
-                App.setScheduleStartWeek(mActivity,nowWeek);
+                App.setScheduleStartWeek(nowWeek);
                 initScheduleDataFromDB();
             }
 
