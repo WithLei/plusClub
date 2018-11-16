@@ -1,7 +1,5 @@
 package com.android.renly.plusclub.Api.Api;
 
-import com.android.renly.plusclub.Common.NetConfig;
-
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;

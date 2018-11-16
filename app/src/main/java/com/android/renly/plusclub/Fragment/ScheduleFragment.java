@@ -58,8 +58,7 @@ public class ScheduleFragment extends BaseFragment {
         if (nowWeek <= 0)
             App.setScheduleStartWeek(1);
         nowWeek = App.getScheduleNowWeek();
-        printLog("nowWeek:" + nowWeek);
-        initView();
+        printLog("ScheduleFragment_NowWeek:" + nowWeek);
     }
 
     @Override
@@ -67,7 +66,8 @@ public class ScheduleFragment extends BaseFragment {
         super.onResume();
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         initSpinner();
         MyDB db = new MyDB(App.getContext());
         if (db.isScheduleExist())

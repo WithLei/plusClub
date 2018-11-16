@@ -8,8 +8,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -33,21 +30,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.CommentAdapter;
-import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Bean.Comment;
 import com.android.renly.plusclub.Bean.Post;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.BaseFragment;
-import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.IntentUtils;
 import com.android.renly.plusclub.Utils.StringUtils;
 import com.squareup.picasso.Picasso;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 import com.zzhoujay.richtext.RichText;
 
 import java.util.ArrayList;
@@ -57,9 +50,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import io.reactivex.functions.Consumer;
-import okhttp3.Call;
-import okhttp3.ResponseBody;
 
 public class PostFragment extends BaseFragment {
     @BindView(R.id.article_title)
@@ -93,7 +83,6 @@ public class PostFragment extends BaseFragment {
     private List<Comment> commentList;
     private Post postObj;
     private long postID;
-    private String PostJsonString;
     // 输入框
     private View mInputBarView;
     private CommentAdapter adapter = null;
@@ -112,7 +101,8 @@ public class PostFragment extends BaseFragment {
         initView();
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         initHead();
     }
 
@@ -150,18 +140,18 @@ public class PostFragment extends BaseFragment {
         RetrofitService.doPostComment(comment + StringUtils.getTextTail(getActivity()), postID)
                 .subscribe(responseBody -> {
                     String response = responseBody.string();
-                            if (!response.contains("code")) {
-                                ToastNetWorkError();
-                                return;
-                            }
-                            JSONObject jsonObject = JSON.parseObject(response);
-                            if (jsonObject.getInteger("code") == 50011) {
-                                getNewToken(comment);
-                            } else {
-                                ToastShort("发布成功");
-                                ((BaseActivity)getmActivity()).hideKeyBoard();
-                                getCommentListData();
-                            }
+                    if (!response.contains("code")) {
+                        ToastNetWorkError();
+                        return;
+                    }
+                    JSONObject jsonObject = JSON.parseObject(response);
+                    if (jsonObject.getInteger("code") == 50011) {
+                        getNewToken(comment);
+                    } else {
+                        ToastShort("发布成功");
+                        ((BaseActivity) getmActivity()).hideKeyBoard();
+                        getCommentListData();
+                    }
                 }, throwable -> ToastNetWorkError());
     }
 
@@ -190,7 +180,7 @@ public class PostFragment extends BaseFragment {
      * 从activity 获取帖子对象
      */
     private void getPostObj() {
-        PostJsonString = getArguments().getString("PostJsonObject");
+        String PostJsonString = getArguments().getString("PostJsonObject");
         from = getArguments().getString("from");
         postObj = JSON.parseObject(PostJsonString, Post.class);
         postID = postObj.getId();
@@ -240,7 +230,7 @@ public class PostFragment extends BaseFragment {
      * 初始化标题等等信息
      */
     private void initHead() {
-        if (from.equals("PostActivity")){
+        if (from.equals("PostActivity")) {
             closePanel.setVisibility(View.GONE);
             initMyInputBar();
         }
@@ -262,7 +252,7 @@ public class PostFragment extends BaseFragment {
         rvComment.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
-                    return false;
+                return false;
             }
         });
         // 解决数据加载不全的问题

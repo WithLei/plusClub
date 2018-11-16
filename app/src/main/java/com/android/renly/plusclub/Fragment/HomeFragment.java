@@ -35,37 +35,24 @@ import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.DateUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.squareup.picasso.Picasso;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Call;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class HomeFragment extends BaseFragment {
     @BindView(R.id.ci_home_img)
@@ -119,10 +106,11 @@ public class HomeFragment extends BaseFragment {
         }
         getWeatherData();
         initForumListData();
-        initView();
+        setUserVisibleHint(true);
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         initForumList();
         initRefreshLayout();
     }
@@ -327,14 +315,13 @@ public class HomeFragment extends BaseFragment {
                             .get()
                             .build();
                     String response = client.newCall(request).execute().body().string();
-                    printLog(response);
                     emitter.onNext(response);
                 })
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(responseString -> {
                             if (!responseString.contains("result")){
-                                printLog("HomeFragment getAvatar subscribe 获取用户信息出错 需要处理");
+                                printLog("HomeFragment_getAvatar_subscribe:获取用户信息出错 需要处理");
                                 return;
                             }
                             JSONObject jsonObject = JSON.parseObject(responseString);
@@ -345,7 +332,7 @@ public class HomeFragment extends BaseFragment {
                                     .load(path)
                                     .placeholder(R.drawable.image_placeholder)
                                     .into(ciHomeImg);
-                        }, throwable -> printLog("HomeFragment getAvatar subscribe onError " + throwable.getMessage()));
+                        }, throwable -> printLog("HomeFragment_getAvatar_subscribe_onError:" + throwable.getMessage()));
 
             }
 

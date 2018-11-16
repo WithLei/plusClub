@@ -30,7 +30,7 @@ public interface PlusClubApi {
     Observable<ResponseBody>getUserDetails(@Header("Authorization")String Authorization);
 
     // 获取帖子
-    @POST("discussions/{id}")
+    @GET("discussions/{id}")
     Observable<ResponseBody>getPost(@Path("id") long id);
 
     // 发送帖子

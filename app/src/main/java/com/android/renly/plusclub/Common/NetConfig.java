@@ -51,7 +51,7 @@ public class NetConfig {
     public static final String PLUSCLUB_ITEM = "https://github.com/WithLei/plusClub";
 
     // 获取PlusClub realease api
-    public static final String GITHUB_GET_RELEASE = "https://api.github.com/repos/WithLei/plusClub/releases/latest/";
+    public static final String GITHUB_GET_RELEASE = "https://api.github.com/repos/WithLei/plusClub/releases/latest";
 
     // PlusClub 登陆
     public static final String BASE_LOGIN_PLUS = BASE_PLUSCLUB + "login";

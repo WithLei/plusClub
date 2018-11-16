@@ -47,7 +47,8 @@ import io.reactivex.functions.Consumer;
 import okhttp3.Call;
 import okhttp3.ResponseBody;
 
-public class HomeActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
+public class HomeActivity extends BaseActivity
+        implements ViewPager.OnPageChangeListener {
     @BindView(R.id.bottom_bar)
     MyBottomTab bottomBar;
     private ViewPager viewPager;
@@ -87,7 +88,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                     if (!response.contains("url"))
                         return;
                     afterGetVersion(response);
-                }, throwable -> printLog("HomeActivity discoverVersion onError " + throwable.getMessage()));
+                }, throwable -> printLog("HomeActivity_discoverVersion_onError:" + throwable.getMessage()));
     }
 
     @Override
@@ -154,7 +155,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     private static HomeFragment homeFragment;
-    private static  HotNewsFragment hotNewsFragment;
+    private static HotNewsFragment hotNewsFragment;
     private static ScheduleFragment scheduleFragment;
     private static MineFragment mineFragment;
 
@@ -187,7 +188,9 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
 
         if (tag_name.equals(version_name)){
 //            MyToast.showText(this,"已经是最新版本");
+            printLog("HomeActivity_afterGetVersion:已经是最新版本");
         }else{
+            printLog("HomeActivity_afterGetVersion:检测到新版本");
             new AlertDialog.Builder(this)
                     .setTitle("检测到新版本")
                     .setMessage("版本名：" + name + "\n" +

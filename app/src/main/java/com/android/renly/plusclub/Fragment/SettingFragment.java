@@ -87,6 +87,7 @@ public class SettingFragment extends PreferenceFragment
         super.onAttach(context);
         this.mActivity = (Activity) context;
     }
+
     private void initCache() {
         // 清除缓存
         clearCache = findPreference("clean_cache");

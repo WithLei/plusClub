@@ -78,7 +78,7 @@ public class RetrofitService {
 
         retrofit = new Retrofit.Builder()
                 .client(client)
-                .baseUrl(NetConfig.GITHUB_GET_RELEASE)
+                .baseUrl(NetConfig.GITHUB_GET_RELEASE + "/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();

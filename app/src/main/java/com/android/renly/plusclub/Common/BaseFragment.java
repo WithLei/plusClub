@@ -30,6 +30,7 @@ public abstract class BaseFragment extends Fragment {
     private View mContentView;
     private Context mContent;
     private Unbinder unbinder;
+    private boolean isViewCreated = false;
 
     @Nullable
     @Override
@@ -37,13 +38,23 @@ public abstract class BaseFragment extends Fragment {
         mContentView = inflater.inflate(getLayoutid(),container,false);
         mContent = getContext();
         unbinder = ButterKnife.bind(mContentView);
+        isViewCreated = true;
         return mContentView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initData(mContent);
         super.onViewCreated(view, savedInstanceState);
+        initData(mContent);
+    }
+
+    // 实现懒加载
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && isViewCreated){
+            initView();
+        }
     }
 
     public Activity getmActivity(){
@@ -54,8 +65,10 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract int getLayoutid();
 
-    //初始化界面的数据
+    // 初始化数据
     protected abstract void initData(Context content);
+    // 初始化界面
+    protected abstract void initView();
 
     /**
      * 打开targetActivity
@@ -78,6 +91,10 @@ public abstract class BaseFragment extends Fragment {
     public void ToastNetWorkError(){
         ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
     }
+    public void ToastNetWorkError(Exception e) {
+        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+        Log.e("print", "ToastNetWorkError: " + e.getMessage());
+    }
 
     public void ToastProgramError(){
         ToastShort("程序猿还在努力开发中 ♪(´∇`*)");
@@ -94,32 +111,6 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public abstract void ScrollToTop();
-
-    /**
-     * 获取新的Token
-     */
-//    private void getNewToken() {
-//        OkHttpUtils.post()
-//                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-//                .addHeader("Authorization", "Bearer " + App.getToken(mContent))
-//                .build()
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onError(Call call, Exception e, int id) {
-//                        printLog("HomeFragment getNewToken onError");
-//                    }
-//
-//                    @Override
-//                    public void onResponse(String response, int id) {
-//                        JSONObject obj = JSON.parseObject(response);
-//                        if (obj.getInteger("code") != 20000) {
-//                            printLog("HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
-//                        } else {
-//                            App.setToken(getContext(), obj.getString("result"));
-//                        }
-//                    }
-//                });
-//    }
 
     @Override
     public void onDestroyView() {

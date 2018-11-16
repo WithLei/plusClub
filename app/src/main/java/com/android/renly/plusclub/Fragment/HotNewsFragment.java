@@ -59,7 +59,8 @@ import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOADING;
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_FAIL;
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_NOTHING;
 
-public class HotNewsFragment extends BaseFragment implements LoadMoreListener.OnLoadMoreListener {
+public class HotNewsFragment extends BaseFragment
+        implements LoadMoreListener.OnLoadMoreListener {
     @BindView(R.id.btn_1)
     BatchRadioButton btn1;
     @BindView(R.id.btn_2)
@@ -163,7 +164,8 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
         };
     }
 
-    private void initView() {
+    @Override
+    protected void initView() {
         initRadioGroup();
         initRefreshLayout();
         initRecyclerView();
@@ -452,9 +454,9 @@ public class HotNewsFragment extends BaseFragment implements LoadMoreListener.On
         }
         JSONObject jsonObject = JSON.parseObject(JsonDataArray);
         // 尾页处理
-        printLog("current " + jsonObject.getInteger("current_page") + " last " + jsonObject.getInteger("last_page"));
+//        printLog("current " + jsonObject.getInteger("current_page") + " last " + jsonObject.getInteger("last_page"));
         if (jsonObject.getInteger("current_page") > jsonObject.getInteger("last_page")
-        || (jsonObject.getInteger("current_page") == 1 && jsonObject.getInteger("current_page") == jsonObject.getInteger("last_page")) ){
+        || (jsonObject.getInteger("current_page") == 1 && jsonObject.getInteger("current_page").equals(jsonObject.getInteger("last_page"))) ){
             switch (type) {
                 case TYPE_NEW:
                     if (postAdapter != null) {

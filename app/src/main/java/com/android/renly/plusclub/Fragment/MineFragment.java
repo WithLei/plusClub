@@ -112,10 +112,10 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         }
         lvMineFunctionList.setAdapter(new SimpleAdapter(mActivity, list, R.layout.item_function, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
         lvMineFunctionList.setOnItemClickListener(this);
-        initView();
     }
 
-    private void initView() {
+    @Override
+    public void initView() {
         initInfo();
     }
 
@@ -226,14 +226,13 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                             .get()
                             .build();
                     String response = client.newCall(request).execute().body().string();
-                    printLog(response);
                     emitter.onNext(response);
                 })
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(responseString -> {
                             if (!responseString.contains("result")) {
-                                printLog("MineFragment getAvatar subscribe 获取用户信息出错 需要处理");
+                                printLog("MineFragment_getAvatar_subscribe:获取用户信息出错 需要处理");
                                 return;
                             }
                             JSONObject jsonObject = JSON.parseObject(responseString);
@@ -242,7 +241,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
                             avatarSrc = obj.getString("avatar");
                             name = obj.getString("name");
                             setInfo(avatarSrc, name);
-                        }, throwable -> printLog("MineFragment getAvatar subscribe onError " + throwable.getMessage()));
+                        }, throwable -> printLog("MineFragment_getAvatar_subscribe_onError:" + throwable.getMessage()));
             }
 
             @Override
