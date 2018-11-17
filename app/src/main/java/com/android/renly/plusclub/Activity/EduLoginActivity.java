@@ -1,10 +1,9 @@
 package com.android.renly.plusclub.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -20,11 +19,11 @@ import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.Listener.MyTextWatcher;
 import com.android.renly.plusclub.R;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.Callback;
-import com.zzhoujay.markdown.MarkDown;
 import com.zzhoujay.richtext.RichText;
 
 import org.jsoup.Jsoup;
@@ -32,12 +31,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -100,39 +100,14 @@ public class EduLoginActivity extends BaseActivity {
         btnLoginSetEnabled();
         etMobile.setText(App.getEduid());
         etMobile.setSelection(etMobile.getText().length());
-        etMobile.addTextChangedListener(new TextWatcher() {
+        MyTextWatcher myTextWatcher = new MyTextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterMyTextChanged(Editable editable) {
                 btnLoginSetEnabled();
             }
-        });
-
-        etPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                btnLoginSetEnabled();
-            }
-        });
+        };
+        etMobile.addTextChangedListener(myTextWatcher);
+        etPassword.addTextChangedListener(myTextWatcher);
     }
 
     @Override
@@ -297,9 +272,10 @@ public class EduLoginActivity extends BaseActivity {
     /**
      * 获取验证码图片
      */
+    @SuppressLint("CheckResult")
     private void GetVerifation() {
         Observable.create((ObservableOnSubscribe<Bitmap>) emitter -> OkHttpUtils.post()
-                .url(NetConfig.CHECKIMG_URL_RS)
+                .url(NetConfig.CHECKIMG_URL_EDU)
                 .addHeader("Cookie", cookie)
                 .build()
                 .execute(new BitmapCallback() {
@@ -316,28 +292,10 @@ public class EduLoginActivity extends BaseActivity {
                 }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Bitmap>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Bitmap bitmap) {
-                        ivCheck.setImageBitmap(bitmap);
-                        etCheck.setText("");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        printLog(e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+                .subscribe(bitmap -> {
+                    ivCheck.setImageBitmap(bitmap);
+                    etCheck.setText("");
+                }, throwable -> printLog("EduLoginActivity_GetVerifation_onError:" + throwable.getMessage()));
 
     }
 
@@ -348,6 +306,7 @@ public class EduLoginActivity extends BaseActivity {
      * @param pwd
      * @param checkid
      */
+    @SuppressLint("CheckResult")
     private void doLogin(String eduid, String pwd, String checkid) {
         Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.post()
                 .url(NetConfig.BASE_EDU_PLUS)
@@ -384,23 +343,7 @@ public class EduLoginActivity extends BaseActivity {
                 }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {}
-
-                    @Override
-                    public void onNext(String s) {
-                        checkLoginSuccess(s);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        printLog(e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {}
-                });
+                .subscribe(s -> checkLoginSuccess(s), throwable -> printLog("EduLoginActivity_doLogin_onError:" + throwable.getMessage()));
 
     }
 

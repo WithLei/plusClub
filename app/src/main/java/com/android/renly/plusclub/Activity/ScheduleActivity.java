@@ -138,7 +138,7 @@ public class ScheduleActivity extends BaseActivity {
         String finalGbkName = gbkName;
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
             OkHttpUtils.get()
-                    .url(NetConfig.BASE_EDU_GETINFO_RS)
+                    .url(NetConfig.BASE_EDU_GETINFO_EDU)
                     .addParams("xh", eduid)
                     .addParams("xm", finalGbkName)
                     .addParams(App.queryScheduleParam, App.queryScheduleValue)

@@ -15,19 +15,19 @@ public class NetConfig {
     public static final String BASE_EDU_HOST_ME = "https://jwgl.webvpn.lsu.edu.cn/xs_main.aspx?xh=";
 
     // 验证码获取 - 外/内网
-    public static final String CHECKIMG_URL_RS = "https://jwgl.webvpn.lsu.edu.cn/CheckCode.aspx";
+    public static final String CHECKIMG_URL_EDU = "https://jwgl.webvpn.lsu.edu.cn/CheckCode.aspx";
 
     // 验证码获取 - 内网
     public static final String CHECKING_URL_IN = "http://jwgl.lsu.edu.cn/CheckCode.aspx";
 
     // 二次get请求登出 URL - 外/内网
-    public static final String GET_LOGOUT_URL_RS = "https://jwgl.webvpn.lsu.edu.cn/logout.aspx";
+    public static final String GET_LOGOUT_URL_EDU = "https://jwgl.webvpn.lsu.edu.cn/logout.aspx";
 
     // 二次get请求登出 URL - 内网
     public static final String GET_LOGOUT_URL_IN = "https://jwgl.lsu.edu.cn/logout.aspx";
 
     // 查询各种信息基地址 - 外/内网
-    public static final String BASE_EDU_GETINFO_RS = "https://jwgl.webvpn.lsu.edu.cn/xskbcx.aspx";
+    public static final String BASE_EDU_GETINFO_EDU = "https://jwgl.webvpn.lsu.edu.cn/xskbcx.aspx";
 
     // 查询各种信息基地址 - 内网
     public static final String BASE_EDU_GETINFO_IN = "https://jwgl.lsu.edu.cn/xskbcx.aspx";
