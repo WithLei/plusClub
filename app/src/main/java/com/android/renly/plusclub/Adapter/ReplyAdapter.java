@@ -3,7 +3,6 @@ package com.android.renly.plusclub.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Bean.SimplePost;
+import com.android.renly.plusclub.Api.Bean.SimplePost;
 import com.android.renly.plusclub.R;
 
 import java.util.List;

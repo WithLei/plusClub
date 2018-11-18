@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Bean.Forum;
+import com.android.renly.plusclub.Api.Bean.Forum;
 import com.android.renly.plusclub.R;
 
 import java.util.List;

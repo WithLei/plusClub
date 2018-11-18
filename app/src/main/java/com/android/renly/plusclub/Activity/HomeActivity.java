@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Adapter.MainPageAdapter;
 import com.android.renly.plusclub.Api.RetrofitService;
-import com.android.renly.plusclub.Bean.MessageEvent;
+import com.android.renly.plusclub.Api.Bean.MessageEvent;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.Common.MyToast;

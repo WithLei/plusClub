@@ -12,8 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.renly.plusclub.Activity.UserDetailActivity;
-import com.android.renly.plusclub.Bean.Post;
-import com.android.renly.plusclub.Bean.User;
+import com.android.renly.plusclub.Api.Bean.Post;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.squareup.picasso.Picasso;

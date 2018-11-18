@@ -15,7 +15,7 @@ import com.android.renly.plusclub.Activity.EduLoginActivity;
 import com.android.renly.plusclub.Activity.HomeActivity;
 import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Bean.Course;
+import com.android.renly.plusclub.Api.Bean.Course;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.DataBase.MyDB;
 import com.android.renly.plusclub.R;

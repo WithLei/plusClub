@@ -26,7 +26,7 @@ import com.android.renly.plusclub.Adapter.ForumAdapter;
 import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Bean.Forum;
+import com.android.renly.plusclub.Api.Bean.Forum;
 import com.android.renly.plusclub.Common.BaseFragment;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.DataBase.MyDB;

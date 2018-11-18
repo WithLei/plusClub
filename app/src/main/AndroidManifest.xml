@@ -36,6 +36,7 @@
         <activity
             android:name=".Activity.ThemeActivity"
             android:theme="@style/AppTheme"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.LoginActivity"

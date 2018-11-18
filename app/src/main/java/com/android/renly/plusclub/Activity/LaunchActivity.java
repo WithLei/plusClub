@@ -1,12 +1,12 @@
 package com.android.renly.plusclub.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -14,10 +14,16 @@ import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.R;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 public class LaunchActivity extends Activity{
-    private static final int WAIT_TIME = 1500;
+    private static final int WAIT_TIME = 2;
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +34,9 @@ public class LaunchActivity extends Activity{
         app.regReciever();
         setCopyRight();
         doPreWrok();
-        new Handler().postDelayed(() -> enterHome(), WAIT_TIME);
+        Observable.timer(WAIT_TIME, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> enterHome());
     }
 
     /**

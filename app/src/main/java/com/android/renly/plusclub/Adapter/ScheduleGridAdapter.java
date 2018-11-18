@@ -9,11 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.android.renly.plusclub.Activity.ScheduleDetailActivity;
-import com.android.renly.plusclub.Bean.Course;
+import com.android.renly.plusclub.Api.Bean.Course;
 import com.android.renly.plusclub.R;
 
 import java.util.ArrayList;

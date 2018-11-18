@@ -6,7 +6,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.alibaba.fastjson.JSON;
-import com.android.renly.plusclub.Bean.Course;
+import com.android.renly.plusclub.Api.Bean.Course;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.R;
 

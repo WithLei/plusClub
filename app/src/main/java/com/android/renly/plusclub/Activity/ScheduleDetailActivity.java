@@ -3,11 +3,10 @@ package com.android.renly.plusclub.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.android.renly.plusclub.Bean.Course;
+import com.android.renly.plusclub.Api.Bean.Course;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.R;
 

@@ -5,10 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.android.renly.plusclub.Bean.Course;
-import com.android.renly.plusclub.Bean.User;
+import com.android.renly.plusclub.Api.Bean.Course;
+import com.android.renly.plusclub.Api.Bean.User;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

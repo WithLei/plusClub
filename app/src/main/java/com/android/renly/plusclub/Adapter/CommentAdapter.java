@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.renly.plusclub.Activity.UserDetailActivity;
-import com.android.renly.plusclub.Bean.Comment;
+import com.android.renly.plusclub.Api.Bean.Comment;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;

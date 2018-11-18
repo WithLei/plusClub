@@ -21,7 +21,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -94,7 +93,8 @@ public class RetrofitService {
      */
     public static Observable<Weather> getWeather(String cityCode) {
         return weatherApi.getWeather(cityCode)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -164,7 +164,8 @@ public class RetrofitService {
      */
     public static Observable<ResponseBody> doLogin(String email, String pwd){
         return plusClubApi.doLogin(email, pwd)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -173,7 +174,8 @@ public class RetrofitService {
      */
     public static Observable<ResponseBody> getUserDetails() {
         return plusClubApi.getUserDetails("Bearer " + Store.getInstance().getToken())
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -183,6 +185,7 @@ public class RetrofitService {
     public static Observable<ResponseBody> getRelease() {
         return githubApi.getVersion(NetConfig.GITHUB_GET_RELEASE)
                 .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -192,6 +195,7 @@ public class RetrofitService {
     public static Observable<ResponseBody> getPost(long id) {
         return plusClubApi.getPost(id)
                 .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -201,6 +205,7 @@ public class RetrofitService {
     public static Observable<ResponseBody> doPost(String title, String content, String categories) {
         return plusClubApi.doPost("Bearer " + Store.getInstance().getToken(), title, content, categories)
                 .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -210,6 +215,7 @@ public class RetrofitService {
     public static Observable<ResponseBody> getCommentListData(long id) {
         return plusClubApi.getCommentListData(id)
                 .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -219,6 +225,7 @@ public class RetrofitService {
     public static Observable<ResponseBody> doPostComment(String comment, long discussion_id) {
         return plusClubApi.postComment("Bearer " + Store.getInstance().getToken(), comment, discussion_id)
                 .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -228,6 +235,7 @@ public class RetrofitService {
     public static Observable<ResponseBody> getReplyPostList(long id, int page) {
         return plusClubApi.getReplyPostList(id, page)
                 .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }
