@@ -2,7 +2,10 @@ package com.android.renly.plusclub.Api.Bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import javax.inject.Inject;
+
 public class Weather {
+    @Inject
     @SerializedName("weatherinfo")
     private WeatherInfo weatherinfo;
 
