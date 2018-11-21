@@ -7,11 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -22,16 +18,12 @@ import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.Api.Bean.MessageEvent;
 import com.android.renly.plusclub.Common.BaseActivity;
 import com.android.renly.plusclub.Common.BaseFragment;
-import com.android.renly.plusclub.Common.MyToast;
-import com.android.renly.plusclub.Common.NetConfig;
-import com.android.renly.plusclub.Fragment.HomeFragment;
+import com.android.renly.plusclub.Module.home.HomeFragment;
 import com.android.renly.plusclub.Fragment.HotNewsFragment;
 import com.android.renly.plusclub.Fragment.MineFragment;
 import com.android.renly.plusclub.Fragment.ScheduleFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.MyBottomTab;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,9 +35,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.functions.Consumer;
-import okhttp3.Call;
-import okhttp3.ResponseBody;
 
 public class HomeActivity extends BaseActivity
         implements ViewPager.OnPageChangeListener {
