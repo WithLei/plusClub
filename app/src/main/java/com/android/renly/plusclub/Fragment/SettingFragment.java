@@ -26,6 +26,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.ChangePwdActivity;
 import com.android.renly.plusclub.Activity.SettingActivity;
+import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.Common.NetConfig;
@@ -54,10 +55,10 @@ public class SettingFragment extends PreferenceFragment
     private SharedPreferences sharedPreferences;
 
     private static final int GET_VERSION = 2333;
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case GET_VERSION:
                     afterGetVersion(msg.getData().getString("obj"));
                     break;
@@ -97,7 +98,7 @@ public class SettingFragment extends PreferenceFragment
 
             Toast.makeText(mActivity, "缓存清理成功!请重新登陆", Toast.LENGTH_SHORT).show();
             clearCache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(mActivity));
-            ((SettingActivity)mActivity).afterLogout();
+            ((SettingActivity) mActivity).afterLogout();
             return false;
         });
     }
@@ -112,6 +113,7 @@ public class SettingFragment extends PreferenceFragment
 
     private int version_code;
     private String version_name;
+
     private void initVersion() {
         PackageManager manager = mActivity.getPackageManager();
         PackageInfo info = null;
@@ -133,30 +135,13 @@ public class SettingFragment extends PreferenceFragment
                 .setSummary("当前版本" + version_name + "  version code:" + version_code);
         findPreference("about_this")
                 .setOnPreferenceClickListener(preference -> {
-                    OkHttpUtils.get()
-                            .url(NetConfig.GITHUB_GET_RELEASE)
-                            .build()
-                            .execute(new StringCallback() {
-                                @Override
-                                public void onError(Call call, Exception e, int id) {
-
-                                }
-
-                                @Override
-                                public void onResponse(String response, int id) {
-                                    Log.e("print",response);
-                                    if (!response.contains("url"))
-                                        return;
-                                    else{
-                                        Message msg = new Message();
-                                        msg.what = GET_VERSION;
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("obj",response);
-                                        msg.setData(bundle);
-                                        handler.sendMessage(msg);
-                                    }
-                                }
-                            });
+                    RetrofitService.getRelease()
+                            .subscribe(responseBody -> {
+                                String response = responseBody.string();
+                                if (!response.contains("url"))
+                                    return;
+                                afterGetVersion(response);
+                            }, throwable -> Log.e("print", "SettingFragment_discoverVersion_onError:" + throwable.getMessage()));
                     return true;
                 });
     }
@@ -172,15 +157,15 @@ public class SettingFragment extends PreferenceFragment
         String browser_download_url = assetObj.getString("browser_download_url");
         // eg:https://github.com/WithLei/DistanceMeasure/releases/download/1.4.0/DistanceMeasure.apk
 
-        if (tag_name.equals(version_name)){
-            MyToast.showText(mActivity,"已经是最新版本");
-        }else{
+        if (tag_name.equals(version_name)) {
+            MyToast.showText(mActivity, "已经是最新版本");
+        } else {
             new AlertDialog.Builder(mActivity)
                     .setTitle("检测到新版本")
                     .setMessage("版本名：" + name + "\n" +
-                                "版本号：" + tag_name + "\n" +
-                                "更新内容：" + body + "\n\n" +
-                                "更新时间：" + updated_at)
+                            "版本号：" + tag_name + "\n" +
+                            "更新内容：" + body + "\n\n" +
+                            "更新时间：" + updated_at)
                     .setCancelable(!body.contains("重要更新"))
                     .setPositiveButton("下载", (dialogInterface, i) -> {
                         Intent intent = new Intent();
@@ -195,20 +180,20 @@ public class SettingFragment extends PreferenceFragment
     }
 
     private void initUserGroup() {
-        group_user = (PreferenceCategory)findPreference("group_user");
-        if (!App.ISLOGIN()){
+        group_user = (PreferenceCategory) findPreference("group_user");
+        if (!App.ISLOGIN()) {
             getPreferenceScreen().removePreference(group_user);
-        }else{
+        } else {
             user_logout = findPreference("user_logout");
             user_logout.setOnPreferenceClickListener(preference -> {
                 App.setIsLogout();
                 MyToast.showText(mActivity, "退出登录成功", Toast.LENGTH_SHORT, true);
-                ((SettingActivity)mActivity).afterLogout();
+                ((SettingActivity) mActivity).afterLogout();
                 return true;
             });
             user_changepwd = findPreference("user_changepwd");
             user_changepwd.setOnPreferenceClickListener(preference -> {
-                startActivity(new Intent(mActivity,ChangePwdActivity.class));
+                startActivity(new Intent(mActivity, ChangePwdActivity.class));
                 return true;
             });
         }

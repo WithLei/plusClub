@@ -2,12 +2,9 @@ package com.android.renly.plusclub.Module.home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -21,7 +18,9 @@ import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Adapter.ForumAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Api.Bean.Forum;
-import com.android.renly.plusclub.Common.BaseFragment;
+import com.android.renly.plusclub.Injector.components.DaggerHomeFragComponent;
+import com.android.renly.plusclub.Injector.modules.HomeFragModule;
+import com.android.renly.plusclub.Module.base.BaseFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.DateUtils;
@@ -30,10 +29,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 public class HomeFragment extends BaseFragment implements HomeFragView{
     @BindView(R.id.ci_home_img)
@@ -56,12 +55,13 @@ public class HomeFragment extends BaseFragment implements HomeFragView{
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.ll_edittip)
     RelativeLayout llEdittip;
-    private Unbinder unbinder;
 
 
     private List<Forum> forumList;
     private String[] headers;
-    private HomeFragPresenter mPresenter;
+
+    @Inject
+    protected HomeFragPresenter mPresenter;
 
     @Override
     public int getLayoutid() {
@@ -70,7 +70,7 @@ public class HomeFragment extends BaseFragment implements HomeFragView{
 
     @Override
     protected void initData(Context content) {
-        mPresenter = new HomeFragPresenter("101210801", this);
+//        mPresenter = new HomeFragPresenter("101210801", this);
         mPresenter.getData(false);
         if (App.ISLOGIN()) {
             llLogintip.setVisibility(View.GONE);
@@ -129,16 +129,12 @@ public class HomeFragment extends BaseFragment implements HomeFragView{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    protected void initInjector() {
+        DaggerHomeFragComponent.builder()
+                .applicationComponent(App.getAppComponent())
+                .homeFragModule(new HomeFragModule(this, "101210801"))
+                .build()
+                .inject(this);
     }
 
     @OnClick({R.id.ci_home_img, R.id.iv_home_search, R.id.tip_login, R.id.tip_edit})

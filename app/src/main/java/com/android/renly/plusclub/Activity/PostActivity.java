@@ -2,8 +2,6 @@ package com.android.renly.plusclub.Activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.ScrollView;
@@ -11,19 +9,13 @@ import android.widget.ScrollView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Api.RetrofitService;
-import com.android.renly.plusclub.Common.BaseActivity;
-import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.Fragment.PostFragment;
 import com.android.renly.plusclub.R;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.functions.Consumer;
-import okhttp3.Call;
-import okhttp3.ResponseBody;
 
 public class PostActivity extends BaseActivity {
     @BindView(R.id.fragment)

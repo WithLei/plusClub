@@ -34,8 +34,8 @@ import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Api.Bean.Comment;
 import com.android.renly.plusclub.Api.Bean.Post;
-import com.android.renly.plusclub.Common.BaseActivity;
-import com.android.renly.plusclub.Common.BaseFragment;
+import com.android.renly.plusclub.Module.base.BaseActivity;
+import com.android.renly.plusclub.Module.base.BaseFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.IntentUtils;
@@ -72,7 +72,6 @@ public class PostFragment extends BaseFragment {
     TextView content;
     @BindView(R.id.rv_comment)
     RecyclerView rvComment;
-    Unbinder unbinder;
     @BindView(R.id.tv_comment_suggest)
     TextView tvCommentSuggest;
     @BindView(R.id.load_bottom)
@@ -149,7 +148,7 @@ public class PostFragment extends BaseFragment {
                         getNewToken(comment);
                     } else {
                         ToastShort("发布成功");
-                        ((BaseActivity) getmActivity()).hideKeyBoard();
+                        ((BaseActivity) super.mContent).hideKeyBoard();
                         getCommentListData();
                     }
                 }, throwable -> ToastNetWorkError());
@@ -349,17 +348,14 @@ public class PostFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
+    protected void initInjector() {
+
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         removeMyInputBar();
-        unbinder.unbind();
+        super.onDestroyView();
     }
 
     @OnClick({R.id.share_panel, R.id.close_panel, R.id.btn_more, R.id.article_user_image, R.id.article_username})

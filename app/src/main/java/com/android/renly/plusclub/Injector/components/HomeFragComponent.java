@@ -7,7 +7,7 @@ import com.android.renly.plusclub.Module.home.HomeFragment;
 import dagger.Component;
 
 /**
- *
+ * HomeFragment
  */
 @PerFragment
 @Component(dependencies = ApplicationComponent.class, modules = HomeFragModule.class)

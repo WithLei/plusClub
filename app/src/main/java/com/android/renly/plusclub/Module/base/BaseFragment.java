@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Common;
+package com.android.renly.plusclub.Module.base;
 
 
 import android.app.Activity;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.App;
+import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.R;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -27,24 +28,37 @@ import okhttp3.Call;
 
 
 public abstract class BaseFragment extends Fragment {
-    private View mContentView;
-    private Context mContent;
-    private Unbinder unbinder;
-    private boolean isViewCreated = false;
+    protected Context mContent;
+    protected Unbinder unbinder;
+    //缓存Fragment View
+    private View mRootView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContent = getContext();
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mContentView = inflater.inflate(getLayoutid(),container,false);
-        mContent = getContext();
-        unbinder = ButterKnife.bind(mContentView);
-        isViewCreated = true;
-        return mContentView;
+        if (mRootView == null) {
+            mRootView = inflater.inflate(getLayoutid(),container,false);
+            unbinder = ButterKnife.bind(this, mRootView);
+        }
+        ViewGroup parent = (ViewGroup) mRootView.getParent();
+        if (parent != null) {
+            parent.removeView(mRootView);
+        }
+        return mRootView;
     }
+
+    protected abstract void initInjector();
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initInjector();
         initData(mContent);
     }
 
@@ -52,15 +66,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && isViewCreated){
+        if (isVisibleToUser && isVisible() && mRootView != null){
             initView();
         }
-    }
-
-    public Activity getmActivity(){
-        if (mContent == null)
-            mContent = getContext();
-        return (Activity)mContent;
     }
 
     public abstract int getLayoutid();
@@ -93,7 +101,7 @@ public abstract class BaseFragment extends Fragment {
     }
     public void ToastNetWorkError(Exception e) {
         ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
-        Log.e("print", "ToastNetWorkError: " + e.getMessage());
+        printLog("ToastNetWorkError: " + e.getMessage());
     }
 
     public void ToastProgramError(){

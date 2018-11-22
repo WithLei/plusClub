@@ -11,14 +11,16 @@ import dagger.Provides;
 @Module
 public class HomeFragModule {
     private final HomeFragment mView;
+    private final String cityCode;
 
-    public HomeFragModule(HomeFragment mView) {
+    public HomeFragModule(HomeFragment mView, String cityCode) {
         this.mView = mView;
+        this.cityCode = cityCode;
     }
 
     @PerFragment
     @Provides
-    public BasePresenter provideHomeFragPresenter(String cityCode) {
+    public HomeFragPresenter provideHomeFragPresenter() {
         return new HomeFragPresenter(cityCode, mView);
     }
 }

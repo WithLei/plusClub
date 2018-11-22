@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Common;
+package com.android.renly.plusclub.Module.base;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.App;
+import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.Utils.DimmenUtils;
 import com.r0adkll.slidr.Slidr;

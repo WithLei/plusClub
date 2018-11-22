@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 
 import butterknife.BindView;

@@ -1,6 +1,5 @@
 package com.android.renly.plusclub.Activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -8,8 +7,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Common.BaseActivity;
-import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 
 import java.util.ArrayList;

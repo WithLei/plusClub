@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;

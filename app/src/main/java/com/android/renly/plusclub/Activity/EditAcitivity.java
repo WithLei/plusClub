@@ -16,15 +16,10 @@ import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.BaseActivity;
-import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.Utils.StringUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.angmarch.views.NiceSpinner;
 
@@ -35,9 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.functions.Consumer;
-import okhttp3.Call;
-import okhttp3.ResponseBody;
 
 public class EditAcitivity extends BaseActivity {
     @BindView(R.id.editor)

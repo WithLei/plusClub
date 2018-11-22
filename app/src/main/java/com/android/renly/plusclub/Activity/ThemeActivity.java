@@ -17,7 +17,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.MyCircleView;
 

@@ -3,8 +3,6 @@ package com.android.renly.plusclub.Activity;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -19,7 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.Common.MyToast;
 import com.android.renly.plusclub.R;
 

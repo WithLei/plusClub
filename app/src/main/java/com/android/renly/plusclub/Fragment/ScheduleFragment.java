@@ -2,7 +2,6 @@ package com.android.renly.plusclub.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,7 @@ import com.android.renly.plusclub.Activity.HomeActivity;
 import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Api.Bean.Course;
-import com.android.renly.plusclub.Common.BaseFragment;
+import com.android.renly.plusclub.Module.base.BaseFragment;
 import com.android.renly.plusclub.DataBase.MyDB;
 import com.android.renly.plusclub.R;
 
@@ -33,7 +32,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class ScheduleFragment extends BaseFragment {
-    Unbinder unbinder;
     @BindView(R.id.iv_toolbar_menu)
     ImageView ivToolbarMenu;
     @BindView(R.id.courceDetail)
@@ -140,10 +138,8 @@ public class ScheduleFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
+    protected void initInjector() {
+
     }
 
     private HomeActivity mActivity;
@@ -151,12 +147,6 @@ public class ScheduleFragment extends BaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = (HomeActivity)context;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @OnClick(R.id.iv_toolbar_menu)

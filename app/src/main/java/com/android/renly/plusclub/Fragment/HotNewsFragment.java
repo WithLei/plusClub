@@ -29,7 +29,7 @@ import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Api.Bean.Post;
 import com.android.renly.plusclub.Api.Bean.SimplePost;
-import com.android.renly.plusclub.Common.BaseFragment;
+import com.android.renly.plusclub.Module.base.BaseFragment;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.Listener.LoadMoreListener;
 import com.android.renly.plusclub.R;
@@ -45,18 +45,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
-import okhttp3.ResponseBody;
 
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOADING;
-import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_FAIL;
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_NOTHING;
 
 public class HotNewsFragment extends BaseFragment
@@ -73,7 +69,6 @@ public class HotNewsFragment extends BaseFragment
     RecyclerView rv;
     @BindView(R.id.swiperefresh_hotnews)
     SwipeRefreshLayout refreshLayout;
-    Unbinder unbinder;
     @BindView(R.id.btn_change)
     RadioGroup btnChange;
 
@@ -235,7 +230,7 @@ public class HotNewsFragment extends BaseFragment
             return;
         }
         if (postList == null)
-            initData(getmActivity());
+            initData(super.mContent);
         isPullDownRefresh = true;
         new Thread() {
             @Override
@@ -607,16 +602,13 @@ public class HotNewsFragment extends BaseFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
+    protected void initInjector() {
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
         handler.removeCallbacksAndMessages(null);
     }
 

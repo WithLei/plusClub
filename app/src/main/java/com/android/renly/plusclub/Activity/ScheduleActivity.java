@@ -13,7 +13,7 @@ import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Api.Bean.Course;
 import com.android.renly.plusclub.Api.Bean.MessageEvent;
-import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.DataBase.MyDB;
 import com.android.renly.plusclub.R;

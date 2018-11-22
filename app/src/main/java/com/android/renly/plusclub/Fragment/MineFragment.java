@@ -28,7 +28,7 @@ import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.BaseFragment;
+import com.android.renly.plusclub.Module.base.BaseFragment;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.CircleImageView;
@@ -47,7 +47,6 @@ import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
@@ -70,7 +69,6 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     ListView lvMineFunctionList;
     @BindView(R.id.ll_mine_window)
     LinearLayout llMineWindow;
-    Unbinder unbinder;
     @BindView(R.id.tv_mine_user_name)
     TextView tvMineUserName;
     @BindView(R.id.tv_mine_user_email)
@@ -135,21 +133,13 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
+    protected void initInjector() {
+
     }
 
     @Override
     public void ScrollToTop() {
 
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @OnClick({R.id.ci_mine_user_img, R.id.ll_mine_history, R.id.ll_mine_star, R.id.ll_mine_friend, R.id.ll_mine_post})

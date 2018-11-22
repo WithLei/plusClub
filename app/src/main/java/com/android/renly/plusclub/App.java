@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.Checknet.NetworkReceiver;
 import com.android.renly.plusclub.DataBase.SQLiteHelper;
+import com.android.renly.plusclub.Injector.components.ApplicationComponent;
+import com.android.renly.plusclub.Injector.components.DaggerApplicationComponent;
+import com.android.renly.plusclub.Injector.modules.ApplicationModule;
 import com.android.renly.plusclub.Utils.DateUtils;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -17,13 +19,29 @@ public class App extends Application {
 
     private static Context context;
     private NetworkReceiver receiver;
+    private static ApplicationComponent mAppComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        this.context = getApplicationContext();
+        context = getApplicationContext();
+        initInjector();
         initConfig();
         regReciever();
+    }
+
+    public static ApplicationComponent getAppComponent() {
+        return mAppComponent;
+    }
+
+    /**
+     * 初始化注射器
+     */
+    private void initInjector() {
+        // 这里不做注入操作，只提供一些全局单例数据
+        mAppComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
     }
 
     private void initConfig() {

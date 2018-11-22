@@ -25,7 +25,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Adapter.PostAdapter;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Api.Bean.Post;
-import com.android.renly.plusclub.Common.BaseActivity;
+import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.Fragment.PostFragment;
 import com.android.renly.plusclub.Listener.LoadMoreListener;
