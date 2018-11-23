@@ -20,7 +20,7 @@ public class HomeFragModule {
 
     @PerFragment
     @Provides
-    public HomeFragPresenter provideHomeFragPresenter() {
+    public HomeFragPresenter  provideHomeFragPresenter() {
         return new HomeFragPresenter(cityCode, mView);
     }
 }

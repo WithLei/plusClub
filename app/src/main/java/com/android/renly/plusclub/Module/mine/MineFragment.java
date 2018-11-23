@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Fragment;
+package com.android.renly.plusclub.Module.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -52,47 +54,19 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public class MineFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class MineFragment extends BaseFragment
+        implements AdapterView.OnItemClickListener, MineFragView {
     @BindView(R.id.ci_mine_user_img)
     CircleImageView ciMineUserImg;
-    @BindView(R.id.rl_mine_header)
-    RelativeLayout rlMineHeader;
-    @BindView(R.id.ll_mine_history)
-    LinearLayout llMineHistory;
-    @BindView(R.id.ll_mine_star)
-    LinearLayout llMineStar;
-    @BindView(R.id.ll_mine_friend)
-    LinearLayout llMineFriend;
-    @BindView(R.id.ll_mine_post)
-    LinearLayout llMinePost;
     @BindView(R.id.lv_mine_function_list)
     ListView lvMineFunctionList;
-    @BindView(R.id.ll_mine_window)
-    LinearLayout llMineWindow;
     @BindView(R.id.tv_mine_user_name)
     TextView tvMineUserName;
     @BindView(R.id.tv_mine_user_email)
     TextView tvMineUserEmail;
 
-    private final int[] icons = new int[]{
-//            R.drawable.ic_autorenew_black_24dp,
-            R.drawable.ic_palette_black_24dp,
-            R.drawable.ic_settings_24dp,
-            R.drawable.ic_menu_share_24dp,
-            R.drawable.ic_info_24dp,
-            R.drawable.ic_favorite_white_12dp,
-            R.drawable.ic_lab_24dp,
-    };
-
-    private final String[] titles = new String[]{
-//            "签到中心",
-            "主题设置",
-            "设置",
-            "分享Plus客户端",
-            "关于本程序",
-            "热爱开源，感谢分享",
-            "实验室功能",
-    };
+    @Inject
+    protected MineFragPresenter mPresenter;
 
     @Override
     public int getLayoutid() {
@@ -101,14 +75,7 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
     @Override
     protected void initData(Context content) {
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (int i = 0; i < icons.length; i++) {
-            Map<String, Object> ob = new HashMap<>();
-            ob.put("icon", icons[i]);
-            ob.put("title", titles[i]);
-            list.add(ob);
-        }
-        lvMineFunctionList.setAdapter(new SimpleAdapter(mActivity, list, R.layout.item_function, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
+        lvMineFunctionList.setAdapter(new SimpleAdapter(mActivity, mPresenter.getMenuList(), R.layout.item_function, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
         lvMineFunctionList.setOnItemClickListener(this);
     }
 
@@ -123,7 +90,6 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
 
     private void initInfo() {
         if (App.ISLOGIN()) {
-            getUserAvator();
             tvMineUserName.setText(App.getUserName());
         } else {
             ciMineUserImg.setImageDrawable(getResources().getDrawable(R.drawable.image_placeholder));
@@ -201,55 +167,8 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
         }
     }
 
-    @SuppressLint("CheckResult")
-    public synchronized void getUserAvator() {
-        Observable<String> observable = RetrofitService.getNewToken();
 
-        DisposableObserver<String> observer = new DisposableObserver<String>() {
-            @Override
-            public void onNext(String s) {
-                Observable.create((ObservableOnSubscribe<String>) emitter -> {
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url(NetConfig.BASE_USERDETAIL_PLUS)
-                            .header("Authorization", "Bearer " + Store.getInstance().getToken())
-                            .get()
-                            .build();
-                    String response = client.newCall(request).execute().body().string();
-                    emitter.onNext(response);
-                })
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(responseString -> {
-                            if (!responseString.contains("result")) {
-                                printLog("MineFragment_getAvatar_subscribe:获取用户信息出错 需要处理");
-                                return;
-                            }
-                            JSONObject jsonObject = JSON.parseObject(responseString);
-                            String avatarSrc = "", name = "";
-                            JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
-                            avatarSrc = obj.getString("avatar");
-                            name = obj.getString("name");
-                            setInfo(avatarSrc, name);
-                        }, throwable -> printLog("MineFragment_getAvatar_subscribe_onError:" + throwable.getMessage()));
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.e("print", "MineFragment_getUserAvator_onError: " + e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer);
-    }
-
-    private void setInfo(String avatarSrc, String userName) {
+    protected void setInfo(String avatarSrc, String userName) {
         Picasso.get()
                 .load(avatarSrc)
                 .placeholder(R.drawable.image_placeholder)
@@ -266,5 +185,10 @@ public class MineFragment extends BaseFragment implements AdapterView.OnItemClic
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = (HomeActivity) context;
+    }
+
+    @Override
+    public void loadAvatar(String path) {
+
     }
 }

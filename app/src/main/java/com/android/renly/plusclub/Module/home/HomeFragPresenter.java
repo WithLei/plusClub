@@ -62,7 +62,7 @@ public class HomeFragPresenter implements BasePresenter {
 
     @SuppressLint("CheckResult")
     private void getWeatherData() {
-        RetrofitService.getWeather("101210801")
+        RetrofitService.getWeather(cityCode)
                 .subscribe(new Observer<Weather>() {
                     @Override
                     public void onSubscribe(Disposable d) {}

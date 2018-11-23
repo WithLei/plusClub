@@ -20,7 +20,7 @@ import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.Module.base.BaseFragment;
 import com.android.renly.plusclub.Module.home.HomeFragment;
 import com.android.renly.plusclub.Fragment.HotNewsFragment;
-import com.android.renly.plusclub.Fragment.MineFragment;
+import com.android.renly.plusclub.Module.mine.MineFragment;
 import com.android.renly.plusclub.Fragment.ScheduleFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.MyBottomTab;
@@ -70,7 +70,7 @@ public class HomeActivity extends BaseActivity
         version_name = "1.0";
         if (info != null) {
             version_name = info.versionName;
-        }
+        } 
         RetrofitService.getRelease()
                 .subscribe(responseBody -> {
                     String response = responseBody.string();
