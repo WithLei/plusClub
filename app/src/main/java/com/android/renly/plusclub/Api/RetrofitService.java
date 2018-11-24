@@ -149,6 +149,7 @@ public class RetrofitService {
                             public ObservableSource<?> apply(Throwable throwable) throws Exception {
                                 if (mRetryCount++ < 3 && throwable.getMessage().equals(ERROR_TOKEN))
                                     return Observable.error(new Throwable(ERROR_RETRY));
+                                mRetryCount = 0;
                                 return Observable.error(throwable);
                             }
                         });

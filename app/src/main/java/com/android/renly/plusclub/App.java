@@ -13,6 +13,7 @@ import com.android.renly.plusclub.Injector.components.ApplicationComponent;
 import com.android.renly.plusclub.Injector.components.DaggerApplicationComponent;
 import com.android.renly.plusclub.Injector.modules.ApplicationModule;
 import com.android.renly.plusclub.Utils.DateUtils;
+import com.android.renly.plusclub.Utils.ToastUtils;
 import com.squareup.leakcanary.LeakCanary;
 
 public class App extends Application {
@@ -49,6 +50,7 @@ public class App extends Application {
             LeakCanary.install(this);
         }
         RetrofitService.init();
+        ToastUtils.init(getContext());
     }
 
     @Override

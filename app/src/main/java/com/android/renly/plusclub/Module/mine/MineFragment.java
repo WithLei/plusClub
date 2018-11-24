@@ -1,22 +1,13 @@
 package com.android.renly.plusclub.Module.mine;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.AboutActivity;
 import com.android.renly.plusclub.Activity.HomeActivity;
 import com.android.renly.plusclub.Activity.LabActivity;
@@ -25,9 +16,9 @@ import com.android.renly.plusclub.Activity.OpenSourceActivity;
 import com.android.renly.plusclub.Activity.SettingActivity;
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
-import com.android.renly.plusclub.Api.Bean.Store;
-import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
+import com.android.renly.plusclub.Injector.components.DaggerMineFragComponent;
+import com.android.renly.plusclub.Injector.modules.MineFragModule;
 import com.android.renly.plusclub.Module.base.BaseFragment;
 import com.android.renly.plusclub.Common.NetConfig;
 import com.android.renly.plusclub.R;
@@ -35,24 +26,13 @@ import com.android.renly.plusclub.UI.CircleImageView;
 import com.android.renly.plusclub.Utils.IntentUtils;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+
+import static com.android.renly.plusclub.Utils.LogUtils.*;
+import static com.android.renly.plusclub.Utils.ToastUtils.*;
 
 public class MineFragment extends BaseFragment
         implements AdapterView.OnItemClickListener, MineFragView {
@@ -75,6 +55,7 @@ public class MineFragment extends BaseFragment
 
     @Override
     protected void initData(Context content) {
+        mPresenter.getData(false);
         lvMineFunctionList.setAdapter(new SimpleAdapter(mActivity, mPresenter.getMenuList(), R.layout.item_function, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
         lvMineFunctionList.setOnItemClickListener(this);
     }
@@ -86,6 +67,7 @@ public class MineFragment extends BaseFragment
 
     public void doRefresh() {
         initInfo();
+        mPresenter.getData(true);
     }
 
     private void initInfo() {
@@ -100,7 +82,11 @@ public class MineFragment extends BaseFragment
 
     @Override
     protected void initInjector() {
-
+        DaggerMineFragComponent.builder()
+                .applicationComponent(App.getAppComponent())
+                .mineFragModule(new MineFragModule(this))
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -167,8 +153,9 @@ public class MineFragment extends BaseFragment
         }
     }
 
-
-    protected void setInfo(String avatarSrc, String userName) {
+    @Override
+    public void loadInfo(String avatarSrc, String userName) {
+        printLog("MineFragment loadInfo");
         Picasso.get()
                 .load(avatarSrc)
                 .placeholder(R.drawable.image_placeholder)
@@ -185,10 +172,5 @@ public class MineFragment extends BaseFragment
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = (HomeActivity) context;
-    }
-
-    @Override
-    public void loadAvatar(String path) {
-
     }
 }

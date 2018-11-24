@@ -34,6 +34,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.android.renly.plusclub.Utils.LogUtils.*;
+import static com.android.renly.plusclub.Utils.ToastUtils.*;
+
 public class HomeFragment extends BaseFragment implements HomeFragView{
     @BindView(R.id.ci_home_img)
     CircleImageView ciHomeImg;

@@ -1,19 +1,16 @@
-package com.android.renly.plusclub.Fragment;
+package com.android.renly.plusclub.Module.hotnews;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -41,9 +38,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
@@ -54,6 +51,8 @@ import okhttp3.Call;
 
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOADING;
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_NOTHING;
+import static com.android.renly.plusclub.Utils.LogUtils.*;
+import static com.android.renly.plusclub.Utils.ToastUtils.*;
 
 public class HotNewsFragment extends BaseFragment
         implements LoadMoreListener.OnLoadMoreListener {
@@ -71,6 +70,9 @@ public class HotNewsFragment extends BaseFragment
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.btn_change)
     RadioGroup btnChange;
+
+    @Inject
+    protected HotNewsFragPresenter mPresenter;
 
     /**
      * 帖子列表[新帖]
@@ -564,7 +566,7 @@ public class HotNewsFragment extends BaseFragment
                 .subscribe(s -> getData(page));
     }
 
-    private void afterGetDataSuccess(int type, String data){
+    protected void afterGetDataSuccess(int type, String data){
         initListData(data, type);
         // 处理第一次刷新和后续刷新
         switch (type) {
@@ -587,7 +589,6 @@ public class HotNewsFragment extends BaseFragment
                     myPostAdapter.notifyDataSetChanged();
                 break;
         }
-        printLog("handleMessage03");
         isPullDownRefresh = false;
         isPullUpRefresh = false;
         tvHotnewsShowlogin.setVisibility(View.GONE);

@@ -19,9 +19,9 @@ import com.android.renly.plusclub.Api.Bean.MessageEvent;
 import com.android.renly.plusclub.Module.base.BaseActivity;
 import com.android.renly.plusclub.Module.base.BaseFragment;
 import com.android.renly.plusclub.Module.home.HomeFragment;
-import com.android.renly.plusclub.Fragment.HotNewsFragment;
+import com.android.renly.plusclub.Module.hotnews.HotNewsFragment;
 import com.android.renly.plusclub.Module.mine.MineFragment;
-import com.android.renly.plusclub.Fragment.ScheduleFragment;
+import com.android.renly.plusclub.Module.schedule.ScheduleFragment;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.UI.MyBottomTab;
 

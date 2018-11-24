@@ -4,6 +4,6 @@ public interface MineFragView {
     /**
      * 显示头像
      */
-    void loadAvatar(String path);
+    void loadInfo(String avatarSrc, String userName);
 
 }

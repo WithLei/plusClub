@@ -88,36 +88,6 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
-    public void ToastLong(String msg){
-        MyToast.showText(getContext(),msg, Toast.LENGTH_LONG);
-    }
-
-    public void ToastShort(String msg){
-        MyToast.showText(getContext(),msg,Toast.LENGTH_SHORT);
-    }
-
-    public void ToastNetWorkError(){
-        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
-    }
-    public void ToastNetWorkError(Exception e) {
-        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
-        printLog("ToastNetWorkError: " + e.getMessage());
-    }
-
-    public void ToastProgramError(){
-        ToastShort("程序猿还在努力开发中 ♪(´∇`*)");
-    }
-
-    /**
-     * Log输出
-     * error
-     * Filter:print
-     * @param str
-     */
-    public void printLog(String str){
-        Log.e("print",str);
-    }
-
     public abstract void ScrollToTop();
 
     @Override

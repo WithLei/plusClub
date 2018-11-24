@@ -27,7 +27,7 @@ import okhttp3.Request;
 
 public class MineFragPresenter implements BasePresenter {
     private final MineFragment mView;
-    private final int[] icons = new int[]{
+    private static final int[] icons = new int[]{
 //            R.drawable.ic_autorenew_black_24dp,
             R.drawable.ic_palette_black_24dp,
             R.drawable.ic_settings_24dp,
@@ -37,7 +37,7 @@ public class MineFragPresenter implements BasePresenter {
             R.drawable.ic_lab_24dp,
     };
 
-    private final String[] titles = new String[]{
+    private static final String[] titles = new String[]{
 //            "签到中心",
             "主题设置",
             "设置",
@@ -58,7 +58,7 @@ public class MineFragPresenter implements BasePresenter {
         }
     }
 
-    protected List<Map<String, Object>> getMenuList() {
+    List<Map<String, Object>> getMenuList() {
         List<Map<String, Object>> list = new ArrayList<>();
         for (int i = 0; i < icons.length; i++) {
             Map<String, Object> ob = new HashMap<>();
@@ -76,7 +76,7 @@ public class MineFragPresenter implements BasePresenter {
 
 
     @SuppressLint("CheckResult")
-    private synchronized void getUserAvator() {
+    protected synchronized void getUserAvator() {
         Observable<String> observable = RetrofitService.getNewToken();
 
         DisposableObserver<String> observer = new DisposableObserver<String>() {
@@ -104,7 +104,7 @@ public class MineFragPresenter implements BasePresenter {
                             JSONObject obj = JSON.parseObject(jsonObject.getString("result"));
                             avatarSrc = obj.getString("avatar");
                             name = obj.getString("name");
-                            mView.setInfo(avatarSrc, name);
+                            mView.loadInfo(avatarSrc, name);
                         }, throwable -> Log.e("print","MineFragment_getAvatar_subscribe_onError:" + throwable.getMessage()));
             }
 
