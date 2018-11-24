@@ -1,9 +1,13 @@
 package com.android.renly.plusclub.Module.hotnews;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.android.renly.plusclub.Activity.PostActivity;
 import com.android.renly.plusclub.Adapter.MyPostAdapter;
 import com.android.renly.plusclub.Adapter.PostAdapter;
 import com.android.renly.plusclub.Adapter.ReplyAdapter;
@@ -27,8 +31,10 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 
+import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOADING;
 import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_NOTHING;
 import static com.android.renly.plusclub.Utils.ToastUtils.*;
+import static com.android.renly.plusclub.Utils.LogUtils.*;
 
 public class HotNewsFragPresenter {
     private HotNewsFragment mView;
@@ -47,9 +53,9 @@ public class HotNewsFragPresenter {
     /**
      * 获取最大帖子页面
      */
-    private int max_page_post = 0;
-    private int max_page_reply = 0;
-    private int max_page_my = 0;
+    int max_page_post = 0;
+    int max_page_reply = 0;
+    int max_page_my = 0;
 
     private PostAdapter postAdapter;
     private ReplyAdapter replyAdapter;
@@ -57,21 +63,187 @@ public class HotNewsFragPresenter {
 
     private Observer<String> observer;
 
+    private static final int TYPE_NEW = 101;
+    private static final int TYPE_REPLY = 102;
+    private static final int TYPE_MY = 103;
+
     public HotNewsFragPresenter(HotNewsFragment mView) {
         this.mView = mView;
     }
 
-    public void getData(boolean isRefresh) {
-        initList();
-        initObserver();
-        getListData(1);
+    public void getData(boolean isRefresh, Context context, int currentType) {
+        if (!isRefresh) {
+            initList();
+            initObserver();
+            getListData(1, currentType);
+        } else {
+            if (postList == null)
+                mView.initData(context);
+            getListData(1, mView.currentType);
+            switch (currentType) {
+                case TYPE_NEW:
+                    max_page_post = 1;
+                    break;
+                case TYPE_REPLY:
+                    max_page_reply = 1;
+                    break;
+                case TYPE_MY:
+                    max_page_my = 1;
+                    break;
+            }
+        }
     }
 
-    public void getMoreData() {
+    // 第一次加载的行为
+    private void initAdapter(int type, Context context) {
+        switch (type) {
+            case TYPE_NEW:
+                postAdapter = new PostAdapter(context, postList);
+                mView.rv.setAdapter(postAdapter);
+                postAdapter.setOnItemClickListener(pos -> {
+                    Intent intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("PostJsonObject", JSON.toJSONString(postList.get(pos)));
+                    intent.putExtra("isNormalPost", true);
+                    context.startActivity(intent);
+                });
+                if (mView.new_loadnothing) {
+                    postAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                    mView.new_loadnothing = false;
+                }
+                break;
+            case TYPE_REPLY:
+                replyAdapter = new ReplyAdapter(context, replyList);
+                mView.rv.setAdapter(replyAdapter);
+                replyAdapter.setOnItemClickListener(pos -> {
+                    Intent intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("id", replyList.get(pos).getDiscussion_id());
+                    intent.putExtra("isNormalPost", false);
+                    context.startActivity(intent);
+                });
+                // 初次加载
+                if (mView.reply_loadnothing) {
+                    replyAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                    mView.reply_loadnothing = false;
+                }
+                break;
+            case TYPE_MY:
+                myPostAdapter = new MyPostAdapter(context, myList);
+                mView.rv.setAdapter(myPostAdapter);
+                myPostAdapter.setOnItemClickListener(pos -> {
+                    Intent intent = new Intent(context, PostActivity.class);
+                    intent.putExtra("id", myList.get(pos).getId());
+                    intent.putExtra("isNormalPost", false);
+                    context.startActivity(intent);
+                });
+                if (mView.my_loadnothing) {
+                    myPostAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                    mView.my_loadnothing = false;
+                }
+                break;
+        }
+        mView.setLoadMoreListener(type);
+    }
+
+    void afterGetDataSuccess(String data, int type, Context context) {
+        initListData(data, type);
+        // 处理第一次刷新和后续刷新
+        switch (type) {
+            case TYPE_NEW:
+                if (postAdapter == null)
+                    initAdapter(type, context);
+                else
+                    postAdapter.notifyDataSetChanged();
+                break;
+            case TYPE_REPLY:
+                if (replyAdapter == null)
+                    initAdapter(type, context);
+                else
+                    replyAdapter.notifyDataSetChanged();
+                break;
+            case TYPE_MY:
+                if (myPostAdapter == null)
+                    initAdapter(type, context);
+                else
+                    myPostAdapter.notifyDataSetChanged();
+                break;
+        }
+    }
+
+    /**
+     * 初始化帖子列表数据
+     */
+    private void initListData(String JsonDataArray, int type) {
+        if (mView.isPullDownRefresh) {
+            // 处理下拉刷新的请求
+            switch (type) {
+                case TYPE_NEW:
+                    postList.clear();
+                    if (postAdapter != null)
+                        postAdapter.changeLoadMoreState(STATE_LOADING);
+                    break;
+                case TYPE_REPLY:
+                    replyList.clear();
+                    if (replyAdapter != null)
+                        replyAdapter.changeLoadMoreState(STATE_LOADING);
+                    break;
+                case TYPE_MY:
+                    myList.clear();
+                    if (myPostAdapter != null)
+                        myPostAdapter.changeLoadMoreState(STATE_LOADING);
+                    break;
+            }
+        }
+        JSONObject jsonObject = JSON.parseObject(JsonDataArray);
+        // 尾页处理
+//        printLog("current " + jsonObject.getInteger("current_page") + " last " + jsonObject.getInteger("last_page"));
+        if (jsonObject.getInteger("current_page") > jsonObject.getInteger("last_page")
+                || (jsonObject.getInteger("current_page") == 1 && jsonObject.getInteger("current_page").equals(jsonObject.getInteger("last_page")))) {
+            switch (type) {
+                case TYPE_NEW:
+                    if (postAdapter != null) {
+                        postAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                        return;
+                    } else {
+                        mView.new_loadnothing = true;
+                    }
+                    break;
+                case TYPE_REPLY:
+                    if (replyAdapter != null) {
+                        replyAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                        return;
+                    } else {
+                        mView.reply_loadnothing = true;
+                    }
+                    break;
+                case TYPE_MY:
+                    if (myPostAdapter != null) {
+                        myPostAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                        return;
+                    } else {
+                        mView.my_loadnothing = true;
+                    }
+                    break;
+            }
+        }
+        JSONArray array = JSON.parseArray(jsonObject.getString("data"));
+        switch (type) {
+            case TYPE_NEW:
+                for (int i = 0; i < array.size(); i++)
+                    postList.add(JSON.parseObject(array.getString(i), Post.class));
+                break;
+            case TYPE_REPLY:
+                for (int i = 0; i < array.size(); i++)
+                    replyList.add(JSON.parseObject(array.getString(i), SimplePost.class));
+                break;
+            case TYPE_MY:
+                for (int i = 0; i < array.size(); i++)
+                    myList.add(JSON.parseObject(array.getString(i), SimplePost.class));
+                break;
+        }
 
     }
 
-    private void getListData(int page) {
+    void getListData(int page, int currentType) {
         switch (currentType) {
             case TYPE_NEW:
                 if (page == 1)
@@ -94,19 +266,22 @@ public class HotNewsFragPresenter {
     private void initObserver() {
         observer = new Observer<String>() {
             @Override
-            public void onSubscribe(Disposable d) {}
+            public void onSubscribe(Disposable d) {
+            }
 
             @Override
             public void onNext(String s) {
                 JSONObject obj = JSON.parseObject(s);
-                mView.afterGetDataSuccess(obj.getInteger("type"),obj.getString("data"));
+                mView.afterGetDataSuccess(obj.getInteger("type"), obj.getString("data"));
             }
 
             @Override
-            public void onError(Throwable e) {}
+            public void onError(Throwable e) {
+            }
 
             @Override
-            public void onComplete() {}
+            public void onComplete() {
+            }
         };
     }
 
@@ -142,15 +317,15 @@ public class HotNewsFragPresenter {
 
                         JSONObject dataObj = JSON.parseObject(response);
                         if (dataObj.getInteger("code") == 50011) {
-                            getNewToken(page);
+                            getNewToken(page, TYPE_REPLY);
                         } else if (dataObj.getInteger("code") != 20000) {
                             emitter.onError(new Throwable("20000 "));
                             ToastShort("服务器出状况惹，稍等喔( • ̀ω•́ )✧");
                         } else {
                             max_page_reply = max_page_reply >= page ? max_page_reply : page;
                             JSONObject obj = new JSONObject();
-                            obj.put("type",TYPE_REPLY);
-                            obj.put("data",dataObj.getString("data"));
+                            obj.put("type", TYPE_REPLY);
+                            obj.put("data", dataObj.getString("data"));
                             emitter.onNext(obj.toJSONString());
                         }
                     }
@@ -186,14 +361,14 @@ public class HotNewsFragPresenter {
 
                         JSONObject dataObj = JSON.parseObject(response);
                         if (dataObj.getInteger("code") == 50011) {
-                            getNewToken(page);
+                            getNewToken(page, TYPE_MY);
                         } else if (dataObj.getInteger("code") != 20000) {
                             ToastShort("服务器出状况惹，稍等喔( • ̀ω•́ )✧");
                         } else {
                             max_page_my = max_page_my >= page ? max_page_my : page;
                             JSONObject obj = new JSONObject();
-                            obj.put("type",TYPE_MY);
-                            obj.put("data",dataObj.getString("data"));
+                            obj.put("type", TYPE_MY);
+                            obj.put("data", dataObj.getString("data"));
                             emitter.onNext(obj.toJSONString());
                         }
                     }
@@ -233,8 +408,8 @@ public class HotNewsFragPresenter {
                         } else {
                             max_page_post = max_page_post >= page ? max_page_post : page;
                             JSONObject obj = new JSONObject();
-                            obj.put("type",TYPE_NEW);
-                            obj.put("data",dataObj.getString("data"));
+                            obj.put("type", TYPE_NEW);
+                            obj.put("data", dataObj.getString("data"));
                             emitter.onNext(obj.toJSONString());
                         }
                     }
@@ -249,8 +424,8 @@ public class HotNewsFragPresenter {
      * 获取新的Token
      */
     @SuppressLint("CheckResult")
-    private void getNewToken(int page) {
+    private void getNewToken(int page, int currentType) {
         RetrofitService.getNewToken()
-                .subscribe(s -> getListData(page));
+                .subscribe(s -> getListData(page, currentType));
     }
 }

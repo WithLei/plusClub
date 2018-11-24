@@ -155,7 +155,6 @@ public class MineFragment extends BaseFragment
 
     @Override
     public void loadInfo(String avatarSrc, String userName) {
-        printLog("MineFragment loadInfo");
         Picasso.get()
                 .load(avatarSrc)
                 .placeholder(R.drawable.image_placeholder)

@@ -2,7 +2,7 @@ package com.android.renly.plusclub.Listener;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import static com.android.renly.plusclub.Utils.LogUtils.*;
 
 public class LoadMoreListener extends RecyclerView.OnScrollListener {
     private LinearLayoutManager linearLayoutManager;
