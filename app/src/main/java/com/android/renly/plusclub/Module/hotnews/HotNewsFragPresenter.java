@@ -3,6 +3,7 @@ package com.android.renly.plusclub.Module.hotnews;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -17,6 +18,7 @@ import com.android.renly.plusclub.Api.Bean.Store;
 import com.android.renly.plusclub.Api.RetrofitService;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.Listener.ListItemClickListener;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -100,9 +102,9 @@ public class HotNewsFragPresenter {
             case TYPE_NEW:
                 postAdapter = new PostAdapter(context, postList);
                 mView.rv.setAdapter(postAdapter);
-                postAdapter.setOnItemClickListener(pos -> {
+                postAdapter.setOnItemClickListener((v, position) -> {
                     Intent intent = new Intent(context, PostActivity.class);
-                    intent.putExtra("PostJsonObject", JSON.toJSONString(postList.get(pos)));
+                    intent.putExtra("PostJsonObject", JSON.toJSONString(postList.get(position)));
                     intent.putExtra("isNormalPost", true);
                     context.startActivity(intent);
                 });
