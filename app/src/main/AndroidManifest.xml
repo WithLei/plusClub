@@ -112,7 +112,7 @@
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name=".Activity.PostActivity"
+            android:name=".module.postContent.fullscreen.PostActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 

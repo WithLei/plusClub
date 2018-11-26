@@ -3,7 +3,7 @@ package com.android.renly.plusclub.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Module.base.BaseActivity;
+import com.android.renly.plusclub.module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 import com.zzhoujay.richtext.RichText;
 

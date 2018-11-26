@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Module.schedule;
+package com.android.renly.plusclub.module.schedule;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +9,9 @@ import android.widget.GridView;
 import com.android.renly.plusclub.Activity.EduLoginActivity;
 import com.android.renly.plusclub.Activity.HomeActivity;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Injector.components.DaggerScheduleFragComponent;
-import com.android.renly.plusclub.Injector.modules.ScheduleFragModule;
-import com.android.renly.plusclub.Module.base.BaseFragment;
+import com.android.renly.plusclub.injector.components.DaggerScheduleFragComponent;
+import com.android.renly.plusclub.injector.modules.ScheduleFragModule;
+import com.android.renly.plusclub.module.base.BaseFragment;
 import com.android.renly.plusclub.R;
 
 import org.angmarch.views.NiceSpinner;

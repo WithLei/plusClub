@@ -1,9 +1,7 @@
-package com.android.renly.plusclub.Module.hotnews;
+package com.android.renly.plusclub.module.hotnews;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,20 +13,19 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Injector.components.DaggerHotNewsFragComponent;
-import com.android.renly.plusclub.Injector.modules.HotNewsFragModule;
-import com.android.renly.plusclub.Module.base.BaseFragment;
-import com.android.renly.plusclub.Listener.LoadMoreListener;
+import com.android.renly.plusclub.injector.components.DaggerHotNewsFragComponent;
+import com.android.renly.plusclub.injector.modules.HotNewsFragModule;
+import com.android.renly.plusclub.module.base.BaseFragment;
+import com.android.renly.plusclub.listener.LoadMoreListener;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.UI.BatchRadioButton;
+import com.android.renly.plusclub.widget.BatchRadioButton;
 
 import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import static com.android.renly.plusclub.Utils.LogUtils.printLog;
-import static com.android.renly.plusclub.Utils.ToastUtils.*;
+import static com.android.renly.plusclub.utils.LogUtils.printLog;
 
 public class HotNewsFragment extends BaseFragment
         implements LoadMoreListener.OnLoadMoreListener {

@@ -1,13 +1,11 @@
-package com.android.renly.plusclub.Utils;
+package com.android.renly.plusclub.utils;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Api.Bean.Store;
-import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.api.bean.Store;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 

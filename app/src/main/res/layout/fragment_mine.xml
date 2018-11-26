@@ -16,7 +16,7 @@
         android:elevation="4dp"
         android:paddingBottom="16dp">
 
-        <com.android.renly.plusclub.UI.CircleImageView
+        <com.android.renly.plusclub.widget.CircleImageView
             android:id="@+id/ci_mine_user_img"
             android:layout_width="80dp"
             android:layout_height="80dp"

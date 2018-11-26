@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.UI;
+package com.android.renly.plusclub.widget;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

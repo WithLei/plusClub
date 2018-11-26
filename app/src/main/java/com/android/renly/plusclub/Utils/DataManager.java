@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Utils;
+package com.android.renly.plusclub.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.DataBase.SQLiteHelper;
+import com.android.renly.plusclub.local.DataBase.SQLiteHelper;
 
 import java.io.File;
 import java.math.BigDecimal;

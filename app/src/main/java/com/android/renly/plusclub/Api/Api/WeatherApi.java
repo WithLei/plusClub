@@ -1,12 +1,10 @@
-package com.android.renly.plusclub.Api.Api;
+package com.android.renly.plusclub.api.api;
 
 
 
-import com.android.renly.plusclub.Api.Bean.Weather;
-import com.android.renly.plusclub.Api.Bean.WeatherInfo;
+import com.android.renly.plusclub.api.bean.Weather;
 
 import io.reactivex.Observable;
-import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 

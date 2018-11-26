@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Activity;
+package com.android.renly.plusclub.module.postContent.fullscreen;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -8,9 +8,9 @@ import android.widget.ScrollView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Api.RetrofitService;
-import com.android.renly.plusclub.Module.base.BaseActivity;
-import com.android.renly.plusclub.Fragment.PostFragment;
+import com.android.renly.plusclub.api.RetrofitService;
+import com.android.renly.plusclub.module.base.BaseActivity;
+import com.android.renly.plusclub.module.postContent.main.PostFragment;
 import com.android.renly.plusclub.R;
 
 import butterknife.BindView;

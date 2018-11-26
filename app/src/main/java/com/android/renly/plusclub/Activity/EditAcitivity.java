@@ -16,9 +16,9 @@ import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Api.RetrofitService;
+import com.android.renly.plusclub.api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Module.base.BaseActivity;
+import com.android.renly.plusclub.module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 
 import org.angmarch.views.NiceSpinner;

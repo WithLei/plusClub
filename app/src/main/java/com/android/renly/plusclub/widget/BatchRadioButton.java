@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.UI;
+package com.android.renly.plusclub.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
-import com.android.renly.plusclub.Utils.DimmenUtils;
+import com.android.renly.plusclub.utils.DimmenUtils;
 
 
 public class BatchRadioButton extends android.support.v7.widget.AppCompatRadioButton {

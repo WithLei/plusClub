@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Injector.modules;
+package com.android.renly.plusclub.injector.modules;
 
 import android.content.Context;
 

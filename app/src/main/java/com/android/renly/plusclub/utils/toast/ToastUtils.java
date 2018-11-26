@@ -1,11 +1,9 @@
-package com.android.renly.plusclub.Utils;
+package com.android.renly.plusclub.utils.toast;
 
 import android.content.Context;
 import android.widget.Toast;
 
-import com.android.renly.plusclub.Common.MyToast;
-
-import static com.android.renly.plusclub.Utils.LogUtils.printLog;
+import static com.android.renly.plusclub.utils.LogUtils.printLog;
 
 public class ToastUtils {
     private static Context mContext;

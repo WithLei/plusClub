@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Module.base;
+package com.android.renly.plusclub.module.base;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,9 +20,9 @@ import android.widget.Toast;
 
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.MyToast;
+import com.android.renly.plusclub.utils.toast.MyToast;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.Utils.DimmenUtils;
+import com.android.renly.plusclub.utils.DimmenUtils;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
@@ -36,11 +36,9 @@ import butterknife.Unbinder;
 
 public abstract class BaseActivity extends FragmentActivity {
     /***是否显示标题栏*/
-    private  boolean isshowtitle = true;
+    private boolean isshowtitle = true;
     /***是否显示标题栏*/
-    private  boolean isshowstate = false;
-    /***封装toast对象**/
-    private static Toast toast;
+    private boolean isshowstate = false;
     private Unbinder unbinder;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

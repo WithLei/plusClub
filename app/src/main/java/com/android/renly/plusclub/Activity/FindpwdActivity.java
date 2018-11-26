@@ -6,7 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.FrameLayout;
 
-import com.android.renly.plusclub.Module.base.BaseActivity;
+import com.android.renly.plusclub.module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 
 import java.util.regex.Matcher;

@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Module.mine;
+package com.android.renly.plusclub.module.mine;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,22 +17,19 @@ import com.android.renly.plusclub.Activity.SettingActivity;
 import com.android.renly.plusclub.Activity.ThemeActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Injector.components.DaggerMineFragComponent;
-import com.android.renly.plusclub.Injector.modules.MineFragModule;
-import com.android.renly.plusclub.Module.base.BaseFragment;
-import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.injector.components.DaggerMineFragComponent;
+import com.android.renly.plusclub.injector.modules.MineFragModule;
+import com.android.renly.plusclub.module.base.BaseFragment;
+import com.android.renly.plusclub.utils.NetConfig;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.UI.CircleImageView;
-import com.android.renly.plusclub.Utils.IntentUtils;
+import com.android.renly.plusclub.widget.CircleImageView;
+import com.android.renly.plusclub.utils.IntentUtils;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static com.android.renly.plusclub.Utils.LogUtils.*;
-import static com.android.renly.plusclub.Utils.ToastUtils.*;
 
 public class MineFragment extends BaseFragment
         implements AdapterView.OnItemClickListener, MineFragView {

@@ -1,17 +1,16 @@
-package com.android.renly.plusclub.Api;
+package com.android.renly.plusclub.api;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Api.Api.GithubApi;
-import com.android.renly.plusclub.Api.Api.PlusClubApi;
-import com.android.renly.plusclub.Api.Bean.Store;
-import com.android.renly.plusclub.Api.Bean.Weather;
-import com.android.renly.plusclub.Api.Api.WeatherApi;
+import com.android.renly.plusclub.api.api.GithubApi;
+import com.android.renly.plusclub.api.api.PlusClubApi;
+import com.android.renly.plusclub.api.bean.Store;
+import com.android.renly.plusclub.api.bean.Weather;
+import com.android.renly.plusclub.api.api.WeatherApi;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.utils.NetConfig;
 
 import java.io.File;
 import java.util.concurrent.Callable;

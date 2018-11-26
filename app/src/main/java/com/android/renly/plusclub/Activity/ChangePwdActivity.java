@@ -11,14 +11,14 @@ import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Api.Bean.Store;
-import com.android.renly.plusclub.Api.RetrofitService;
-import com.android.renly.plusclub.Module.base.BaseActivity;
-import com.android.renly.plusclub.Common.MyToast;
-import com.android.renly.plusclub.Common.NetConfig;
-import com.android.renly.plusclub.Listener.MyTextWatcher;
+import com.android.renly.plusclub.api.bean.Store;
+import com.android.renly.plusclub.api.RetrofitService;
+import com.android.renly.plusclub.module.base.BaseActivity;
+import com.android.renly.plusclub.utils.toast.MyToast;
+import com.android.renly.plusclub.utils.NetConfig;
+import com.android.renly.plusclub.listener.MyTextWatcher;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.Utils.StringUtils;
+import com.android.renly.plusclub.utils.StringUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 

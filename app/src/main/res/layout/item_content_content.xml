@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/bg_primary">
-    <com.android.renly.plusclub.UI.CircleImageView
+    <com.android.renly.plusclub.widget.CircleImageView
         android:id="@+id/article_user_image"
         android:layout_width="42dp"
         android:layout_height="42dp"

@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Module.home;
+package com.android.renly.plusclub.module.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,15 +15,15 @@ import com.android.renly.plusclub.Activity.HomeActivity;
 import com.android.renly.plusclub.Activity.LoginActivity;
 import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
-import com.android.renly.plusclub.Adapter.ForumAdapter;
+import com.android.renly.plusclub.adapter.ForumAdapter;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Api.Bean.Forum;
-import com.android.renly.plusclub.Injector.components.DaggerHomeFragComponent;
-import com.android.renly.plusclub.Injector.modules.HomeFragModule;
-import com.android.renly.plusclub.Module.base.BaseFragment;
+import com.android.renly.plusclub.api.bean.Forum;
+import com.android.renly.plusclub.injector.components.DaggerHomeFragComponent;
+import com.android.renly.plusclub.injector.modules.HomeFragModule;
+import com.android.renly.plusclub.module.base.BaseFragment;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.UI.CircleImageView;
-import com.android.renly.plusclub.Utils.DateUtils;
+import com.android.renly.plusclub.widget.CircleImageView;
+import com.android.renly.plusclub.utils.DateUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.squareup.picasso.Picasso;
 
@@ -34,8 +34,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.android.renly.plusclub.Utils.LogUtils.*;
-import static com.android.renly.plusclub.Utils.ToastUtils.*;
+import static com.android.renly.plusclub.utils.toast.ToastUtils.*;
 
 public class HomeFragment extends BaseFragment implements HomeFragView{
     @BindView(R.id.ci_home_img)

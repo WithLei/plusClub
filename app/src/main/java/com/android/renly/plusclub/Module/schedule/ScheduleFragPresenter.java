@@ -1,13 +1,13 @@
-package com.android.renly.plusclub.Module.schedule;
+package com.android.renly.plusclub.module.schedule;
 
 import android.app.Activity;
 import android.util.Log;
 
-import com.android.renly.plusclub.Adapter.ScheduleGridAdapter;
-import com.android.renly.plusclub.Api.Bean.Course;
+import com.android.renly.plusclub.adapter.ScheduleGridAdapter;
+import com.android.renly.plusclub.api.bean.Course;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.DataBase.MyDB;
-import com.android.renly.plusclub.Module.base.BasePresenter;
+import com.android.renly.plusclub.local.DataBase.MyDB;
+import com.android.renly.plusclub.module.base.BasePresenter;
 
 import java.util.ArrayList;
 import java.util.List;

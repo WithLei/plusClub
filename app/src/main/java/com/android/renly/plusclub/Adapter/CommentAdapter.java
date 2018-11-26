@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Adapter;
+package com.android.renly.plusclub.adapter;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -12,14 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.renly.plusclub.Activity.UserDetailActivity;
-import com.android.renly.plusclub.Api.Bean.Comment;
-import com.android.renly.plusclub.Common.MyToast;
+import com.android.renly.plusclub.api.bean.Comment;
+import com.android.renly.plusclub.utils.toast.MyToast;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.UI.CircleImageView;
-import com.android.renly.plusclub.Utils.DateUtils;
+import com.android.renly.plusclub.widget.CircleImageView;
+import com.android.renly.plusclub.utils.DateUtils;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
 

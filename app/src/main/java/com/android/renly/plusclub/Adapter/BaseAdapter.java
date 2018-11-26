@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Adapter;
+package com.android.renly.plusclub.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Listener.ListItemClickListener;
+import com.android.renly.plusclub.listener.ListItemClickListener;
 import com.android.renly.plusclub.R;
 
 import butterknife.BindView;
@@ -22,9 +22,9 @@ import butterknife.ButterKnife;
 public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseViewHolder>{
     private ListItemClickListener itemListener;
 
-    private static final int TYPE_LOADMORE = 1001;
-    private static final int TYPE_NO_DATA = 1002;
-    private static final int TYPE_NORMAL =1003;
+    static final int TYPE_LOADMORE = 1001;
+    static final int TYPE_NO_DATA = 1002;
+    static final int TYPE_NORMAL =1003;
 
 
     public static final int STATE_LOADING = 1;
@@ -33,7 +33,7 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
     public static final int STATE_LOAD_OK = 4;
     public static final int STATE_NEED_LOGIN = 5;
 
-    private int loadState = STATE_LOADING;
+    int loadState = STATE_LOADING;
 
     @NonNull
     @Override

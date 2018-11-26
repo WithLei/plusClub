@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Api.Api;
+package com.android.renly.plusclub.api.api;
 
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;

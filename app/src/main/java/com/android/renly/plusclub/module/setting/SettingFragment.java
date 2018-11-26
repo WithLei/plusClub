@@ -1,9 +1,8 @@
-package com.android.renly.plusclub.Fragment;
+package com.android.renly.plusclub.module.setting;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -26,17 +25,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.ChangePwdActivity;
 import com.android.renly.plusclub.Activity.SettingActivity;
-import com.android.renly.plusclub.Api.RetrofitService;
+import com.android.renly.plusclub.api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.MyToast;
-import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.utils.toast.MyToast;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.Utils.DataManager;
-import com.android.renly.plusclub.Utils.IntentUtils;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
-import okhttp3.Call;
+import com.android.renly.plusclub.utils.DataManager;
+import com.android.renly.plusclub.utils.IntentUtils;
 
 public class SettingFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {

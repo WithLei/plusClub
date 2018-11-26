@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Fragment;
+package com.android.renly.plusclub.module.postContent.main;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -28,17 +28,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.android.renly.plusclub.Activity.PostsActivity;
 import com.android.renly.plusclub.Activity.UserDetailActivity;
-import com.android.renly.plusclub.Adapter.CommentAdapter;
-import com.android.renly.plusclub.Api.RetrofitService;
+import com.android.renly.plusclub.adapter.CommentAdapter;
+import com.android.renly.plusclub.api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Api.Bean.Comment;
-import com.android.renly.plusclub.Api.Bean.Post;
-import com.android.renly.plusclub.Module.base.BaseActivity;
-import com.android.renly.plusclub.Module.base.BaseFragment;
+import com.android.renly.plusclub.api.bean.Comment;
+import com.android.renly.plusclub.api.bean.Post;
+import com.android.renly.plusclub.module.base.BaseActivity;
+import com.android.renly.plusclub.module.base.BaseFragment;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.UI.CircleImageView;
-import com.android.renly.plusclub.Utils.IntentUtils;
-import com.android.renly.plusclub.Utils.StringUtils;
+import com.android.renly.plusclub.widget.CircleImageView;
+import com.android.renly.plusclub.utils.IntentUtils;
+import com.android.renly.plusclub.utils.StringUtils;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
 
@@ -48,7 +48,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.android.renly.plusclub.Utils.ToastUtils.*;
+import static com.android.renly.plusclub.utils.toast.ToastUtils.*;
 
 public class PostFragment extends BaseFragment {
     @BindView(R.id.article_title)

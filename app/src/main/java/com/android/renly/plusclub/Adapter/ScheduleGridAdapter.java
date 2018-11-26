@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Adapter;
+package com.android.renly.plusclub.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.android.renly.plusclub.Activity.ScheduleDetailActivity;
-import com.android.renly.plusclub.Api.Bean.Course;
+import com.android.renly.plusclub.api.bean.Course;
 import com.android.renly.plusclub.R;
 
 import java.util.ArrayList;

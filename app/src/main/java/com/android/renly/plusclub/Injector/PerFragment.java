@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Injector;
+package com.android.renly.plusclub.injector;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

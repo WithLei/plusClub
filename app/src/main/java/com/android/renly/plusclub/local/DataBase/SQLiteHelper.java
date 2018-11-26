@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.DataBase;
+package com.android.renly.plusclub.local.DataBase;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

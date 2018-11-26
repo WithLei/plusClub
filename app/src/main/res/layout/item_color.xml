@@ -5,7 +5,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.android.renly.plusclub.UI.MyCircleView
+    <com.android.renly.plusclub.widget.MyCircleView
         android:id="@+id/color"
         android:layout_width="36dp"
         android:layout_height="36dp" />

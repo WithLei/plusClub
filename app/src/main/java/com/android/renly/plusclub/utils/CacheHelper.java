@@ -1,8 +1,8 @@
-package com.android.renly.plusclub.Common;
+package com.android.renly.plusclub.utils;
 
 import com.android.renly.plusclub.App;
 
-public class CacheConfig {
+public class CacheHelper {
     // 缓存基地址
     public static final String CACHE_BASE_PATH = App.getContext().getCacheDir().getPath();
 

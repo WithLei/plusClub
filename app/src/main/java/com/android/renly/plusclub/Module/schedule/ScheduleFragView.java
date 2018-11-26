@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Module.schedule;
+package com.android.renly.plusclub.module.schedule;
 
 public interface ScheduleFragView {
     /**

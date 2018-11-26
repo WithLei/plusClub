@@ -1,15 +1,15 @@
-package com.android.renly.plusclub.Module.mine;
+package com.android.renly.plusclub.module.mine;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Api.Bean.Store;
-import com.android.renly.plusclub.Api.RetrofitService;
+import com.android.renly.plusclub.api.bean.Store;
+import com.android.renly.plusclub.api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.NetConfig;
-import com.android.renly.plusclub.Module.base.BasePresenter;
+import com.android.renly.plusclub.utils.NetConfig;
+import com.android.renly.plusclub.module.base.BasePresenter;
 import com.android.renly.plusclub.R;
 
 import java.util.ArrayList;

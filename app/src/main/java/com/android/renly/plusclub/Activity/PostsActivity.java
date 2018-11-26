@@ -2,6 +2,7 @@ package com.android.renly.plusclub.Activity;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,15 +23,15 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Adapter.PostAdapter;
+import com.android.renly.plusclub.adapter.PostAdapter;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Api.Bean.Post;
-import com.android.renly.plusclub.Module.base.BaseActivity;
-import com.android.renly.plusclub.Common.NetConfig;
-import com.android.renly.plusclub.Fragment.PostFragment;
-import com.android.renly.plusclub.Listener.LoadMoreListener;
+import com.android.renly.plusclub.api.bean.Post;
+import com.android.renly.plusclub.module.base.BaseActivity;
+import com.android.renly.plusclub.utils.NetConfig;
+import com.android.renly.plusclub.module.postContent.main.PostFragment;
+import com.android.renly.plusclub.listener.LoadMoreListener;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.Utils.DimmenUtils;
+import com.android.renly.plusclub.utils.DimmenUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -42,11 +43,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import okhttp3.Call;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
-import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOADING;
-import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_FAIL;
-import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_NOTHING;
+import static com.android.renly.plusclub.adapter.BaseAdapter.*;
 
 public class PostsActivity extends BaseActivity
         implements LoadMoreListener.OnLoadMoreListener {
@@ -94,38 +99,6 @@ public class PostsActivity extends BaseActivity
 
     private PostAdapter adapter;
 
-    private static final int GET_POST_SUCCESS = 2;
-    private static final int GET_POST_FAIL = 4;
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case GET_POST_SUCCESS:
-                    initPostListData(msg.getData().getString("data"));
-                    // 处理第一次刷新和后续刷新
-                    if (adapter == null)
-                        initpostList();
-                    else
-                        adapter.notifyDataSetChanged();
-
-                    isPullDownRefresh = false;
-                    isPullUpRefresh = false;
-                    if (tvHotnewsShowlogin != null){
-                        //防止内存泄露 暂时这样写
-                        tvHotnewsShowlogin.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
-                        if (refreshLayout.isRefreshing())
-                            refreshLayout.setRefreshing(false);
-                    }
-                    break;
-                case GET_POST_FAIL:
-                    ToastShort("获取列表数据失败");
-                    adapter.changeLoadMoreState(STATE_LOAD_FAIL);
-                    break;
-            }
-        }
-    };
-
     @Override
     protected int getLayoutID() {
         return R.layout.activity_posts;
@@ -145,7 +118,7 @@ public class PostsActivity extends BaseActivity
         addToolbarMenu(R.drawable.ic_create_black_24dp).setOnClickListener(view -> {
             if (App.ISLOGIN()) {
                 Intent intent = new Intent(PostsActivity.this, EditAcitivity.class);
-                intent.putExtra("category",currentCategory);
+                intent.putExtra("category", currentCategory);
                 startActivityForResult(intent, EditAcitivity.requestCode);
             } else {
                 new AlertDialog.Builder(this)
@@ -202,7 +175,7 @@ public class PostsActivity extends BaseActivity
      * 执行刷新操作
      */
     private void doRefresh() {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 runOnUiThread(() -> {
@@ -219,42 +192,60 @@ public class PostsActivity extends BaseActivity
     }
 
     /**
+     * 获取帖子成功
+     * @param s
+     */
+    private void afterGetPostSuccess(String s) {
+        initPostListData(s);
+        // 处理第一次刷新和后续刷新
+        if (adapter == null)
+            initpostList();
+        else
+            adapter.notifyDataSetChanged();
+
+        isPullDownRefresh = false;
+        isPullUpRefresh = false;
+        tvHotnewsShowlogin.setVisibility(View.GONE);
+        refreshLayout.setVisibility(View.VISIBLE);
+        if (refreshLayout.isRefreshing())
+            refreshLayout.setRefreshing(false);
+    }
+
+    /**
      * 从服务器获取帖子
      */
+    @SuppressLint("CheckResult")
     private void getPostListData(int page) {
-        OkHttpUtils.get()
-                .url(NetConfig.BASE_POST_PLUS)
-                .addParams("categories",currentCategory)
-                .addParams("page", page + "")
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
+        Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            OkHttpClient client = new OkHttpClient();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(NetConfig.BASE_POST_PLUS)
+                    .newBuilder();
+            urlBuilder.addQueryParameter("categories", currentCategory);
+            urlBuilder.addQueryParameter("page", page + "");
+            Request request = new Request.Builder()
+                    .url(urlBuilder.build())
+                    .get()
+                    .build();
+            emitter.onNext(client.newCall(request).execute().body().string());
+        })
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(s -> {
+                    if (!s.contains("code")) {
+                        ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
+                        return;
                     }
 
-                    @Override
-                    public void onResponse(String response, int id) {
-//                        printLog(response);
-                        if (!response.contains("code")) {
-                            ToastShort("请检查网络设置ヽ(#`Д´)ﾉ");
-                            return;
-                        }
-
-                        JSONObject dataObj = JSON.parseObject(response);
-                        if (dataObj.getInteger("code") != 20000) {
-                            ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
-                        } else {
-                            printLog("dataobj == " + dataObj.getString("data"));
-                            max_page = max_page >= page ? max_page : page;
-                            Message msg = new Message();
-                            msg.what = GET_POST_SUCCESS;
-                            Bundle bundle = new Bundle();
-                            bundle.putString("data", dataObj.getString("data"));
-                            msg.setData(bundle);
-                            handler.sendMessage(msg);
-                        }
+                    JSONObject dataObj = JSON.parseObject(s);
+                    if (dataObj.getInteger("code") != 20000) {
+                        ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
+                    } else {
+                        max_page = max_page >= page ? max_page : page;
+                        afterGetPostSuccess(dataObj.getString("data"));
                     }
+                }, throwable -> {
+
                 });
     }
 
@@ -271,10 +262,10 @@ public class PostsActivity extends BaseActivity
         JSONObject jsonObject = JSON.parseObject(JsonDataArray);
         // 尾页处理
         if (jsonObject.getInteger("current_page") >= jsonObject.getInteger("last_page")) {
-            if (adapter != null){
+            if (adapter != null) {
                 adapter.changeLoadMoreState(STATE_LOAD_NOTHING);
                 return;
-            }else
+            } else
                 load_nothing = true;
         }
         JSONArray array = JSON.parseArray(jsonObject.getString("data"));
@@ -285,6 +276,7 @@ public class PostsActivity extends BaseActivity
     }
 
     private boolean load_nothing = false;
+
     private void initpostList() {
         // 初始化fragmentPool池
 //        fragmentPool = new ArrayList<>();
@@ -294,7 +286,7 @@ public class PostsActivity extends BaseActivity
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvPost.setLayoutManager(mLayoutManager);
         rvPost.addOnScrollListener(new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 5));
-        adapter.setOnItemClickListener(pos -> {
+        adapter.setOnItemClickListener((view, pos) -> {
             if (pos >= postList.size())
                 return;
             lastFragment = currentFragment;
@@ -306,11 +298,12 @@ public class PostsActivity extends BaseActivity
             bundle.putString("PostJsonObject", JSON.toJSONString(postList.get(pos)));
             bundle.putString("from", "PostsActivity");
             currentFragment.setArguments(bundle);
-            loadPanel(currentFragment,lastFragment);
+            loadPanel(currentFragment, lastFragment);
 //            fragment.setArguments(bundle);
 //            loadPanel(fragment, fragmentPool.size() == 1 ? null : fragmentPool.get(fragmentPool.size() - 2));
         });
-        if (load_nothing){
+        if (load_nothing) {
+            printLog("PostsActivity: load_nothing");
             adapter.changeLoadMoreState(STATE_LOAD_NOTHING);
             load_nothing = false;
         }
@@ -385,7 +378,6 @@ public class PostsActivity extends BaseActivity
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-        handler.removeCallbacksAndMessages(null);
     }
 
     @Override

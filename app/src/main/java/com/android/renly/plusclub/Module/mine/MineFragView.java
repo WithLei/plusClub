@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Module.mine;
+package com.android.renly.plusclub.module.mine;
 
 public interface MineFragView {
     /**

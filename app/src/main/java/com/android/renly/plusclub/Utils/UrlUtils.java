@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Utils;
+package com.android.renly.plusclub.utils;
 
 /**
  * 返回各种url;

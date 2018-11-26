@@ -32,7 +32,7 @@
                 android:layout_alignBottom="@+id/user_detail_layout_info"
                 android:adjustViewBounds="true" />
 
-            <com.android.renly.plusclub.UI.CircleImageView
+            <com.android.renly.plusclub.widget.CircleImageView
                 android:id="@+id/user_detail_img_avatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -48,7 +48,7 @@
                 android:layout_marginBottom="4dp"
                 android:orientation="vertical">
 
-                <com.android.renly.plusclub.UI.GradeProgressView
+                <com.android.renly.plusclub.widget.GradeProgressView
                     android:id="@+id/grade_progress"
                     android:layout_width="match_parent"
                     android:layout_height="3.2dp" />

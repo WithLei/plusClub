@@ -1,20 +1,16 @@
-package com.android.renly.plusclub.Adapter;
+package com.android.renly.plusclub.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.renly.plusclub.Activity.UserDetailActivity;
-import com.android.renly.plusclub.Api.Bean.Post;
+import com.android.renly.plusclub.api.bean.Post;
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.UI.CircleImageView;
+import com.android.renly.plusclub.widget.CircleImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -29,8 +25,6 @@ public class PostAdapter extends BaseAdapter {
     private List<Post> postList;
     private Context context;
 
-    private int loadState = STATE_LOADING;
-
     public PostAdapter(Context context, List<Post> postList) {
         this.context = context;
         this.postList = postList;
@@ -43,7 +37,11 @@ public class PostAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return 0;
+        if (position == postList.size()) {
+            return TYPE_LOADMORE;
+        } else {
+            return TYPE_NORMAL;
+        }
     }
 
     @Override
@@ -58,7 +56,11 @@ public class PostAdapter extends BaseAdapter {
 
     @Override
     protected int getItemType(int pos) {
-        return 0;
+        if (pos == postList.size()) {
+            return TYPE_LOADMORE;
+        } else {
+            return TYPE_NORMAL;
+        }
     }
 
     @Override
@@ -70,7 +72,7 @@ public class PostAdapter extends BaseAdapter {
 
     //改变状态
     public void changeLoadMoreState(int i) {
-        this.loadState = i;
+        loadState = i;
         notifyItemChanged(0);
     }
 

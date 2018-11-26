@@ -1,8 +1,8 @@
-package com.android.renly.plusclub.Injector.components;
+package com.android.renly.plusclub.injector.components;
 
 import android.content.Context;
 
-import com.android.renly.plusclub.Injector.modules.ApplicationModule;
+import com.android.renly.plusclub.injector.modules.ApplicationModule;
 
 import javax.inject.Singleton;
 

@@ -16,7 +16,7 @@
         android:background="@android:color/white"
         android:gravity="center">
 
-        <com.android.renly.plusclub.UI.WeekTitleView
+        <com.android.renly.plusclub.widget.WeekTitleView
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/bg_secondary" />

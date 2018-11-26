@@ -1,7 +1,7 @@
-package com.android.renly.plusclub.Api;
+package com.android.renly.plusclub.api;
 
-import com.android.renly.plusclub.Api.Api.PlusClubApi;
-import com.android.renly.plusclub.Api.Api.WeatherApi;
+import com.android.renly.plusclub.api.api.PlusClubApi;
+import com.android.renly.plusclub.api.api.WeatherApi;
 
 public class ApiFactory {
     protected static final Object monitor = new Object();

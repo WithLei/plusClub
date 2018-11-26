@@ -1,8 +1,8 @@
-package com.android.renly.plusclub.Injector.modules;
+package com.android.renly.plusclub.injector.modules;
 
-import com.android.renly.plusclub.Injector.PerFragment;
-import com.android.renly.plusclub.Module.hotnews.HotNewsFragPresenter;
-import com.android.renly.plusclub.Module.hotnews.HotNewsFragment;
+import com.android.renly.plusclub.injector.PerFragment;
+import com.android.renly.plusclub.module.hotnews.HotNewsFragPresenter;
+import com.android.renly.plusclub.module.hotnews.HotNewsFragment;
 
 import dagger.Module;
 import dagger.Provides;

@@ -1,19 +1,6 @@
-package com.android.renly.plusclub.Checknet;
+package com.android.renly.plusclub.checknet;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.android.renly.plusclub.App;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by free2 on 16-4-13.

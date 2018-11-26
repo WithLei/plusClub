@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Module.base;
+package com.android.renly.plusclub.module.base;
 
 import rx.functions.Action1;
 

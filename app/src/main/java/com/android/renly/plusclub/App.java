@@ -6,14 +6,14 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.android.renly.plusclub.Api.RetrofitService;
-import com.android.renly.plusclub.Checknet.NetworkReceiver;
-import com.android.renly.plusclub.DataBase.SQLiteHelper;
-import com.android.renly.plusclub.Injector.components.ApplicationComponent;
-import com.android.renly.plusclub.Injector.components.DaggerApplicationComponent;
-import com.android.renly.plusclub.Injector.modules.ApplicationModule;
-import com.android.renly.plusclub.Utils.DateUtils;
-import com.android.renly.plusclub.Utils.ToastUtils;
+import com.android.renly.plusclub.api.RetrofitService;
+import com.android.renly.plusclub.checknet.NetworkReceiver;
+import com.android.renly.plusclub.local.DataBase.SQLiteHelper;
+import com.android.renly.plusclub.injector.components.ApplicationComponent;
+import com.android.renly.plusclub.injector.components.DaggerApplicationComponent;
+import com.android.renly.plusclub.injector.modules.ApplicationModule;
+import com.android.renly.plusclub.utils.DateUtils;
+import com.android.renly.plusclub.utils.toast.ToastUtils;
 import com.squareup.leakcanary.LeakCanary;
 
 public class App extends Application {

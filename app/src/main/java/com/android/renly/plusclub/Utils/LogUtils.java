@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Utils;
+package com.android.renly.plusclub.utils;
 
 import android.util.Log;
 

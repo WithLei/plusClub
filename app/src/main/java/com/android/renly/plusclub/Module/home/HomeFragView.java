@@ -1,7 +1,6 @@
-package com.android.renly.plusclub.Module.home;
+package com.android.renly.plusclub.module.home;
 
-import com.android.renly.plusclub.Api.Bean.Forum;
-import com.android.renly.plusclub.Api.Bean.Weather;
+import com.android.renly.plusclub.api.bean.Forum;
 
 import java.util.List;
 

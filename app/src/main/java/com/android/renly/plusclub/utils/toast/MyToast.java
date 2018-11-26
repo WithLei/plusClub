@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Common;
+package com.android.renly.plusclub.utils.toast;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;

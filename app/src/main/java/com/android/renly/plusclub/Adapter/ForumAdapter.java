@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Adapter;
+package com.android.renly.plusclub.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Api.Bean.Forum;
+import com.android.renly.plusclub.api.bean.Forum;
 import com.android.renly.plusclub.R;
 
 import java.util.List;

@@ -1,24 +1,22 @@
-package com.android.renly.plusclub.Module.hotnews;
+package com.android.renly.plusclub.module.hotnews;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Activity.PostActivity;
-import com.android.renly.plusclub.Adapter.MyPostAdapter;
-import com.android.renly.plusclub.Adapter.PostAdapter;
-import com.android.renly.plusclub.Adapter.ReplyAdapter;
-import com.android.renly.plusclub.Api.Bean.Post;
-import com.android.renly.plusclub.Api.Bean.SimplePost;
-import com.android.renly.plusclub.Api.Bean.Store;
-import com.android.renly.plusclub.Api.RetrofitService;
+import com.android.renly.plusclub.module.postContent.fullscreen.PostActivity;
+import com.android.renly.plusclub.adapter.MyPostAdapter;
+import com.android.renly.plusclub.adapter.PostAdapter;
+import com.android.renly.plusclub.adapter.ReplyAdapter;
+import com.android.renly.plusclub.api.bean.Post;
+import com.android.renly.plusclub.api.bean.SimplePost;
+import com.android.renly.plusclub.api.bean.Store;
+import com.android.renly.plusclub.api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.NetConfig;
-import com.android.renly.plusclub.Listener.ListItemClickListener;
+import com.android.renly.plusclub.utils.NetConfig;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -33,10 +31,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 
-import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOADING;
-import static com.android.renly.plusclub.Adapter.PostAdapter.STATE_LOAD_NOTHING;
-import static com.android.renly.plusclub.Utils.ToastUtils.*;
-import static com.android.renly.plusclub.Utils.LogUtils.*;
+import static com.android.renly.plusclub.adapter.BaseAdapter.*;
+import static com.android.renly.plusclub.utils.toast.ToastUtils.*;
 
 public class HotNewsFragPresenter {
     private HotNewsFragment mView;
@@ -116,7 +112,7 @@ public class HotNewsFragPresenter {
             case TYPE_REPLY:
                 replyAdapter = new ReplyAdapter(context, replyList);
                 mView.rv.setAdapter(replyAdapter);
-                replyAdapter.setOnItemClickListener(pos -> {
+                replyAdapter.setOnItemClickListener((view, pos) -> {
                     Intent intent = new Intent(context, PostActivity.class);
                     intent.putExtra("id", replyList.get(pos).getDiscussion_id());
                     intent.putExtra("isNormalPost", false);
@@ -131,7 +127,7 @@ public class HotNewsFragPresenter {
             case TYPE_MY:
                 myPostAdapter = new MyPostAdapter(context, myList);
                 mView.rv.setAdapter(myPostAdapter);
-                myPostAdapter.setOnItemClickListener(pos -> {
+                myPostAdapter.setOnItemClickListener((view, pos) -> {
                     Intent intent = new Intent(context, PostActivity.class);
                     intent.putExtra("id", myList.get(pos).getId());
                     intent.putExtra("isNormalPost", false);

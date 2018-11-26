@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.UI;
+package com.android.renly.plusclub.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.Utils.DimmenUtils;
+import com.android.renly.plusclub.utils.DimmenUtils;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Api.Bean;
+package com.android.renly.plusclub.api.bean;
 
 /**
  * HomeFragment论坛模块Bean类

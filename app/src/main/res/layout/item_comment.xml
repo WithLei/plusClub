@@ -10,7 +10,7 @@
     android:focusable="true"
     android:padding="12dp">
 
-    <com.android.renly.plusclub.UI.CircleImageView
+    <com.android.renly.plusclub.widget.CircleImageView
         android:id="@+id/article_user_image"
         android:layout_width="40dp"
         android:layout_height="40dp"

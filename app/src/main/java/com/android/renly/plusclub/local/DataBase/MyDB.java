@@ -1,12 +1,12 @@
-package com.android.renly.plusclub.DataBase;
+package com.android.renly.plusclub.local.DataBase;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.android.renly.plusclub.Api.Bean.Course;
-import com.android.renly.plusclub.Api.Bean.User;
+import com.android.renly.plusclub.api.bean.Course;
+import com.android.renly.plusclub.api.bean.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

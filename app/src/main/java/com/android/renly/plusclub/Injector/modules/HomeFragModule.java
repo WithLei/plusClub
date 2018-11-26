@@ -1,9 +1,8 @@
-package com.android.renly.plusclub.Injector.modules;
+package com.android.renly.plusclub.injector.modules;
 
-import com.android.renly.plusclub.Injector.PerFragment;
-import com.android.renly.plusclub.Module.base.BasePresenter;
-import com.android.renly.plusclub.Module.home.HomeFragPresenter;
-import com.android.renly.plusclub.Module.home.HomeFragment;
+import com.android.renly.plusclub.injector.PerFragment;
+import com.android.renly.plusclub.module.home.HomeFragPresenter;
+import com.android.renly.plusclub.module.home.HomeFragment;
 
 import dagger.Module;
 import dagger.Provides;

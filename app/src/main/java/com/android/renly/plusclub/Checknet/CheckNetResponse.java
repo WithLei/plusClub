@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Checknet;
+package com.android.renly.plusclub.checknet;
 
 import android.os.Handler;
 import android.os.Looper;

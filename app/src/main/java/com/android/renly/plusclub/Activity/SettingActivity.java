@@ -4,8 +4,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
-import com.android.renly.plusclub.Module.base.BaseActivity;
-import com.android.renly.plusclub.Fragment.SettingFragment;
+import com.android.renly.plusclub.module.base.BaseActivity;
+import com.android.renly.plusclub.module.setting.SettingFragment;
 import com.android.renly.plusclub.R;
 
 import butterknife.BindView;

@@ -7,8 +7,8 @@ import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Module.base.BaseActivity;
-import com.android.renly.plusclub.Common.NetConfig;
+import com.android.renly.plusclub.module.base.BaseActivity;
+import com.android.renly.plusclub.utils.NetConfig;
 import com.android.renly.plusclub.R;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;

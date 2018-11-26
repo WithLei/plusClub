@@ -1,8 +1,7 @@
-package com.android.renly.plusclub.UI;
+package com.android.renly.plusclub.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -10,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.android.renly.plusclub.R;
-import com.android.renly.plusclub.Utils.DimmenUtils;
+import com.android.renly.plusclub.utils.DimmenUtils;
 
 /**
  * 自定义标题栏，用来显示周一到周日

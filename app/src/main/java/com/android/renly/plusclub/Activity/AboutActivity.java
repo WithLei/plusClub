@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Module.base.BaseActivity;
+import com.android.renly.plusclub.module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 import com.zzhoujay.richtext.RichText;
 

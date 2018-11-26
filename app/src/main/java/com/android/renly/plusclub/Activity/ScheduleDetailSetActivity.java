@@ -6,8 +6,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.alibaba.fastjson.JSON;
-import com.android.renly.plusclub.Api.Bean.Course;
-import com.android.renly.plusclub.Module.base.BaseActivity;
+import com.android.renly.plusclub.api.bean.Course;
+import com.android.renly.plusclub.module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 
 import butterknife.BindView;

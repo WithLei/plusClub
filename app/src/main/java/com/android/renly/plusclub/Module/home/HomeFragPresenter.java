@@ -1,20 +1,19 @@
-package com.android.renly.plusclub.Module.home;
+package com.android.renly.plusclub.module.home;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.Api.Bean.Forum;
-import com.android.renly.plusclub.Api.Bean.Store;
-import com.android.renly.plusclub.Api.Bean.Weather;
-import com.android.renly.plusclub.Api.RetrofitService;
+import com.android.renly.plusclub.api.bean.Forum;
+import com.android.renly.plusclub.api.bean.Store;
+import com.android.renly.plusclub.api.bean.Weather;
+import com.android.renly.plusclub.api.RetrofitService;
 import com.android.renly.plusclub.App;
-import com.android.renly.plusclub.Common.NetConfig;
-import com.android.renly.plusclub.DataBase.MyDB;
-import com.android.renly.plusclub.Module.base.BasePresenter;
+import com.android.renly.plusclub.utils.NetConfig;
+import com.android.renly.plusclub.local.DataBase.MyDB;
+import com.android.renly.plusclub.module.base.BasePresenter;
 import com.android.renly.plusclub.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.android.renly.plusclub.Module.base;
+package com.android.renly.plusclub.module.base;
 
 /**
  * 基础 Presenter
