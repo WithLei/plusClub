@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Activity.UserDetailActivity;
+import com.android.renly.plusclub.module.user.userdetail.UserDetailActivity;
 import com.android.renly.plusclub.api.bean.Comment;
 import com.android.renly.plusclub.utils.toast.MyToast;
 import com.android.renly.plusclub.R;

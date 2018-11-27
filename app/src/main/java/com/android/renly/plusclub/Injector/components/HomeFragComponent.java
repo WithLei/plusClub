@@ -2,7 +2,7 @@ package com.android.renly.plusclub.injector.components;
 
 import com.android.renly.plusclub.injector.PerFragment;
 import com.android.renly.plusclub.injector.modules.HomeFragModule;
-import com.android.renly.plusclub.module.home.HomeFragment;
+import com.android.renly.plusclub.module.home.fullscreen.HomeFragment;
 
 import dagger.Component;
 

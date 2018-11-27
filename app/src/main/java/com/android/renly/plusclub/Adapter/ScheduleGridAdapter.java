@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.android.renly.plusclub.Activity.ScheduleDetailActivity;
+import com.android.renly.plusclub.module.schedule.edu.detail.ScheduleDetailActivity;
 import com.android.renly.plusclub.api.bean.Course;
 import com.android.renly.plusclub.R;
 

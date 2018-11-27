@@ -7,7 +7,7 @@ import android.content.Intent;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.android.renly.plusclub.module.postContent.fullscreen.PostActivity;
+import com.android.renly.plusclub.module.post.postcontent.fullscreen.PostActivity;
 import com.android.renly.plusclub.adapter.MyPostAdapter;
 import com.android.renly.plusclub.adapter.PostAdapter;
 import com.android.renly.plusclub.adapter.ReplyAdapter;

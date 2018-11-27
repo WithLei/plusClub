@@ -1,8 +1,8 @@
 package com.android.renly.plusclub.injector.modules;
 
-import com.android.renly.plusclub.module.schedule.ScheduleFragment;
+import com.android.renly.plusclub.module.schedule.home.ScheduleFragment;
 import com.android.renly.plusclub.injector.PerFragment;
-import com.android.renly.plusclub.module.schedule.ScheduleFragPresenter;
+import com.android.renly.plusclub.module.schedule.home.ScheduleFragPresenter;
 
 import dagger.Module;
 import dagger.Provides;

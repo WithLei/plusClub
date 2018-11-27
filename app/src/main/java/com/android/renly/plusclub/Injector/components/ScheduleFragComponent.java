@@ -1,6 +1,6 @@
 package com.android.renly.plusclub.injector.components;
 
-import com.android.renly.plusclub.module.schedule.ScheduleFragment;
+import com.android.renly.plusclub.module.schedule.home.ScheduleFragment;
 import com.android.renly.plusclub.injector.PerFragment;
 import com.android.renly.plusclub.injector.modules.ScheduleFragModule;
 

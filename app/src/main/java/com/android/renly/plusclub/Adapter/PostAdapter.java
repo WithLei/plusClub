@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.renly.plusclub.Activity.UserDetailActivity;
+import com.android.renly.plusclub.module.user.userdetail.UserDetailActivity;
 import com.android.renly.plusclub.api.bean.Post;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.widget.CircleImageView;

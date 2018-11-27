@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         tools:replace="android:icon">
         <activity
-            android:name=".Activity.LaunchActivity"
+            android:name=".module.home.LaunchActivity"
             android:theme="@style/AppTheme.normal"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
@@ -30,89 +30,89 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.HomeActivity"
+            android:name=".module.home.HomeActivity"
             android:theme="@style/AppTheme.normal"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".Activity.ThemeActivity"
+            android:name=".module.setting.theme.ThemeActivity"
             android:theme="@style/AppTheme"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.LoginActivity"
+            android:name=".module.user.login.LoginActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.UserDetailActivity"
+            android:name=".module.user.userdetail.UserDetailActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.AboutActivity"
+            android:name=".module.setting.about.AboutActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.LabActivity"
+            android:name=".module.setting.lab.LabActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.ScheduleActivity"
+            android:name=".module.schedule.edu.main.ScheduleActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.EduActivity"
+            android:name=".module.edu.main.EduActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.EduLoginActivity"
+            android:name=".module.edu.login.EduLoginActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.PostsActivity"
+            android:name=".module.post.postlist.PostsActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.EditAcitivity"
+            android:name=".module.post.edit.EditAcitivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Activity.ScheduleDetailActivity"
+            android:name=".module.schedule.edu.detail.ScheduleDetailActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.ScheduleDetailSetActivity"
+            android:name=".module.schedule.edu.set.ScheduleDetailSetActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.ECardActivity"
+            android:name=".module.edu.ecard.ECardActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.SignActivity"
+            android:name=".module.user.sign.SignActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.FindpwdActivity"
+            android:name=".module.user.findpwd.FindpwdActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.ChangePwdActivity"
+            android:name=".module.user.changepwd.ChangePwdActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.WebViewActivity"
+            android:name=".module.webview.WebViewActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.SettingActivity"
+            android:name=".module.setting.main.SettingActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activity.OpenSourceActivity"
+            android:name=".module.setting.opensource.OpenSourceActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name=".module.postContent.fullscreen.PostActivity"
+            android:name=".module.post.postcontent.fullscreen.PostActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 

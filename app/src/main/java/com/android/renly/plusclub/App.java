@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.renly.plusclub.api.RetrofitService;
 import com.android.renly.plusclub.checknet.NetworkReceiver;
@@ -25,6 +26,11 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
         context = getApplicationContext();
         initInjector();
         initConfig();
@@ -47,6 +53,7 @@ public class App extends Application {
 
     private void initConfig() {
         if (BuildConfig.DEBUG) {
+            Log.e("print","LeakCanary.install(this);");
             LeakCanary.install(this);
         }
         RetrofitService.init();

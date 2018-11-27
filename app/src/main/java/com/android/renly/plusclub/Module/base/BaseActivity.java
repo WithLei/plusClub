@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.renly.plusclub.Activity.ThemeActivity;
+import com.android.renly.plusclub.module.setting.theme.ThemeActivity;
 import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.utils.toast.MyToast;
 import com.android.renly.plusclub.R;
@@ -40,46 +40,56 @@ public abstract class BaseActivity extends FragmentActivity {
     /***是否显示标题栏*/
     private boolean isshowstate = false;
     private Unbinder unbinder;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //切换主题
-        switchTheme();
-        if(!isshowtitle){
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
-
-        if(isshowstate){
-            getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN ,
-                    WindowManager.LayoutParams. FLAG_FULLSCREEN);
-        }
         setContentView(getLayoutID());
         unbinder = ButterKnife.bind(this);
-        //设置数据
+        // 切换主题
+        switchTheme();
+        // 初始化状态栏
+        initWindowTitle();
+        // 设置数据
         initData();
-        //初始化控件
+        // 初始化控件
         initView();
     }
+
     protected abstract int getLayoutID();
 
     protected abstract void initData();
 
     protected abstract void initView();
 
-    public void ToastLong(String msg){
-        MyToast.showText(this,msg,Toast.LENGTH_LONG);
+    public void ToastLong(String msg) {
+        MyToast.showText(this, msg, Toast.LENGTH_LONG);
     }
 
-    public void ToastShort(String msg){
-        MyToast.showText(this,msg,Toast.LENGTH_SHORT);
+    public void ToastShort(String msg) {
+        MyToast.showText(this, msg, Toast.LENGTH_SHORT);
     }
 
-    public void ToastNetWorkError(){
+    public void ToastNetWorkError() {
         ToastShort("网络出状况咯ヽ(#`Д´)ﾉ");
     }
 
-    public void ToastProgramError(){
+    public void ToastProgramError() {
         ToastShort("程序猿还在努力开发中 ♪(´∇`*)");
+    }
+
+    /**
+     * 初始化状态栏
+     */
+    private void initWindowTitle() {
+        if (!isshowtitle) {
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
+
+        if (isshowstate) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
     }
 
     /**
@@ -88,33 +98,36 @@ public abstract class BaseActivity extends FragmentActivity {
      * @return
      */
     public void setTitle(boolean ishow) {
-        isshowtitle=ishow;
+        isshowtitle = ishow;
     }
 
     /**
      * 设置是否显示状态栏
+     *
      * @param ishow
      */
     public void setState(boolean ishow) {
-        isshowstate=ishow;
+        isshowstate = ishow;
     }
 
     /**
      * Log输出
      * error
      * Filter:print
+     *
      * @param str
      */
-    public void printLog(String str){
-        Log.e("print",str);
+    public void printLog(String str) {
+        Log.e("print", str);
     }
 
     /**
      * 打印str到手机src内存中
+     *
      * @param src 地址
      * @param str 打印内容
      */
-    public void writeData(String src,String str) {
+    public void writeData(String src, String str) {
         try {
             File file = new File(src);
             if (!file.exists()) {
@@ -133,15 +146,17 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /**
      * 打开targetActivity
+     *
      * @param targetActivity
      */
-    public void gotoActivity(Class<?> targetActivity){
-        startActivity(new Intent(this,targetActivity));
-        overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
+    public void gotoActivity(Class<?> targetActivity) {
+        startActivity(new Intent(this, targetActivity));
+        overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
     }
 
     /**
      * 初始化标题栏
+     *
      * @param isshowBack
      * @param text
      */
@@ -159,6 +174,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /**
      * 添加标题栏组件
+     *
      * @param resid
      * @return
      */
@@ -175,6 +191,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
     /**
      * 添加标题栏组件
+     *
      * @param v
      */
     protected void addToolbarView(View v) {
@@ -210,11 +227,11 @@ public abstract class BaseActivity extends FragmentActivity {
                 int[] time = App.getDarkModeTime();
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 //                if ((hour >= time[0] || hour < time[1])) {
-                    //自动切换
+                //自动切换
 //                    to = AppCompatDelegate.MODE_NIGHT_YES;
 //                    printLog("toNight");
 //                } else {
-                    to = AppCompatDelegate.MODE_NIGHT_NO;
+                to = AppCompatDelegate.MODE_NIGHT_NO;
 //                }
             } else {
                 to = AppCompatDelegate.MODE_NIGHT_NO;
@@ -238,8 +255,8 @@ public abstract class BaseActivity extends FragmentActivity {
         }
     }
 
-    public void hideKeyBoard(){
-        getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    public void hideKeyBoard() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     public void showSoftInput() {
@@ -247,27 +264,27 @@ public abstract class BaseActivity extends FragmentActivity {
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    public void finishActivity(){
+    public void finishActivity() {
         finish();
-        overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
+        overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
     }
 
     /**
      * 初始化滑动事件
      */
     public void initSlidr() {
-        SlidrConfig config=new SlidrConfig.Builder()
+        SlidrConfig config = new SlidrConfig.Builder()
                 .position(SlidrPosition.LEFT)//滑动起始方向
                 .edge(true)
                 .edgeSize(0.18f)//距离左边界占屏幕大小的18%
                 .build();
-        Slidr.attach(this,config);
+        Slidr.attach(this, config);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
+        overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
     }
 
     @Override
