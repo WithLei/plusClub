@@ -23,11 +23,7 @@
             android:name=".module.home.LaunchActivity"
             android:theme="@style/AppTheme.normal"
             android:windowSoftInputMode="stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".module.home.HomeActivity"
