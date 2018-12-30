@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.android.renly.plusclub.module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.module.edu.login.EduLoginActivity;
+import com.android.renly.plusclub.utils.toast.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +72,9 @@ public class LabActivity extends BaseActivity implements AdapterView.OnItemClick
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         switch (i) {
             case 0:
-                gotoActivity(EduLoginActivity.class);
+                ToastUtils.ToastShort("由于技术升级，爬虫不可用，此功能暂时下线");
+                // TODO:暂时下线功能
+//                gotoActivity(EduLoginActivity.class);
                 break;
         }
     }

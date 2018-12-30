@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -201,6 +203,14 @@ public class EditAcitivity extends BaseActivity {
      */
     private void initEditor() {
         editor.setSelection(editor.getText().length());
+        //设置EditText的显示方式为多行文本输入
+        editor.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        //文本显示的位置在EditText的最上方
+        editor.setGravity(Gravity.TOP);
+        //改变默认的单行模式
+        editor.setSingleLine(false);
+        //水平滚动设置为False
+        editor.setHorizontallyScrolling(false);
     }
 
     @Override

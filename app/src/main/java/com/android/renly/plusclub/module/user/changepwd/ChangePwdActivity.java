@@ -104,7 +104,7 @@ public class ChangePwdActivity extends BaseActivity {
                         } else if (jsonObject.getInteger("code") == 50002) {
                             ToastShort("密码输错了，检查一下吧");
                         } else {
-                            MyToast.showText(ChangePwdActivity.this, jsonObject.getString("msg"), true);
+                            MyToast.showText(getApplicationContext(), jsonObject.getString("msg"), true);
                             finishActivity();
                         }
                     }

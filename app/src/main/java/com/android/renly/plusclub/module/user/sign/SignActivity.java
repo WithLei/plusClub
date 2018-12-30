@@ -192,7 +192,7 @@ public class SignActivity extends BaseActivity {
                             ToastNetWorkError();
                         }else if (obj.getInteger("code") == 20000){
                             Store.getInstance().setToken(obj.getString("result"));
-                            MyToast.showText(SignActivity.this,"注册成功",true);
+                            MyToast.showText(getApplicationContext(),"注册成功",true);
                             hideKeyBoard();
                             finishActivity();
                         }

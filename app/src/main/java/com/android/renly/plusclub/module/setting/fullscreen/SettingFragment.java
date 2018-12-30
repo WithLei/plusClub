@@ -29,6 +29,7 @@ import com.android.renly.plusclub.utils.toast.MyToast;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.utils.DataManager;
 import com.android.renly.plusclub.utils.IntentUtils;
+import com.android.renly.plusclub.utils.toast.ToastUtils;
 
 public class SettingFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -75,7 +76,7 @@ public class SettingFragment extends PreferenceFragment
         clearCache.setOnPreferenceClickListener(preference -> {
             DataManager.cleanApplicationData(mActivity);
 
-            Toast.makeText(mActivity, "缓存清理成功!请重新登陆", Toast.LENGTH_SHORT).show();
+            ToastUtils.ToastShort("缓存清理成功!请重新登陆");
             clearCache.setSummary("缓存大小：" + DataManager.getTotalCacheSize(mActivity));
             ((SettingActivity) mActivity).afterLogout();
             return false;
@@ -137,7 +138,7 @@ public class SettingFragment extends PreferenceFragment
         // eg:https://github.com/WithLei/DistanceMeasure/releases/download/1.4.0/DistanceMeasure.apk
 
         if (tag_name.equals(version_name)) {
-            MyToast.showText(mActivity, "已经是最新版本");
+            ToastUtils.ToastShort("已经是最新版本");
         } else {
             new AlertDialog.Builder(mActivity)
                     .setTitle("检测到新版本")
@@ -166,7 +167,7 @@ public class SettingFragment extends PreferenceFragment
             user_logout = findPreference("user_logout");
             user_logout.setOnPreferenceClickListener(preference -> {
                 App.setIsLogout();
-                MyToast.showText(mActivity, "退出登录成功", Toast.LENGTH_SHORT, true);
+                MyToast.showText(getActivity().getApplicationContext(), "退出登录成功", Toast.LENGTH_SHORT, true);
                 ((SettingActivity) mActivity).afterLogout();
                 return true;
             });

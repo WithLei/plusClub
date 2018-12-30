@@ -411,7 +411,7 @@ public class EduLoginActivity extends BaseActivity {
      * 成功登陆后的操作
      */
     private void AfterSuccessLogin(String stuName) {
-        MyToast.showText(this, "登陆成功", Toast.LENGTH_SHORT, true);
+        MyToast.showText(getApplicationContext(), "登陆成功", Toast.LENGTH_SHORT, true);
         SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(App.COOKIE, cookie);

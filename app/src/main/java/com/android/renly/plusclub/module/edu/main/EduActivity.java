@@ -141,7 +141,7 @@ public class EduActivity extends BaseActivity {
         editor.putString("Cookie", Cookie);
         editor.apply();
         printLog("退出登录成功");
-        MyToast.showText(this, "退出登录成功", Toast.LENGTH_SHORT, true);
+        MyToast.showText(getApplicationContext(), "退出登录成功", Toast.LENGTH_SHORT, true);
         finishActivity();
     }
 

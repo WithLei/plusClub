@@ -147,7 +147,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void afterLoginFail() {
-        MyToast.showText(this,"账号或密码错误", Toast.LENGTH_SHORT,false);
+        MyToast.showText(getApplicationContext(),"账号或密码错误", Toast.LENGTH_SHORT,false);
     }
 
     private void afterLoginSuccess(String email, String pwd, String token) {
@@ -159,7 +159,7 @@ public class LoginActivity extends BaseActivity {
         editor.putBoolean(App.IS_REMEBER_PWD_USER,cbRemUser.isChecked());
         editor.putBoolean(App.IS_LOGIN, true);
         editor.apply();
-        MyToast.showText(this,"登录成功", Toast.LENGTH_SHORT,true);
+        MyToast.showText(getApplicationContext(),"登录成功", Toast.LENGTH_SHORT,true);
         printLog("登录成功");
 
         getUserInfo();

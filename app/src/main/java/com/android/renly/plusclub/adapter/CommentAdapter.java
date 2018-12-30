@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.android.renly.plusclub.module.user.userdetail.UserDetailActivity;
 import com.android.renly.plusclub.api.bean.Comment;
-import com.android.renly.plusclub.utils.toast.MyToast;
 import com.android.renly.plusclub.R;
+import com.android.renly.plusclub.utils.toast.ToastUtils;
 import com.android.renly.plusclub.widget.CircleImageView;
 import com.android.renly.plusclub.utils.DateUtils;
 import com.squareup.picasso.Picasso;
@@ -74,7 +74,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             if (cm != null) {
                 cm.setPrimaryClip(ClipData.newPlainText(null, content));
-                MyToast.showText(context,"已复制" + user + "的评论");
+                ToastUtils.ToastShort("已复制" + user + "的评论");
             }
             return true;
         });

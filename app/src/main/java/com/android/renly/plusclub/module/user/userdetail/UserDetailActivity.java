@@ -117,7 +117,7 @@ public class UserDetailActivity extends BaseActivity {
     private void onLogout() {
         App.setIsLogout();
         setResult(RESULT_OK);
-        MyToast.showText(this, "退出登录成功", Toast.LENGTH_SHORT, true);
+        MyToast.showText(getApplicationContext(), "退出登录成功", Toast.LENGTH_SHORT, true);
         finishActivity();
     }
 

@@ -46,6 +46,7 @@ public class DataManager {
         boolean isRemember = perUserInfo.getBoolean(App.IS_REMEBER_PWD_USER, false);
         String userEmail = perUserInfo.getString(App.USER_EMAIL_KEY, "");
         String userPass = perUserInfo.getString(App.USER_PWD_KEY, "");
+        int theme = perUserInfo.getInt(App.THEME_KEY,0);
 
         cleanInternalCache(context);
         cleanExternalCache(context);
@@ -64,6 +65,7 @@ public class DataManager {
         editor.putBoolean(App.IS_REMEBER_PWD_USER, isRemember);
         editor.putString(App.USER_EMAIL_KEY, userEmail);
         editor.putString(App.USER_PWD_KEY, userPass);
+        editor.putInt(App.THEME_KEY, theme);
         editor.apply();
     }
 

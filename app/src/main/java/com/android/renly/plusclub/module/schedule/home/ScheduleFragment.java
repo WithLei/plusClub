@@ -13,6 +13,7 @@ import com.android.renly.plusclub.injector.components.DaggerScheduleFragComponen
 import com.android.renly.plusclub.injector.modules.ScheduleFragModule;
 import com.android.renly.plusclub.module.base.BaseFragment;
 import com.android.renly.plusclub.R;
+import com.android.renly.plusclub.utils.toast.ToastUtils;
 
 import org.angmarch.views.NiceSpinner;
 
@@ -107,8 +108,10 @@ public class ScheduleFragment extends BaseFragment
 
     @OnClick(R.id.iv_toolbar_menu)
     public void onViewClicked() {
-        Intent intent = new Intent(mActivity, EduLoginActivity.class);
-        startActivity(intent);
+        ToastUtils.ToastShort("由于技术升级，爬虫不可用，此功能暂时下线");
+        // TODO:暂时下线功能
+//        Intent intent = new Intent(mActivity, EduLoginActivity.class);
+//        startActivity(intent);
     }
 
     @Override

@@ -23,6 +23,7 @@ import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.utils.toast.MyToast;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.utils.DimmenUtils;
+import com.android.renly.plusclub.utils.toast.ToastUtils;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrPosition;
@@ -63,11 +64,11 @@ public abstract class BaseActivity extends FragmentActivity {
     protected abstract void initView();
 
     public void ToastLong(String msg) {
-        MyToast.showText(this, msg, Toast.LENGTH_LONG);
+        ToastUtils.ToastLong(msg);
     }
 
     public void ToastShort(String msg) {
-        MyToast.showText(this, msg, Toast.LENGTH_SHORT);
+        ToastUtils.ToastShort(msg);
     }
 
     public void ToastNetWorkError() {
