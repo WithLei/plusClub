@@ -9,7 +9,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbarHeight"
-        android:background="?attr/colorPrimary"
+        android:background="?android:attr/colorPrimary"
         android:elevation="4dp">
 
         <com.android.renly.plusclub.widget.CircleImageView

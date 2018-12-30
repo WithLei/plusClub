@@ -44,10 +44,10 @@ public abstract class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutID());
-        unbinder = ButterKnife.bind(this);
         // 切换主题
         switchTheme();
+        setContentView(getLayoutID());
+        unbinder = ButterKnife.bind(this);
         // 初始化状态栏
         initWindowTitle();
         // 设置数据

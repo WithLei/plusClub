@@ -15,8 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.renly.plusclub.App;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.utils.DimmenUtils;
+import com.android.renly.plusclub.utils.LogUtils;
 
 
 /**
@@ -81,8 +83,8 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
      * 初始化视图
      */
     private void init() {
-        //COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
-        COLOR_SELECT = ThemeUtil.getThemeColor(context, R.attr.colorAccent);
+//        COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
+        COLOR_SELECT = ThemeUtil.getThemeColor(context, R.attr.colorPrimary);
         COLOR_UNSELECT = ContextCompat.getColor(context, R.color.colorDisableHintIcon);
         SIZE_2 = DimmenUtils.dip2px(context, SIZE_2);
         SIZE_ICON = DimmenUtils.dip2px(context, SIZE_ICON);

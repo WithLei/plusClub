@@ -53,7 +53,9 @@ public class MineFragment extends BaseFragment
     @Override
     protected void initData(Context content) {
         mPresenter.getData(false);
-        lvMineFunctionList.setAdapter(new SimpleAdapter(mActivity, mPresenter.getMenuList(), R.layout.item_function, new String[]{"icon", "title"}, new int[]{R.id.icon, R.id.title}));
+        lvMineFunctionList.setAdapter(new SimpleAdapter(mActivity, mPresenter.getMenuList(),
+                R.layout.item_function, new String[]{"icon", "title"},
+                new int[]{R.id.icon, R.id.title}));
         lvMineFunctionList.setOnItemClickListener(this);
     }
 
