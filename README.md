@@ -85,7 +85,7 @@ It extends the observer pattern to support sequences of data/events and adds ope
 [scwang90](https://github.com/scwang90/SmartRefreshLayout)
 
 ## License
-Copyright 2016-2018 PlusClub  
+Copyright 2016-2019 PlusClub  
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
