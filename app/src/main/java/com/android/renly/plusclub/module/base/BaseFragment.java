@@ -74,7 +74,6 @@ public abstract class BaseFragment extends Fragment {
     public void gotoActivity(Class<?> targetActivity){
         startActivity(new Intent(getActivity(),targetActivity));
         getActivity().overridePendingTransition(R.anim.translate_in,R.anim.translate_out);
-
     }
 
     public abstract void ScrollToTop();

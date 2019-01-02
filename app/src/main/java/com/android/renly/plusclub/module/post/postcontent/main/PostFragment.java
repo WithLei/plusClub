@@ -135,7 +135,7 @@ public class PostFragment extends BaseFragment {
 
     @SuppressLint("CheckResult")
     private void postComments(String comment) {
-        RetrofitService.doPostComment(comment + StringUtils.getTextTail(getActivity()), postID)
+        RetrofitService.doPostComment(comment + StringUtils.getTextTail(), postID)
                 .subscribe(responseBody -> {
                     String response = responseBody.string();
                     if (!response.contains("code")) {

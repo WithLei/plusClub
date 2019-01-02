@@ -10,6 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtils {
+    private static Context mContext;
+    public static void init(Context context) {
+        mContext = context;
+    }
     /**
      * 检查密码中是否含有数字和字母
      *
@@ -35,8 +39,8 @@ public class StringUtils {
         return !(p.length() == pwd.length() || p2.length() == pwd.length() || p3.length() == pwd.length());
     }
 
-    public static String getTextTail(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+    public static String getTextTail() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (sp.getBoolean(App.TEXT_SHOW_TAIL,false)){
             String tail = sp.getString(App.TEXT_TAIL,"无尾巴");
             if (!tail.equals("无尾巴"))
