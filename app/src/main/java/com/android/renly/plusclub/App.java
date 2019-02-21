@@ -62,6 +62,23 @@ public class App extends Application {
         StringUtils.init(getContext());
     }
 
+    /**
+     * 低内存的时候执行
+     */
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+    }
+
+    /**
+     * HOME键退出应用程序
+     * 程序在内存清理的时候执行
+     */
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+    }
+
     @Override
     public void onTerminate() {
         // 关闭数据库
