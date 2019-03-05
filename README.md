@@ -48,9 +48,9 @@ It extends the observer pattern to support sequences of data/events and adds ope
 >Fastjson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Fastjson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.  
 >[Alibaba](https://github.com/alibaba/fastjson)
 
-### OkHttpUtils
->An HTTP & HTTP/2 client for Android and Java applications.  
-[hongyangAndroid](https://github.com/hongyangAndroid/okhttputils)
+### OkHttp
+>An HTTP+HTTP/2 client for Android and Java applications. http://square.github.io/okhttp/  
+[square](https://github.com/square/okhttp)
 
 ### EventBus  
 >Event bus for Android and Java that simplifies communication between Activities, Fragments, Threads, Services, etc. Less code, better quality.  
