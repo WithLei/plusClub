@@ -1,5 +1,6 @@
 package com.android.renly.plusclub.module.setting.lab;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.android.renly.plusclub.module.base.BaseActivity;
 import com.android.renly.plusclub.R;
 import com.android.renly.plusclub.module.edu.login.EduLoginActivity;
+import com.android.renly.plusclub.module.webview.WebViewActivity;
 import com.android.renly.plusclub.utils.toast.ToastUtils;
 
 import java.util.ArrayList;
