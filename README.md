@@ -16,7 +16,7 @@ React-Native端跨平台项目：[WithLei/plusClub_RN](https://github.com/WithLe
 Web端项目：[Robinson28years/lsuplusclub](https://github.com/Robinson28years/lsuplusclub)  
 前移动端项目：[xiaoshidefeng/PLUS-for-Android](https://github.com/xiaoshidefeng/PLUS-for-Android)
 
-备用下载链接：http://149.28.149.136:8080/plusClub/plusClub-app.apk
+备用下载链接：https://www.heyrenly.com/plusClub/plusClub-app.apk
 
 ## 项目展示
 <img src="https://github.com/WithLei/plusClub/blob/master/screenshots/1.png" width="250" hegiht="500" align=left />
